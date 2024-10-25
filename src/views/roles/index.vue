@@ -91,8 +91,8 @@
       <pagination
         v-if="total > 0"
         v-model:total="total"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
+        v-model:page="queryParams.page"
+        v-model:limit="queryParams.per_page"
         @pagination="handleQuery"
       />
     </el-card>

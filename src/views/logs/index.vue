@@ -10,9 +10,9 @@
             @keyup.enter="handleQuery"
           />
         </el-form-item>
-        <el-form-item prop="createTime" label="操作时间">
+        <el-form-item prop="created_at" label="操作时间">
           <el-date-picker
-            v-model="queryParams.createTime"
+            v-model="queryParams.created_at"
             :editable="false"
             class="!w-[240px]"
             type="daterange"
@@ -59,8 +59,8 @@
       <pagination
         v-if="total > 0"
         v-model:total="total"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
+        v-model:page="queryParams.page"
+        v-model:limit="queryParams.per_page"
         @pagination="handleQuery"
       />
     </el-card>
