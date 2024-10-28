@@ -103,28 +103,6 @@
               </div>
             </el-form-item>
           </el-tooltip>
-
-          <!-- 验证码 -->
-          <!-- <el-form-item prop="captchaCode">
-            <div class="input-wrapper">
-              <svg-icon icon-class="captcha" class="mx-2" />
-              <el-input
-                v-model="loginData.captchaCode"
-                auto-complete="off"
-                size="large"
-                class="flex-1"
-                :placeholder="$t('login.captchaCode')"
-                @keyup.enter="handleLoginSubmit"
-              />
-
-              <el-image
-                :src="captchaBase64"
-                class="captcha-img"
-                @click="getCaptcha"
-              />
-            </div>
-          </el-form-item> -->
-
           <div class="flex-x-between w-full py-1">
             <el-checkbox>
               {{ $t("login.rememberMe") }}
@@ -160,19 +138,6 @@
       </div>
     </div>
 
-    <!--  -->
-    <!-- <div class="login-footer">
-      <el-text size="small">
-        Copyright © 2021 - 2024 youlai.tech All Rights Reserved.
-        <el-link
-          :underline="false"
-          href="http://beian.miit.gov.cn/"
-          target="_blank"
-        >
-          皖ICP备20006496号-2
-        </el-link>
-      </el-text>
-    </div> -->
   </div>
 </template>
 
