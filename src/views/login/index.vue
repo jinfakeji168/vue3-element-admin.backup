@@ -185,7 +185,7 @@ const loginRules = computed(() => {
         message: t("login.message.password.required"),
       },
       {
-        min: 6,
+        min: 1,
         message: t("login.message.password.min"),
         trigger: "blur",
       },
