@@ -34,46 +34,30 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
-    // if (
-    //   response.config.responseType === "blob" ||
-    //   response.config.responseType === "arraybuffer"
-    // ) {
-    //   return response;
-    // }
-
-    // const { code, data, msg } = response.data;
-    // if (code === ResultEnum.SUCCESS) {
-    //   return data;
-    // }
-
-    // ElMessage.error(msg || "系统出错");
-    // return Promise.reject(new Error(msg || "Error"));
-
-    const { data } = response.data;
-    return data;
+    return response.data;
   },
   (error: any) => {
-    console.log(error)
+    console.log(error);
 
-    // 异常处理 非 2xx 状态码 会进入这里
-    if (error.response.data) {
-      const { code, msg } = error.response.data;
-      if (code === ResultEnum.TOKEN_INVALID) {
-        ElNotification({
-          title: "提示",
-          message: "您的会话已过期，请重新登录",
-          type: "info",
+    if (error.status === 401) {
+      ElNotification({
+        title: "提示",
+        message: "您的会话已过期，请重新登录",
+        type: "info",
+      });
+      useUserStoreHook()
+        .clearUserSession()
+        .then(() => {
+          location.reload();
         });
-        useUserStoreHook()
-          .clearUserSession()
-          .then(() => {
-            location.reload();
-          });
-      } else {
-        ElMessage.error(msg || "系统出错11");
-      }
+    } else if (error.status === 422) {
+      const { message } = error.response.data;
+      ElMessage.error(message || "系统出错");
+    } else {
+      const { message } = error.response.data;
+      ElMessage.error(message || "系统出错");
     }
+
     return Promise.reject(error.message);
   }
 );

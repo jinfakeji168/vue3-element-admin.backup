@@ -6,7 +6,7 @@ const AuthAPI = {
   /** 登录 接口*/
   login(data: LoginData) {
     const formData = new FormData();
-    formData.append("email", data.username);
+    formData.append("username", data.username);
     formData.append("password", data.password);
     // formData.append("captchaKey", data.captchaKey);
     // formData.append("captchaCode", data.captchaCode);
