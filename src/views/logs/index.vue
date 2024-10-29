@@ -51,7 +51,7 @@
         <el-table-column label="用户ID" prop="user_id" width="120" />
         <el-table-column label="请求方式" prop="method" width="150" />
         <el-table-column label="API" prop="path" width="100" />
-        <el-table-column label="数据" prop="payload" min-width="200" />
+        <el-table-column label="Payload" prop="payload" min-width="200" />
         <el-table-column label="IP 地址" prop="ip_address" width="150" />
         <el-table-column label="User Agent" prop="user_agent" width="150" />
       </el-table>

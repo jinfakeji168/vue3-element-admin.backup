@@ -50,18 +50,11 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="ID" prop="id" />
-        <el-table-column label="角色名称" prop="name" min-width="100" />
-        <el-table-column label="角色编码" prop="code" width="150" />
-
-        <el-table-column label="状态" align="center" width="100">
-          <template #default="scope">
-            <el-tag v-if="scope.row.status === 1" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
-          </template>
-        </el-table-column>
-
-        <el-table-column label="排序" align="center" width="80" prop="sort" />
-
+        <el-table-column label="权限名称" prop="title" min-width="100" />
+        <el-table-column label="唯一标识" prop="name" width="150" />
+        <el-table-column label="描述" prop="description" width="80" />
+        <el-table-column label="Guard" prop="guard_name" />
+        
         <el-table-column fixed="right" label="操作" width="220">
           <template #default="scope">
             <el-button

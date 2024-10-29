@@ -50,7 +50,7 @@
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="ID" prop="id" />
-        <el-table-column label="名称" prop="title" min-width="100" />
+        <el-table-column label="角色名称" prop="title" min-width="100" />
         <el-table-column label="唯一标识" prop="name" width="150" />
         <el-table-column label="描述" prop="description" />
         <el-table-column label="Guard" prop="guard_name" />
