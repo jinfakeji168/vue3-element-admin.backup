@@ -26,6 +26,10 @@ declare global {
     total: number;
   }
 
+  interface PaginationResponse<T> {
+    data: T;
+  }
+
   /**
    * 页签对象
    */
