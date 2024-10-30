@@ -13,11 +13,15 @@
 
         <el-form-item>
           <el-button type="primary" @click="handleQuery">
-            <template #icon><Search /></template>
+            <template #icon>
+              <Search />
+            </template>
             搜索
           </el-button>
           <el-button @click="handleResetQuery">
-            <template #icon><Refresh /></template>
+            <template #icon>
+              <Refresh />
+            </template>
             重置
           </el-button>
         </el-form-item>
@@ -27,7 +31,9 @@
     <el-card shadow="never" class="table-wrapper">
       <template #header>
         <el-button type="success" @click="handleOpenDialog()">
-          <template #icon><Plus /></template>
+          <template #icon>
+            <Plus />
+          </template>
           新增
         </el-button>
         <el-button
@@ -35,7 +41,9 @@
           :disabled="ids.length === 0"
           @click="handleDelete()"
         >
-          <template #icon><Delete /></template>
+          <template #icon>
+            <Delete />
+          </template>
           删除
         </el-button>
       </template>
@@ -69,7 +77,9 @@
               link
               @click="handleOpenAssignPermDialog(scope.row)"
             >
-              <template #icon><Position /></template>
+              <template #icon>
+                <Position />
+              </template>
               分配权限
             </el-button>
             <el-button
@@ -78,7 +88,9 @@
               link
               @click="handleOpenDialog(scope.row.id)"
             >
-              <template #icon><Edit /></template>
+              <template #icon>
+                <Edit />
+              </template>
               编辑
             </el-button>
             <el-button
@@ -87,7 +99,9 @@
               link
               @click="handleDelete(scope.row.id)"
             >
-              <template #icon><Delete /></template>
+              <template #icon>
+                <Delete />
+              </template>
               删除
             </el-button>
           </template>

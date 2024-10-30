@@ -9,7 +9,7 @@ import { getToken } from "@/utils/auth";
 
 // 创建 axios 实例
 const service = axios.create({
-  baseURL: import.meta.env.VITE_APP_BASE_API,
+  baseURL: import.meta.env.VITE_APP_API_URL,
   timeout: 50000,
   headers: { "Content-Type": "application/json;charset=utf-8" },
   paramsSerializer: (params) => {
@@ -54,7 +54,7 @@ service.interceptors.response.use(
     return data;
   },
   (error: any) => {
-    console.log(error)
+    console.log(error);
 
     // 异常处理 非 2xx 状态码 会进入这里
     if (error.response.data) {

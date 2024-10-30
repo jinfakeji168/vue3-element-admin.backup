@@ -56,16 +56,16 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       port: +env.VITE_APP_PORT,
       // 是否自动在浏览器中打开
       open: true,
-      proxy: {
-        // 代理前缀为 /dev-api 的请求
-        [env.VITE_APP_BASE_API]: {
-          changeOrigin: true,
-          // 代理目标真实接口地址：https://api.youlai.tech
-          target: env.VITE_APP_API_URL,
-          rewrite: (path) =>
-            path.replace(new RegExp("^" + env.VITE_APP_BASE_API), ""),
-        },
-      },
+      // proxy: {
+      //   // 代理前缀为 /dev-api 的请求
+      //   [env.VITE_APP_BASE_API]: {
+      //     changeOrigin: true,
+      //     // 代理目标真实接口地址：https://api.youlai.tech
+      //     target: env.VITE_APP_API_URL,
+      //     rewrite: (path) =>
+      //       path.replace(new RegExp("^" + env.VITE_APP_BASE_API), ""),
+      //   },
+      // },
     },
     plugins: [
       vue(),

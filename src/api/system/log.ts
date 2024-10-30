@@ -8,7 +8,7 @@ const LogAPI = {
    *
    * @param queryParams 查询参数
    */
-  getPage(queryParams: LogPageQuery) {
+  index(queryParams: LogPageQuery) {
     return request<any, PageResult<LogPageVO[]>>({
       url: `/api/admin/operation-logs`,
       method: "get",

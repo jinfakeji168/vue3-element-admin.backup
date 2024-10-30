@@ -13,11 +13,15 @@
 
         <el-form-item>
           <el-button type="primary" @click="handleQuery">
-            <template #icon><Search /></template>
+            <template #icon>
+              <Search />
+            </template>
             搜索
           </el-button>
           <el-button @click="handleResetQuery">
-            <template #icon><Refresh /></template>
+            <template #icon>
+              <Refresh />
+            </template>
             重置
           </el-button>
         </el-form-item>
@@ -27,7 +31,9 @@
     <el-card shadow="never" class="table-wrapper">
       <template #header>
         <el-button type="success" @click="handleOpenDialog()">
-          <template #icon><Plus /></template>
+          <template #icon>
+            <Plus />
+          </template>
           新增
         </el-button>
         <el-button
@@ -35,7 +41,9 @@
           :disabled="ids.length === 0"
           @click="handleDelete()"
         >
-          <template #icon><Delete /></template>
+          <template #icon>
+            <Delete />
+          </template>
           删除
         </el-button>
       </template>
@@ -54,7 +62,7 @@
         <el-table-column label="唯一标识" prop="name" width="150" />
         <el-table-column label="描述" prop="description" width="80" />
         <el-table-column label="Guard" prop="guard_name" />
-        
+
         <el-table-column fixed="right" label="操作" width="220">
           <template #default="scope">
             <el-button
@@ -63,7 +71,9 @@
               link
               @click="handleOpenAssignPermDialog(scope.row)"
             >
-              <template #icon><Position /></template>
+              <template #icon>
+                <Position />
+              </template>
               分配权限
             </el-button>
             <el-button
@@ -72,7 +82,9 @@
               link
               @click="handleOpenDialog(scope.row.id)"
             >
-              <template #icon><Edit /></template>
+              <template #icon>
+                <Edit />
+              </template>
               编辑
             </el-button>
             <el-button
@@ -81,7 +93,9 @@
               link
               @click="handleDelete(scope.row.id)"
             >
-              <template #icon><Delete /></template>
+              <template #icon>
+                <Delete />
+              </template>
               删除
             </el-button>
           </template>
@@ -292,10 +306,10 @@ const parentChildLinked = ref(true);
 /** 查询 */
 function handleQuery() {
   loading.value = true;
-  RoleAPI.getPage(queryParams)
+  RoleAPI.index(queryParams)
     .then((data) => {
-      roleList.value = data.list;
-      total.value = data.total;
+      roleList.value = data;
+      // total.value = data.total;
     })
     .finally(() => {
       loading.value = false;

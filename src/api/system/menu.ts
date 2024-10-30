@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 // 菜单基础URL
-const MENU_BASE_URL = "/api/v1/menus";
+const MENU_BASE_URL = "/api/admin/menus";
 
 const MenuAPI = {
   /**
@@ -23,7 +23,7 @@ const MenuAPI = {
    * @param queryParams 查询参数
    * @returns 菜单树形列表
    */
-  getList(queryParams: MenuQuery) {
+  index(queryParams: MenuQuery) {
     return request<any, MenuVO[]>({
       url: `${MENU_BASE_URL}`,
       method: "get",
@@ -36,7 +36,7 @@ const MenuAPI = {
    *
    * @returns 菜单下拉数据源
    */
-  getOptions(onlyParent?: boolean) {
+  option(onlyParent?: boolean) {
     return request<any, OptionType[]>({
       url: `${MENU_BASE_URL}/options`,
       method: "get",
@@ -49,7 +49,7 @@ const MenuAPI = {
    *
    * @param id 菜单ID
    */
-  getFormData(id: number) {
+  form(id: number) {
     return request<any, MenuForm>({
       url: `${MENU_BASE_URL}/${id}/form`,
       method: "get",

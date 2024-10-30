@@ -12,11 +12,15 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">
-            <template #icon><Search /></template>
+            <template #icon>
+              <Search />
+            </template>
             搜索
           </el-button>
           <el-button @click="handleResetQuery">
-            <template #icon><Refresh /></template>
+            <template #icon>
+              <Refresh />
+            </template>
             重置
           </el-button>
         </el-form-item>
@@ -30,7 +34,9 @@
           type="success"
           @click="handleOpenDialog(0)"
         >
-          <template #icon><Plus /></template>
+          <template #icon>
+            <Plus />
+          </template>
           新增
         </el-button>
       </template>
@@ -133,7 +139,9 @@
               size="small"
               @click.stop="handleOpenDialog(scope.row.id)"
             >
-              <template #icon><Plus /></template>
+              <template #icon>
+                <Plus />
+              </template>
               新增
             </el-button>
 
@@ -144,7 +152,9 @@
               size="small"
               @click.stop="handleOpenDialog(undefined, scope.row.id)"
             >
-              <template #icon><Edit /></template>
+              <template #icon>
+                <Edit />
+              </template>
               编辑
             </el-button>
             <el-button
@@ -154,7 +164,9 @@
               size="small"
               @click.stop="handleDelete(scope.row.id)"
             >
-              <template #icon><Delete /></template>
+              <template #icon>
+                <Delete />
+              </template>
               删除
             </el-button>
           </template>
@@ -514,7 +526,7 @@ const selectedMenuId = ref<number | undefined>();
 // 查询菜单
 function handleQuery() {
   loading.value = true;
-  MenuAPI.getList(queryParams)
+  MenuAPI.index(queryParams)
     .then((data) => {
       menuTableData.value = data;
     })

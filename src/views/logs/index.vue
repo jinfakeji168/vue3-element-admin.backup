@@ -86,10 +86,10 @@ const pageData = ref<LogPageVO[]>();
 
 function handleQuery() {
   loading.value = true;
-  LogAPI.getPage(queryParams)
+  LogAPI.index(queryParams)
     .then((data) => {
-      pageData.value = data.list;
-      total.value = data.total;
+      pageData.value = data;
+      // total.value = data.total;
     })
     .finally(() => {
       loading.value = false;

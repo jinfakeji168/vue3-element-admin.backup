@@ -13,11 +13,15 @@
 
         <el-form-item>
           <el-button type="primary" @click="handleQuery">
-            <template #icon><Search /></template>
+            <template #icon>
+              <Search />
+            </template>
             搜索
           </el-button>
           <el-button @click="handleResetQuery">
-            <template #icon><Refresh /></template>
+            <template #icon>
+              <Refresh />
+            </template>
             重置
           </el-button>
         </el-form-item>
@@ -27,7 +31,9 @@
     <el-card shadow="never" class="table-wrapper">
       <template #header>
         <el-button type="success" @click="handleOpenDialog()">
-          <template #icon><Plus /></template>
+          <template #icon>
+            <Plus />
+          </template>
           新增
         </el-button>
         <el-button
@@ -35,7 +41,9 @@
           :disabled="ids.length === 0"
           @click="handleDelete()"
         >
-          <template #icon><Delete /></template>
+          <template #icon>
+            <Delete />
+          </template>
           删除
         </el-button>
       </template>
@@ -54,7 +62,13 @@
         <el-table-column label="唯一标识" prop="name" width="150" />
         <el-table-column label="描述" prop="description" />
         <el-table-column label="Guard" prop="guard_name" />
-
+        <el-table-column label="状态" align="center" width="100">
+          <template #default="scope">
+            <el-tag v-if="scope.row.status === 1" type="success">正常</el-tag>
+            <el-tag v-else type="info">禁用</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="排序" prop="sort" width="100" />
         <el-table-column fixed="right" label="操作" width="220">
           <template #default="scope">
             <el-button
@@ -63,7 +77,9 @@
               link
               @click="handleOpenAssignPermDialog(scope.row)"
             >
-              <template #icon><Position /></template>
+              <template #icon>
+                <Position />
+              </template>
               分配权限
             </el-button>
             <el-button
@@ -72,7 +88,9 @@
               link
               @click="handleOpenDialog(scope.row.id)"
             >
-              <template #icon><Edit /></template>
+              <template #icon>
+                <Edit />
+              </template>
               编辑
             </el-button>
             <el-button
@@ -81,7 +99,9 @@
               link
               @click="handleDelete(scope.row.id)"
             >
-              <template #icon><Delete /></template>
+              <template #icon>
+                <Delete />
+              </template>
               删除
             </el-button>
           </template>
@@ -114,34 +134,30 @@
           <el-input v-model="formData.name" placeholder="请输入角色名称" />
         </el-form-item>
 
-        <el-form-item label="角色编码" prop="code">
-          <el-input v-model="formData.code" placeholder="请输入角色编码" />
+        <el-form-item label="唯一标识" prop="title">
+          <el-input v-model="formData.title" placeholder="请输入唯一标识" />
         </el-form-item>
 
-        <el-form-item label="数据权限" prop="dataScope">
+        <el-form-item label="描述" prop="description">
+          <el-input
+            v-model="formData.description"
+            type="textarea"
+            placeholder="请输描述"
+          />
+        </el-form-item>
+
+        <!-- <el-form-item label="数据权限" prop="dataScope">
           <el-select v-model="formData.dataScope">
             <el-option :key="0" label="全部数据" :value="0" />
             <el-option :key="1" label="部门及子部门数据" :value="1" />
             <el-option :key="2" label="本部门数据" :value="2" />
             <el-option :key="3" label="本人数据" :value="3" />
           </el-select>
-        </el-form-item>
+        </el-form-item> -->
 
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="1">正常</el-radio>
-            <el-radio :label="0">停用</el-radio>
-          </el-radio-group>
-        </el-form-item>
-
-        <el-form-item label="排序" prop="sort">
-          <el-input-number
-            v-model="formData.sort"
-            controls-position="right"
-            :min="0"
-            style="width: 100px"
-          />
-        </el-form-item>
+        <!-- <el-form-item label="排序" prop="sort">
+          <el-input-number v-model="formData.sort" controls-position="right" :min="0" style="width: 100px" />
+        </el-form-item> -->
       </el-form>
 
       <template #footer>
@@ -291,10 +307,11 @@ const parentChildLinked = ref(true);
 /** 查询 */
 function handleQuery() {
   loading.value = true;
-  RoleAPI.getPage(queryParams)
+  RoleAPI.index(queryParams)
     .then((data) => {
-      roleList.value = data.list;
-      total.value = data.total;
+      console.log("data===>", data);
+      roleList.value = data;
+      // total.value = data.total;
     })
     .finally(() => {
       loading.value = false;
@@ -318,7 +335,7 @@ function handleOpenDialog(roleId?: number) {
   dialog.visible = true;
   if (roleId) {
     dialog.title = "修改角色";
-    RoleAPI.getFormData(roleId).then((data) => {
+    RoleAPI.show(roleId).then((data) => {
       Object.assign(formData, data);
     });
   } else {
@@ -341,7 +358,7 @@ function handleSubmit() {
           })
           .finally(() => (loading.value = false));
       } else {
-        RoleAPI.add(formData)
+        RoleAPI.store(formData)
           .then(() => {
             ElMessage.success("新增成功");
             handleCloseDialog();
@@ -380,7 +397,7 @@ function handleDelete(roleId?: number) {
   }).then(
     () => {
       loading.value = true;
-      RoleAPI.deleteByIds(roleIds)
+      RoleAPI.destroy(roleIds)
         .then(() => {
           ElMessage.success("删除成功");
           handleResetQuery();
@@ -404,10 +421,10 @@ async function handleOpenAssignPermDialog(row: RolePageVO) {
     checkedRole.value.name = row.name;
 
     // 获取所有的菜单
-    menuPermOptions.value = await MenuAPI.getOptions();
+    menuPermOptions.value = await MenuAPI.option(false);
 
     // 回显角色已拥有的菜单
-    RoleAPI.getRoleMenuIds(roleId)
+    RoleAPI.menuIds(roleId)
       .then((data) => {
         const checkedMenuIds = data;
         checkedMenuIds.forEach((menuId) =>

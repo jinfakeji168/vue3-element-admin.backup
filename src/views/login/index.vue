@@ -137,7 +137,6 @@
         </el-form>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -193,11 +192,11 @@ const loginRules = computed(() => {
         trigger: "blur",
         message: t("login.message.password.required"),
       },
-      {
-        min: 6,
-        message: t("login.message.password.min"),
-        trigger: "blur",
-      },
+      // {
+      //   min: 6,
+      //   message: t("login.message.password.min"),
+      //   trigger: "blur",
+      // },
     ],
     captchaCode: [
       {
@@ -333,7 +332,7 @@ onMounted(() => {
     border-radius: 5px;
     box-shadow: var(--el-box-shadow-light);
 
-    @media (width <= 768px) {
+    @media (width <=768px) {
       flex-direction: column;
       max-width: 100%;
       height: 100vh;
@@ -348,7 +347,7 @@ onMounted(() => {
       justify-content: center;
       background: linear-gradient(60deg, #165dff, #6aa1ff);
 
-      @media (width <= 768px) {
+      @media (width <=768px) {
         display: none;
       }
     }
@@ -361,7 +360,7 @@ onMounted(() => {
       min-width: 400px;
       padding: 30px;
 
-      @media (width <= 768px) {
+      @media (width <=768px) {
         width: 100%;
         padding: 0 20px;
       }

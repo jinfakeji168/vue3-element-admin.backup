@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 
-const USER_BASE_URL = "/api/v1/users";
+const USER_BASE_URL = "/api/admin/admins";
 
 const UserAPI = {
   /**
@@ -20,9 +20,9 @@ const UserAPI = {
    *
    * @param queryParams 查询参数
    */
-  getPage(queryParams: UserPageQuery) {
+  index(queryParams: UserPageQuery) {
     return request<any, PageResult<UserPageVO[]>>({
-      url: `${USER_BASE_URL}/page`,
+      url: `${USER_BASE_URL}`,
       method: "get",
       params: queryParams,
     });
@@ -34,7 +34,7 @@ const UserAPI = {
    * @param userId 用户ID
    * @returns 用户表单详情
    */
-  getFormData(userId: number) {
+  form(userId: number) {
     return request<any, UserForm>({
       url: `${USER_BASE_URL}/${userId}/form`,
       method: "get",
