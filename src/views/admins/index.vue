@@ -122,6 +122,7 @@
               prop="username"
             />
             <el-table-column label="用户昵称" align="center" prop="nickname" />
+            <el-table-column label="角色" align="center" prop="roleNames" />
 
             <el-table-column
               label="状态"

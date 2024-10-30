@@ -123,17 +123,6 @@
           >
             {{ $t("login.login") }}
           </el-button>
-
-          <!-- 第三方登录 -->
-          <el-divider>
-            <el-text size="small">{{ $t("login.otherLoginMethods") }}</el-text>
-          </el-divider>
-          <div class="third-party-login">
-            <svg-icon icon-class="wechat" class="icon" />
-            <svg-icon icon-class="qq" class="icon" />
-            <svg-icon icon-class="github" class="icon" />
-            <svg-icon icon-class="gitee" class="icon" />
-          </div>
         </el-form>
       </div>
     </div>
@@ -171,8 +160,8 @@ const loginImage = ref(
 );
 
 const loginData = ref<LoginData>({
-  username: "root@example.com",
-  password: "password",
+  username: "admin",
+  password: "admin",
   captchaKey: "",
   captchaCode: "",
 });
@@ -192,11 +181,11 @@ const loginRules = computed(() => {
         trigger: "blur",
         message: t("login.message.password.required"),
       },
-      // {
-      //   min: 6,
-      //   message: t("login.message.password.min"),
-      //   trigger: "blur",
-      // },
+      {
+        min: 1,
+        message: t("login.message.password.min"),
+        trigger: "blur",
+      },
     ],
     captchaCode: [
       {
