@@ -11,7 +11,7 @@ const AuthAPI = {
     // formData.append("captchaKey", data.captchaKey);
     // formData.append("captchaCode", data.captchaCode);
     return request<any, LoginResult>({
-      url: `/api/admin/tokens`,
+      url: `/api/admin/auth/token`,
       method: "post",
       data: formData,
       // headers: {
@@ -23,7 +23,7 @@ const AuthAPI = {
   /** 注销 接口*/
   logout() {
     return request({
-      url: `/api/admin/tokens`,
+      url: `/api/admin/auth/token`,
       method: "delete",
     });
   },
