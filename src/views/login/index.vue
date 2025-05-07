@@ -161,7 +161,7 @@ const loginImage = ref(
 
 const loginData = ref<LoginData>({
   username: "admin",
-  password: "admin",
+  password: "Admin123",
   captchaKey: "",
   captchaCode: "",
 });

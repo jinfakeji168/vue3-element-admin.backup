@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 // 菜单基础URL
-const MENU_BASE_URL = "/api/admin/menus";
+const MENU_BASE_URL = "/admin/auth/menu";
 
 const MenuAPI = {
   /**
@@ -11,8 +11,8 @@ const MenuAPI = {
    * @returns 路由列表
    */
   getRoutes() {
-    return request<any, RouteVO[]>({
-      url: `/api/admin/menu-routes`,
+    return request<any, { permissions: string[]; menu: RouteVO[] }>({
+      url: `/admin/auth/menu/my`,
       method: "get",
     });
   },
@@ -23,9 +23,9 @@ const MenuAPI = {
    * @param queryParams 查询参数
    * @returns 菜单树形列表
    */
-  index(queryParams: MenuQuery) {
+  index(queryParams: MenuQuery & { is_tree?: boolean }) {
     return request<any, MenuVO[]>({
-      url: `${MENU_BASE_URL}`,
+      url: `${MENU_BASE_URL}/index`,
       method: "get",
       params: queryParams,
     });
@@ -64,7 +64,7 @@ const MenuAPI = {
    */
   add(data: MenuForm) {
     return request({
-      url: `${MENU_BASE_URL}`,
+      url: `${MENU_BASE_URL}/add`,
       method: "post",
       data: data,
     });
@@ -79,7 +79,7 @@ const MenuAPI = {
    */
   update(id: string, data: MenuForm) {
     return request({
-      url: `${MENU_BASE_URL}/${id}`,
+      url: `${MENU_BASE_URL}/edit?id=${id}`,
       method: "put",
       data: data,
     });
@@ -91,10 +91,11 @@ const MenuAPI = {
    * @param id 菜单ID
    * @returns 请求结果
    */
-  deleteById(id: number) {
+  deleteById(ids: number[]) {
     return request({
-      url: `${MENU_BASE_URL}/${id}`,
+      url: `${MENU_BASE_URL}/delete`,
       method: "delete",
+      data: { ids },
     });
   },
 };
@@ -107,75 +108,55 @@ import type { MenuTypeEnum } from "@/enums/MenuTypeEnum";
 export interface MenuQuery {
   /** 搜索关键字 */
   keywords?: string;
+  title?: string;
+  name?: string;
+  page?: number;
 }
 
-/** 菜单视图对象 */
-export interface MenuVO {
-  /** 子菜单 */
-  children?: MenuVO[];
-  /** 组件路径 */
-  component?: string;
-  /** ICON */
-  icon?: string;
+/** 基础菜单对象 */
+export interface baseM {
   /** 菜单ID */
-  id?: number;
-  /** 菜单名称 */
-  name?: string;
+  id?: number | string;
   /** 父菜单ID */
-  parentId?: number;
-  /** 按钮权限标识 */
+  parent_id?: number;
+  /** 菜单权限/名称 */
+  name?: string;
+  /** 权限标识 */
   perm?: string;
-  /** 跳转路径 */
-  redirect?: string;
-  /** 路由名称 */
-  routeName?: string;
-  /** 路由相对路径 */
-  routePath?: string;
-  /** 菜单排序(数字越小排名越靠前) */
-  sort?: number;
-  /** 菜单 */
-  type?: MenuTypeEnum;
-  /** 菜单是否可见(1:显示;0:隐藏) */
-  visible?: number;
-}
-
-/** 菜单表单对象 */
-export interface MenuForm {
-  /** 菜单ID */
-  id?: string;
-  /** 父菜单ID */
-  parentId?: number;
-  /** 菜单名称 */
-  name?: string;
-  /** 菜单是否可见(1-是 0-否) */
-  visible: number;
+  /**名称 */
+  title?: string;
   /** ICON */
   icon?: string;
   /** 排序 */
   sort?: number;
+  /** 菜单类型 */
+  type?: MenuTypeEnum;
+  /** 菜单是否可见(1:显示;2:隐藏) */
+  hidden?: 1 | 2;
   /** 路由名称 */
   routeName?: string;
   /** 路由路径 */
-  routePath?: string;
+  path?: string;
   /** 组件路径 */
   component?: string;
   /** 跳转路由路径 */
   redirect?: string;
-  /** 菜单 */
-  type?: MenuTypeEnum;
-  /** 权限标识 */
-  perm?: string;
+}
+
+/** 菜单视图对象 */
+export interface MenuVO extends baseM {
+  /** 子菜单 */
+  children?: MenuVO[];
+}
+
+/** 菜单表单对象 */
+export interface MenuForm extends baseM {
   /** 【菜单】是否开启页面缓存 */
   keepAlive?: number;
   /** 【目录】只有一个子路由是否始终显示 */
   alwaysShow?: number;
   /** 参数 */
   params?: KeyValue[];
-}
-
-interface KeyValue {
-  key: string;
-  value: string;
 }
 
 /** RouteVO，路由对象 */
@@ -193,7 +174,10 @@ export interface RouteVO {
   /** 跳转链接 */
   redirect?: string;
 }
-
+interface KeyValue {
+  key: string;
+  value: string;
+}
 /** Meta，路由属性 */
 export interface Meta {
   /** 【目录】只有一个子路由是否始终显示 */

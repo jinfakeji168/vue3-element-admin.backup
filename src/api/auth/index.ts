@@ -11,7 +11,7 @@ const AuthAPI = {
     // formData.append("captchaKey", data.captchaKey);
     // formData.append("captchaCode", data.captchaCode);
     return request<any, LoginResult>({
-      url: `/api/admin/auth/token`,
+      url: `/admin/auth/login`,
       method: "post",
       data: formData,
       // headers: {
@@ -54,15 +54,13 @@ export interface LoginData {
 /** 登录响应 */
 export interface LoginResult {
   /** 访问token */
-  accessToken?: string;
+  access_token?: string;
   /** 过期时间(单位：毫秒) */
   expires?: number;
   /** 刷新token */
   refreshToken?: string;
   /** token 类型 */
   tokenType?: string;
-
-  token?: string;
 }
 
 /** 验证码响应 */

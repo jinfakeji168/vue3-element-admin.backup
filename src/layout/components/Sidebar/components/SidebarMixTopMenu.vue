@@ -42,6 +42,7 @@ import { LocationQueryRaw, RouteRecordRaw } from "vue-router";
 import { usePermissionStore, useAppStore } from "@/store";
 import { translateRouteTitle } from "@/utils/i18n";
 import variables from "@/styles/variables.module.scss";
+import { StatusEnum } from "@/enums/MenuTypeEnum";
 
 /**
  * 定义状态：先定义 reactive、ref 或 computed 状态
@@ -100,7 +101,7 @@ const navigateToFirstLeftMenu = (menus: RouteRecordRaw[]) => {
 
 onMounted(() => {
   topMenus.value = permissionStore.routes.filter(
-    (item) => !item.meta || !item.meta.hidden
+    (item) => item?.hidden == StatusEnum.False
   );
 });
 </script>

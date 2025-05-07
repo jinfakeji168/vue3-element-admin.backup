@@ -39,3 +39,19 @@ export function isExternal(path: string) {
   const isExternal = /^(https?:|http?:|mailto:|tel:)/.test(path);
   return isExternal;
 }
+
+/**keys [new key，old key]的二维数组 */
+export function deepChangeOpction(list: any[], keys: string[][]): any[] {
+  return list.map((item: any) => {
+    return {
+      item: item,
+      ...Object.assign(
+        {},
+        ...keys.map((keyItem) => ({ [keyItem[0]]: item[keyItem[1]] }))
+      ),
+      children: item.children
+        ? deepChangeOpction(item.children, keys)
+        : item.children,
+    };
+  });
+}

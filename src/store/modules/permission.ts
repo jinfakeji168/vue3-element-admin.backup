@@ -2,6 +2,7 @@ import type { RouteRecordRaw } from "vue-router";
 import { constantRoutes } from "@/router";
 import { store } from "@/store";
 import MenuAPI, { type RouteVO } from "@/api/system/menu";
+import { useUserStore } from "@/store/modules/user";
 
 const modules = import.meta.glob("../../views/**/**.vue");
 const Layout = () => import("@/layout/index.vue");
@@ -20,10 +21,13 @@ export const usePermissionStore = defineStore("permission", () => {
    * 生成动态路由
    */
   function generateRoutes() {
+    const userStore = useUserStore(store);
     return new Promise<RouteRecordRaw[]>((resolve, reject) => {
       MenuAPI.getRoutes()
         .then((data) => {
-          const dynamicRoutes = transformRoutes(data);
+          //data.permissions 存入 userinfo
+          userStore.setUserInfoPermission(data.permissions);
+          const dynamicRoutes = transformRoutes(data.menu);
           routes.value = constantRoutes.concat(dynamicRoutes);
           isRoutesLoaded.value = true;
           resolve(dynamicRoutes);

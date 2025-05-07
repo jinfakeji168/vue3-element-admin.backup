@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 
-const DEPT_BASE_URL = "/api/v1/dept";
+const DEPT_BASE_URL = "/admin/auth/department";
 
 const DeptAPI = {
   /**
@@ -10,18 +10,19 @@ const DeptAPI = {
    * @returns 部门树形表格数据
    */
   getList(queryParams?: DeptQuery) {
-    return request<any, DeptVO[]>({
-      url: `${DEPT_BASE_URL}`,
+    return request<any, PageResult<DeptVO[]>>({
+      url: `${DEPT_BASE_URL}/index`,
       method: "get",
       params: queryParams,
     });
   },
 
   /** 获取部门下拉列表 */
-  getOptions() {
-    return request<any, OptionType[]>({
-      url: `${DEPT_BASE_URL}/options`,
+  getOptions(queryParams?: DeptQuery) {
+    return request<any, PageResult<OptionType[]>>({
+      url: `${DEPT_BASE_URL}/index`,
       method: "get",
+      params: queryParams,
     });
   },
 
@@ -46,7 +47,7 @@ const DeptAPI = {
    */
   add(data: DeptForm) {
     return request({
-      url: `${DEPT_BASE_URL}`,
+      url: `${DEPT_BASE_URL}/add`,
       method: "post",
       data: data,
     });
@@ -61,7 +62,7 @@ const DeptAPI = {
    */
   update(id: number, data: DeptForm) {
     return request({
-      url: `${DEPT_BASE_URL}/${id}`,
+      url: `${DEPT_BASE_URL}/edit`,
       method: "put",
       data: data,
     });
@@ -70,13 +71,14 @@ const DeptAPI = {
   /**
    * 删除部门
    *
-   * @param ids 部门ID，多个以英文逗号(,)分隔
+   * @param ids
    * @returns 请求结果
    */
-  deleteByIds(ids: string) {
+  deleteByIds(ids: string[]) {
     return request({
-      url: `${DEPT_BASE_URL}/${ids}`,
+      url: `${DEPT_BASE_URL}/delete`,
       method: "delete",
+      data: { ids },
     });
   },
 };
@@ -87,28 +89,19 @@ export default DeptAPI;
 export interface DeptQuery {
   /** 搜索关键字 */
   keywords?: string;
+  title?: string;
   /** 状态 */
   status?: number;
+  page?: number;
+  limit?: number;
 }
 
 /** 部门类型 */
-export interface DeptVO {
+export interface DeptVO extends DeptForm {
   /** 子部门 */
   children?: DeptVO[];
   /** 创建时间 */
   createTime?: Date;
-  /** 部门ID */
-  id?: number;
-  /** 部门名称 */
-  name?: string;
-  /** 部门编号 */
-  code?: string;
-  /** 父部门ID */
-  parentId?: number;
-  /** 排序 */
-  sort?: number;
-  /** 状态(1:启用；0:禁用) */
-  status?: number;
   /** 修改时间 */
   updateTime?: Date;
 }
@@ -118,13 +111,15 @@ export interface DeptForm {
   /** 部门ID(新增不填) */
   id?: number;
   /** 部门名称 */
-  name?: string;
+  title?: string;
   /** 部门编号 */
-  code?: string;
+  name?: string;
   /** 父部门ID */
-  parentId: number;
+  parent_id: number;
   /** 排序 */
   sort?: number;
   /** 状态(1:启用；0：禁用) */
   status?: number;
+  /** 备注 */
+  description?: string;
 }

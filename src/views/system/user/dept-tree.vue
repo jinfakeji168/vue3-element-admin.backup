@@ -11,7 +11,11 @@
       ref="deptTreeRef"
       class="mt-2"
       :data="deptList"
-      :props="{ children: 'children', label: 'label', disabled: '' }"
+      :props="{
+        children: 'children',
+        label: 'title',
+        disabled: '',
+      }"
       :expand-on-click-node="false"
       :filter-node-method="handleFilter"
       default-expand-all
@@ -62,7 +66,7 @@ function handleNodeClick(data: { [key: string]: any }) {
 
 onBeforeMount(() => {
   DeptAPI.getOptions().then((data) => {
-    deptList.value = data;
+    deptList.value = data.data;
   });
 });
 </script>

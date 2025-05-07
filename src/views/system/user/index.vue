@@ -369,9 +369,9 @@ const rules = reactive({
 /** 查询 */
 function handleQuery() {
   loading.value = true;
-  UserAPI.getPage(queryParams)
+  UserAPI.index(queryParams)
     .then((data) => {
-      pageData.value = data.list;
+      pageData.value = data.data;
       total.value = data.total;
     })
     .finally(() => {

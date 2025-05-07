@@ -9,14 +9,19 @@ export const enum MenuTypeEnum {
   /**
    * 菜单
    */
-  MENU = "MENU",
+  MENU = "menu",
 
   /**
    * 按钮
    */
-  BUTTON = "BUTTON",
+  BUTTON = "button",
   /**
    * 外链
    */
-  EXTLINK = "EXTLINK",
+  EXTLINK = "link",
+}
+
+export const enum StatusEnum {
+  True = 2,
+  False = 1,
 }

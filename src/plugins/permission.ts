@@ -90,7 +90,7 @@ export function hasAuth(
   const { roles, perms } = useUserStore().userInfo;
 
   // 超级管理员 拥有所有权限
-  if (type === "button" && roles.includes("ROOT")) {
+  if (type === "button" && !roles.length) {
     return true;
   }
 

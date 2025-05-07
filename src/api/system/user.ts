@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 
-const USER_BASE_URL = "/api/admin/admins";
+const USER_BASE_URL = "/admin/auth/admin/";
 
 const UserAPI = {
   /**
@@ -10,7 +10,7 @@ const UserAPI = {
    */
   getInfo() {
     return request<any, UserInfo>({
-      url: `/api/admin/user`,
+      url: `/admin/auth/user`,
       method: "get",
     });
   },
@@ -22,7 +22,7 @@ const UserAPI = {
    */
   index(queryParams: UserPageQuery) {
     return request<any, PageResult<UserPageVO[]>>({
-      url: `${USER_BASE_URL}`,
+      url: `${USER_BASE_URL}index`,
       method: "get",
       params: queryParams,
     });

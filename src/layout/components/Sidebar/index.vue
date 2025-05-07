@@ -24,6 +24,7 @@ import { LayoutEnum } from "@/enums/LayoutEnum";
 const appStore = useAppStore();
 const settingsStore = useSettingsStore();
 const permissionStore = usePermissionStore();
+console.log(permissionStore.routes);
 
 const sidebarLogo = computed(() => settingsStore.sidebarLogo);
 const layout = computed(() => settingsStore.layout);

@@ -1,6 +1,6 @@
 <template>
   <!-- 如果菜单项未隐藏，显示菜单项 -->
-  <div v-if="!item.meta || !item.meta.hidden">
+  <div v-if="item.hidden == StatusEnum.False">
     <!-- 如果只有一个子路由或没有子路由，显示该菜单项 -->
     <template
       v-if="
@@ -58,6 +58,7 @@ defineOptions({
 import path from "path-browserify";
 import { isExternal } from "@/utils";
 import { RouteRecordRaw } from "vue-router";
+import { StatusEnum } from "@/enums/MenuTypeEnum";
 
 const props = defineProps({
   /**
@@ -100,10 +101,10 @@ function hasOneShowingChild(
 ) {
   // 筛选出可见的子路由
   const showingChildren = children.filter((route: RouteRecordRaw) => {
-    if (route.meta?.hidden) {
+    if (route.hidden == StatusEnum.True) {
       return false;
     } else {
-      route.meta!.hidden = false;
+      // route.meta!.hidden = false;
       onlyOneChild.value = route;
       return true;
     }

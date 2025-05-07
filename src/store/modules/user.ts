@@ -20,14 +20,9 @@ export const useUserStore = defineStore("user", () => {
     return new Promise<void>((resolve, reject) => {
       AuthAPI.login(loginData)
         .then((data) => {
-          
-
-          // const { tokenType, accessToken } = data;
-          // setToken(tokenType + " " + accessToken); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
-
-          const { token } = data;
-          console.log(token)
-          setToken("Bearer " + token); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
+          const { access_token } = data;
+          console.log(access_token);
+          setToken("Bearer " + access_token); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
 
           resolve();
         })
@@ -58,7 +53,12 @@ export const useUserStore = defineStore("user", () => {
         });
     });
   }
-
+  function setUserInfoPermission(permissions: string[]) {
+    return new Promise<void>((resolve) => {
+      userInfo.value.perms = permissions;
+      resolve();
+    });
+  }
   /**
    * 登出
    */
@@ -95,6 +95,7 @@ export const useUserStore = defineStore("user", () => {
     login,
     logout,
     clearUserSession,
+    setUserInfoPermission,
   };
 });
 
