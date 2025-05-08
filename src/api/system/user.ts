@@ -1,6 +1,6 @@
 import request from "@/utils/request";
 
-const USER_BASE_URL = "/admin/auth/admin/";
+const USER_BASE_URL = "/admin/auth/admin";
 
 const UserAPI = {
   /**
@@ -22,7 +22,7 @@ const UserAPI = {
    */
   index(queryParams: UserPageQuery) {
     return request<any, PageResult<UserPageVO[]>>({
-      url: `${USER_BASE_URL}index`,
+      url: `${USER_BASE_URL}/index`,
       method: "get",
       params: queryParams,
     });
@@ -48,7 +48,7 @@ const UserAPI = {
    */
   add(data: UserForm) {
     return request({
-      url: `${USER_BASE_URL}`,
+      url: `${USER_BASE_URL}/add`,
       method: "post",
       data: data,
     });
@@ -62,7 +62,7 @@ const UserAPI = {
    */
   update(id: number, data: UserForm) {
     return request({
-      url: `${USER_BASE_URL}/${id}`,
+      url: `${USER_BASE_URL}/edit`,
       method: "put",
       data: data,
     });
@@ -87,10 +87,11 @@ const UserAPI = {
    *
    * @param ids 用户ID字符串，多个以英文逗号(,)分割
    */
-  deleteByIds(ids: string) {
+  deleteByIds(ids: any[]) {
     return request({
-      url: `${USER_BASE_URL}/${ids}`,
+      url: `${USER_BASE_URL}/delete`,
       method: "delete",
+      params: { ids: ids },
     });
   },
 
@@ -238,9 +239,12 @@ export interface UserPageQuery extends PageQuery {
 
   /** 用户状态 */
   status?: number;
+  username?: string;
+  mobile?: string;
+  email?: string;
 
   /** 部门ID */
-  deptId?: number;
+  department_id?: number;
 
   /** 开始时间 */
   createTime?: [string, string];
@@ -265,7 +269,7 @@ export interface UserPageVO {
   /** 用户昵称 */
   nickname?: string;
   /** 角色名称，多个使用英文逗号(,)分割 */
-  roleNames?: string;
+  roles?: any[];
   /** 用户状态(1:启用;0:禁用) */
   status?: number;
   /** 用户名 */
@@ -277,23 +281,25 @@ export interface UserForm {
   /** 用户头像 */
   avatar?: string;
   /** 部门ID */
-  deptId?: number;
+  department_id?: number;
   /** 邮箱 */
   email?: string;
   /** 性别 */
   gender?: number;
   /** 用户ID */
-  id?: number;
+  uid?: number;
   /** 手机号 */
   mobile?: string;
   /** 昵称 */
   nickname?: string;
   /** 角色ID集合 */
-  roleIds?: number[];
+  roles?: number[];
   /** 用户状态(1:正常;0:禁用) */
   status?: number;
   /** 用户名 */
   username?: string;
+  password?: string;
+  password2?: string;
 }
 
 /** 个人中心用户信息 */

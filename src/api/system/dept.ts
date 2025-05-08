@@ -10,19 +10,19 @@ const DeptAPI = {
    * @returns 部门树形表格数据
    */
   getList(queryParams?: DeptQuery) {
-    return request<any, PageResult<DeptVO[]>>({
+    return request<any, DeptVO[]>({
       url: `${DEPT_BASE_URL}/index`,
       method: "get",
-      params: queryParams,
+      params: { ...queryParams, is_tree: true },
     });
   },
 
   /** 获取部门下拉列表 */
   getOptions(queryParams?: DeptQuery) {
-    return request<any, PageResult<OptionType[]>>({
+    return request<any, OptionType[]>({
       url: `${DEPT_BASE_URL}/index`,
       method: "get",
-      params: queryParams,
+      params: { ...queryParams, limit: 9999, is_tree: true },
     });
   },
 

@@ -60,13 +60,13 @@ function handleFilter(value: string, data: any) {
 
 /** 部门树节点 Click */
 function handleNodeClick(data: { [key: string]: any }) {
-  deptId.value = data.value;
+  deptId.value = data.id;
   emits("node-click");
 }
 
 onBeforeMount(() => {
   DeptAPI.getOptions().then((data) => {
-    deptList.value = data.data;
+    deptList.value = [{ id: "", title: "全部", children: data }];
   });
 });
 </script>

@@ -129,7 +129,7 @@
               "
               link
               size="small"
-              @click.stop="disabledHandler(scope.row)"
+              @click.stop="changeStatus(scope.row)"
             >
               {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
@@ -206,7 +206,7 @@ defineOptions({
 
 import DeptAPI, { DeptVO, DeptForm, DeptQuery } from "@/api/system/dept";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
-import { deepChangeOpction } from "@/utils";
+import { deepChangeOption } from "@/utils";
 
 const queryFormRef = ref(ElForm);
 const deptFormRef = ref(ElForm);
@@ -245,7 +245,7 @@ const rules = reactive({
 function handleQuery() {
   loading.value = true;
   DeptAPI.getList(queryParams).then((data) => {
-    deptList.value = data.data;
+    deptList.value = data;
     loading.value = false;
   });
 }
@@ -274,7 +274,7 @@ async function handleOpenDialog(parent_id?: number, item?: DeptVO) {
     {
       value: 0,
       label: "顶级部门",
-      children: deepChangeOpction(data, [
+      children: deepChangeOption(data, [
         ["label", "title"],
         ["value", "id"],
       ]),
@@ -351,9 +351,7 @@ function handleDelete(deptId?: number) {
   );
 }
 
-function disabledHandler(item: DeptVO) {
-  const deptId = item.id;
-  const status = item.status === 1 ? 0 : 1;
+function changeStatus(item: DeptVO) {
   DeptAPI.update(item.id as number, {
     ...item,
     status: item.status == StatusEnum.True ? StatusEnum.False : StatusEnum.True,

@@ -41,7 +41,7 @@ export function isExternal(path: string) {
 }
 
 /**keys [new key，old key]的二维数组 */
-export function deepChangeOpction(list: any[], keys: string[][]): any[] {
+export function deepChangeOption<T = any[]>(list: any[], keys: string[][]): T {
   return list.map((item: any) => {
     return {
       item: item,
@@ -50,8 +50,8 @@ export function deepChangeOpction(list: any[], keys: string[][]): any[] {
         ...keys.map((keyItem) => ({ [keyItem[0]]: item[keyItem[1]] }))
       ),
       children: item.children
-        ? deepChangeOpction(item.children, keys)
+        ? deepChangeOption(item.children, keys)
         : item.children,
     };
-  });
+  }) as T;
 }

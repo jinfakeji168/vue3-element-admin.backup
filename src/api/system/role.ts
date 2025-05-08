@@ -1,12 +1,14 @@
 import request from "@/utils/request";
+import type { MenuVO } from "./menu";
+import type { StatusEnum } from "@/enums/MenuTypeEnum";
 
-const ROLE_BASE_URL = "/api/admin/roles";
+const ROLE_BASE_URL = "/admin/auth/role";
 
 const RoleAPI = {
   /** 获取角色分页数据 */
   index(queryParams?: RolePageQuery) {
     return request<any, PageResult<RolePageVO[]>>({
-      url: `${ROLE_BASE_URL}`,
+      url: `${ROLE_BASE_URL}/index`,
       method: "get",
       params: queryParams,
     });
@@ -15,8 +17,9 @@ const RoleAPI = {
   /** 获取角色下拉数据源 */
   options() {
     return request<any, OptionType[]>({
-      url: `${ROLE_BASE_URL}/options`,
+      url: `${ROLE_BASE_URL}/index`,
       method: "get",
+      params: { limit: 9999 },
     });
   },
   /**
@@ -38,11 +41,11 @@ const RoleAPI = {
    * @param roleId 角色ID
    * @param data 菜单ID集合
    */
-  updateRoleMenus(roleId: number, data: number[]) {
+  updateRoleMenus(roleId: number, permissionIds: number[]) {
     return request({
-      url: `${ROLE_BASE_URL}/${roleId}/menus`,
+      url: `${ROLE_BASE_URL}/auth`,
       method: "put",
-      data: data,
+      data: { id: roleId, permissions: permissionIds, data_range: "all" },
     });
   },
 
@@ -60,9 +63,9 @@ const RoleAPI = {
   },
 
   /** 添加角色 */
-  store(data: RoleForm) {
+  add(data: RoleForm) {
     return request({
-      url: `${ROLE_BASE_URL}`,
+      url: `${ROLE_BASE_URL}/add`,
       method: "post",
       data: data,
     });
@@ -76,7 +79,7 @@ const RoleAPI = {
    */
   update(id: number, data: RoleForm) {
     return request({
-      url: `${ROLE_BASE_URL}/${id}`,
+      url: `${ROLE_BASE_URL}/edit`,
       method: "put",
       data: data,
     });
@@ -87,10 +90,11 @@ const RoleAPI = {
    *
    * @param ids 角色ID字符串，多个以英文逗号(,)分割
    */
-  destroy(ids: string) {
+  delete(ids: string) {
     return request({
-      url: `${ROLE_BASE_URL}/${ids}`,
+      url: `${ROLE_BASE_URL}/delete`,
       method: "delete",
+      data: { ids: ids },
     });
   },
 };
@@ -101,6 +105,8 @@ export default RoleAPI;
 export interface RolePageQuery extends PageQuery {
   /** 搜索关键字 */
   keywords?: string;
+  title: string;
+  name: string;
 }
 
 /** 角色分页对象 */
@@ -111,6 +117,7 @@ export interface RolePageVO {
   id?: number;
   /** 角色名称 */
   title?: string;
+  permissions: MenuVO[];
   /** 排序 */
   description?: string;
   /** 角色状态 */
@@ -119,6 +126,7 @@ export interface RolePageVO {
   created_at?: Date;
   /** 修改时间 */
   updated_at?: Date;
+  status: StatusEnum;
 }
 
 /** 角色表单对象 */
@@ -126,11 +134,11 @@ export interface RoleForm {
   /** 角色ID */
   id?: number;
   /** 角色编码 */
-  name: string;
+  name?: string;
   /** 数据权限 */
   dataScope?: number;
   /** 角色名称 */
-  title: string;
+  title?: string;
   /** 排序 */
   sort?: number;
   /** 角色状态(1-正常；0-停用) */
