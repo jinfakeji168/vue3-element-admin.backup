@@ -1,0 +1,160 @@
+<template>
+  <div class="app-container">
+    <div class="search-bar">
+      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="queryParams.name" @keyup.enter="handleQuery" />
+        </el-form-item>
+
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="queryParams.status" clearable class="!w-[100px]">
+            <el-option :value="StatusEnum.False" label="正常" />
+            <el-option :value="StatusEnum.True" label="禁用" />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button class="filter-item" type="primary" @click="handleQuery">
+            <template #icon>
+              <Search />
+            </template>
+            搜索
+          </el-button>
+          <el-button @click="handleResetQuery">
+            <template #icon>
+              <Refresh />
+            </template>
+            重置
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <el-card shadow="never" class="table-wrapper">
+      <template #header>
+        <el-button v-hasPerm="['curreny:add']" type="success" @click="editHandler()">
+          <template #icon>
+            <Plus />
+          </template>
+          新增
+        </el-button>
+        <el-button v-hasPerm="['curreny:delete']" type="danger" @click="deleteHandler()">
+          <template #icon>
+            <Delete />
+          </template>
+          删除
+        </el-button>
+      </template>
+      <el-table v-loading="loading" :data="list" row-key="id">
+        <el-table-column type="selection" width="55" />
+        <el-table-column prop="show_name" label="名称" min-width="120" />
+        <el-table-column prop="icon" label="" min-width="100">
+          <template #default="{ row }">
+            <img :src="row.icon" />
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="min_withdraw" label="最小提现金额" min-width="120" />
+        <el-table-column prop="max_withdraw" label="最小提现金额" min-width="120" />
+        <el-table-column prop="withdraw_fee_ratio" label="提现手续费%" min-width="120" />
+        <el-table-column prop="max_withdraw_fee" label="最大手续费" min-width="120" />
+        <el-table-column prop="min_withdraw_fee" label="最小手续费" min-width="120" />
+        <el-table-column prop="status" label="状态" width="100">
+          <template #default="{ row }">
+            <el-tag v-if="row.status == StatusEnum.False" type="success">正常</el-tag>
+            <el-tag v-else type="info">禁用</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="充值" width="100">
+          <template #default="{ row }">
+            <el-tag v-if="row.open_recharge == StatusEnum.False" type="success">正常</el-tag>
+            <el-tag v-else type="info">禁用</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="提现" width="100">
+          <template #default="{ row }">
+            <el-tag v-if="row.open_withdraw == StatusEnum.False" type="success">正常</el-tag>
+            <el-tag v-else type="info">禁用</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="withdraw_type" label="提款金额类型" min-width="120">
+          <template #default="{ row }">
+            {{ row.withdraw_type == 1 ? "用户输入" : "固定金额" }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="withdraw_config" label="提款金额配置" min-width="120" />
+        <el-table-column prop="exchange_rate" label="汇率  " min-width="120" />
+        <el-table-column prop="exchange_rate_update_time" label="汇率更新时间" min-width="120" />
+        <el-table-column prop="merchant_num" label="商户号" min-width="120" />
+        <el-table-column prop="merchant_key" label="商户key " min-width="120" />
+        <el-table-column prop="remark_original" label="说明原文  " min-width="120" />
+        <el-table-column prop="sort" label="排序" width="100" />
+
+        <el-table-column label="操作" fixed="right" align="left" width="200">
+          <template #default="{ row }">
+            <el-button v-hasPerm="['curreny:edit']" type="primary" link size="small" @click.stop="editHandler(row)">
+              <template #icon>
+                <Edit />
+              </template>
+              编辑
+            </el-button>
+            <el-button v-hasPerm="['curreny:delete']" type="danger" link size="small" @click.stop="deleteHandler(row.id)">
+              <template #icon>
+                <Delete />
+              </template>
+              删除
+            </el-button>
+            <el-button v-hasPerm="['curreny:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="changeStatus(row)">
+              {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
+
+    <editPart v-model="visible" :data="currentData"></editPart>
+  </div>
+</template>
+
+<script setup lang="ts">
+import editPart from "./components/edit.vue";
+import api, { type Form, Query } from "@/api/system/currency";
+import { StatusEnum } from "@/enums/MenuTypeEnum";
+
+const queryFormRef = ref(ElForm);
+const loading = ref(false);
+const queryParams = reactive<Query>({
+  page: 1,
+  limit: 20,
+});
+const list = ref<Form[]>();
+
+/** 查询部门 */
+async function handleQuery() {
+  loading.value = true;
+  const temp = await api.getList(queryParams);
+  list.value = temp.list;
+  loading.value = false;
+}
+
+/** 重置查询 */
+function handleResetQuery() {
+  queryFormRef.value.resetFields();
+  handleQuery();
+}
+
+const visible = ref(false);
+const currentData = ref<Form>();
+function editHandler(item?: Form) {
+  visible.value = true;
+  currentData.value = item;
+}
+function deleteHandler(id?: number) {}
+async function changeStatus(item: Form) {
+  await api.changeStatus(<number>item.id, item.status == StatusEnum.True ? StatusEnum.False : StatusEnum.True);
+  handleQuery();
+}
+
+onMounted(() => {
+  handleQuery();
+});
+</script>
