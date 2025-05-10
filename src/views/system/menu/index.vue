@@ -38,7 +38,7 @@
     <el-card shadow="never" class="table-wrapper">
       <template #header>
         <el-button
-          v-hasPerm="['sys:menu:add']"
+          v-hasPerm="['menu:add']"
           type="success"
           @click="handleOpenDialog(0)"
         >
@@ -138,8 +138,8 @@
         <el-table-column fixed="right" align="center" label="操作" width="220">
           <template #default="scope">
             <el-button
-              v-if="scope.row.type == 'CATALOG' || scope.row.type == 'MENU'"
-              v-hasPerm="['sys:menu:add']"
+              v-if="scope.row.type == MenuTypeEnum.MENU"
+              v-hasPerm="['menu:add']"
               type="primary"
               link
               size="small"
@@ -152,7 +152,7 @@
             </el-button>
 
             <el-button
-              v-hasPerm="['sys:menu:edit']"
+              v-hasPerm="['menu:edit']"
               type="primary"
               link
               size="small"
@@ -164,7 +164,7 @@
               编辑
             </el-button>
             <el-button
-              v-hasPerm="['sys:menu:delete']"
+              v-hasPerm="['menu:delete']"
               type="danger"
               link
               size="small"
@@ -547,8 +547,10 @@ async function handleOpenDialog(parent_id?: number, menu?: MenuVO) {
   dialog.visible = true;
   if (menu) {
     dialog.title = "编辑菜单";
-    initialMenuFormData.value = { ...menu };
-    formData.value = { ...menu };
+    // initialMenuFormData.value = { ...menu };
+    nextTick(() => {
+      formData.value = { ...menu };
+    });
   } else {
     dialog.title = "新增菜单";
     formData.value.parent_id = parent_id;
@@ -579,13 +581,11 @@ function submitForm() {
       const menuId = formData.value.id;
       if (menuId) {
         MenuAPI.update(menuId as string, formData.value).then(() => {
-          ElMessage.success("修改成功");
           handleCloseDialog();
           handleQuery();
         });
       } else {
         MenuAPI.add(formData.value).then(() => {
-          ElMessage.success("新增成功");
           handleCloseDialog();
           handleQuery();
         });
@@ -602,33 +602,25 @@ function handleDelete(menuId: number) {
   }
 
   ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
     type: "warning",
-  }).then(
-    () => {
-      loading.value = true;
-      MenuAPI.deleteById([menuId])
-        .then(() => {
-          ElMessage.success("删除成功");
-          handleQuery();
-        })
-        .finally(() => {
-          loading.value = false;
-        });
-    },
-    () => {
-      ElMessage.info("已取消删除");
-    }
-  );
+  }).then(() => {
+    loading.value = true;
+    MenuAPI.deleteById([menuId])
+      .then(() => {
+        handleQuery();
+      })
+      .finally(() => {
+        loading.value = false;
+      });
+  });
 }
 
 // 关闭弹窗
 function handleCloseDialog() {
-  dialog.visible = false;
   menuFormRef.value.resetFields();
   menuFormRef.value.clearValidate();
   formData.value.id = undefined;
+  dialog.visible = false;
 }
 
 onMounted(() => {

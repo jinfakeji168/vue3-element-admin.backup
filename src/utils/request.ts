@@ -4,8 +4,9 @@ import axios, {
 } from "axios";
 import qs from "qs";
 import { useUserStoreHook } from "@/store/modules/user";
-import { ResultEnum } from "@/enums/ResultEnum";
+import { ResultEnum, ResultMsg } from "@/enums/ResultEnum";
 import { getToken } from "@/utils/auth";
+import router from "@/router";
 
 // 创建 axios 实例
 const service = axios.create({
@@ -21,59 +22,50 @@ const service = axios.create({
 service.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     const accessToken = getToken();
-    if (accessToken) {
+    console.log("🚀 ~ accessToken:", config.url?.match(/(?<=\/)login/));
+    if (accessToken || config.url?.match(/(?<=\/)login/)) {
       config.headers.Authorization = accessToken;
+      return config;
+    } else {
+      return Promise.reject("未登录");
     }
-    return config;
   },
   (error: any) => {
     return Promise.reject(error);
   }
 );
 
+/**方法对应的返回成功提示 */
+const successMsg = {
+  get: "获取成功",
+  post: "操作成功",
+  put: "更新成功",
+  delete: "删除成功",
+};
 // 响应拦截器
 service.interceptors.response.use(
   (response: AxiosResponse) => {
-    // 检查配置的响应类型是否为二进制类型（'blob' 或 'arraybuffer'）, 如果是，直接返回响应对象
-    // if (
-    //   response.config.responseType === "blob" ||
-    //   response.config.responseType === "arraybuffer"
-    // ) {
-    //   return response;
-    // }
+    const { data, code, message } = response.data;
+    const method = response.config.method;
 
-    // const { code, data, msg } = response.data;
-    // if (code === ResultEnum.SUCCESS) {
-    //   return data;
-    // }
+    if (code === ResultEnum.SUCCESS) {
+      if (method !== "get") {
+        ElMessage.success(successMsg[method as keyof typeof successMsg]);
+      }
+      return data;
+    } else {
+      ElMessage.error(ResultMsg[code as ResultEnum]);
+      if (code === ResultEnum.TOKEN_INVALID) {
+        //跳到登录页
+        console.log("eeeeeeeeeeee");
 
-    // ElMessage.error(msg || "系统出错");
-    // return Promise.reject(new Error(msg || "Error"));
-
-    const { data } = response.data;
-    return data;
+        router.push("/login");
+      }
+      return Promise.reject(message);
+    }
   },
   (error: any) => {
-    console.log(error);
-
-    // 异常处理 非 2xx 状态码 会进入这里
-    if (error.response.data) {
-      const { code, msg } = error.response.data;
-      if (code === ResultEnum.TOKEN_INVALID) {
-        ElNotification({
-          title: "提示",
-          message: "您的会话已过期，请重新登录",
-          type: "info",
-        });
-        useUserStoreHook()
-          .clearUserSession()
-          .then(() => {
-            location.reload();
-          });
-      } else {
-        ElMessage.error(msg || "系统出错11");
-      }
-    }
+    console.log("🚀 ~ error:", error);
     return Promise.reject(error.message);
   }
 );

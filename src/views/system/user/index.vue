@@ -70,7 +70,7 @@
             <div class="flex-x-between">
               <div>
                 <el-button
-                  v-hasPerm="['sys:user:add']"
+                  v-hasPerm="['user:add']"
                   type="success"
                   @click="handleOpenDialog()"
                 >
@@ -78,7 +78,7 @@
                   新增
                 </el-button>
                 <el-button
-                  v-hasPerm="['sys:user:delete']"
+                  v-hasPerm="['user:delete']"
                   type="danger"
                   :disabled="removeIds.length === 0"
                   @click="handleDelete()"
@@ -87,17 +87,6 @@
                   删除
                 </el-button>
               </div>
-              <!-- <div>
-                <el-button class="ml-3" @click="handleOpenImportDialog">
-                  <template #icon><Upload /></template>
-                  导入
-                </el-button>
-
-                <el-button class="ml-3" @click="handleExport">
-                  <template #icon><Download /></template>
-                  导出
-                </el-button>
-              </div> -->
             </div>
           </template>
 
@@ -106,7 +95,12 @@
             :data="pageData"
             @selection-change="handleSelectionChange"
           >
-            <el-table-column type="selection" width="50" align="center" />
+            <el-table-column
+              type="selection"
+              :selectable="selectableHandler"
+              width="50"
+              align="center"
+            />
             <el-table-column
               key="uid"
               label="编号"
@@ -143,7 +137,7 @@
             >
               <template #default="scope">
                 <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
-                  {{ scope.row.status == 1 ? "正常" : "禁用" }}
+                  {{ scope.row.status == StatusEnum.False ? "正常" : "禁用" }}
                 </el-tag>
               </template>
             </el-table-column>
@@ -156,7 +150,7 @@
             <el-table-column label="操作" fixed="right" width="300">
               <template #default="scope">
                 <el-button
-                  v-hasPerm="['sys:user:password:reset']"
+                  v-hasPerm="['user:edit']"
                   type="primary"
                   size="small"
                   link
@@ -165,37 +159,41 @@
                   <template #icon><RefreshLeft /></template>
                   重置密码
                 </el-button>
-                <el-button
-                  v-hasPerm="['sys:user:edit']"
-                  type="primary"
-                  link
-                  size="small"
-                  @click="handleOpenDialog(scope.row)"
-                >
-                  <template #icon><Edit /></template>
-                  编辑
-                </el-button>
-                <el-button
-                  v-hasPerm="['sys:user:delete']"
-                  type="danger"
-                  link
-                  size="small"
-                  @click="handleDelete(scope.row.uid)"
-                >
-                  <template #icon><Delete /></template>
-                  删除
-                </el-button>
-                <el-button
-                  v-hasPerm="['sys:dept:delete']"
-                  :type="
-                    scope.row.status == StatusEnum.False ? 'danger' : 'success'
-                  "
-                  link
-                  size="small"
-                  @click.stop="changeStatus(scope.row)"
-                >
-                  {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
-                </el-button>
+                <template v-if="scope.row.uid !== 1">
+                  <el-button
+                    v-hasPerm="['user:edit']"
+                    type="primary"
+                    link
+                    size="small"
+                    @click="handleOpenDialog(scope.row)"
+                  >
+                    <template #icon><Edit /></template>
+                    编辑
+                  </el-button>
+                  <el-button
+                    v-hasPerm="['user:delete']"
+                    type="danger"
+                    link
+                    size="small"
+                    @click="handleDelete(scope.row.uid)"
+                  >
+                    <template #icon><Delete /></template>
+                    删除
+                  </el-button>
+                  <el-button
+                    v-hasPerm="['user:status']"
+                    :type="
+                      scope.row.status == StatusEnum.False
+                        ? 'danger'
+                        : 'success'
+                    "
+                    link
+                    size="small"
+                    @click.stop="changeStatus(scope.row)"
+                  >
+                    {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
+                  </el-button>
+                </template>
               </template>
             </el-table-column>
           </el-table>
@@ -254,6 +252,7 @@
               :key="item.value"
               :label="item.label"
               :value="item.value"
+              :disabled="item.disabled"
             />
           </el-select>
         </el-form-item>
@@ -424,26 +423,17 @@ function handleSelectionChange(selection: any) {
 function hancleResetPassword(row: { [key: string]: any }) {
   ElMessageBox.prompt(
     "请输入用户「" + row.username + "」的新密码",
-    "重置密码",
-    {
-      confirmButtonText: "确定",
-      cancelButtonText: "取消",
+    "重置密码"
+  ).then(({ value }) => {
+    if (!value || value.length < 8) {
+      // 检查密码是否为空或少于8位
+      ElMessage.warning("密码至少需要8位字符，请重新输入");
+      return false;
     }
-  ).then(
-    ({ value }) => {
-      if (!value || value.length < 6) {
-        // 检查密码是否为空或少于6位
-        ElMessage.warning("密码至少需要6位字符，请重新输入");
-        return false;
-      }
-      UserAPI.resetPassword(row.id, value).then(() => {
-        ElMessage.success("密码重置成功，新密码是：" + value);
-      });
-    },
-    () => {
-      ElMessage.info("已取消重置密码");
-    }
-  );
+    UserAPI.resetPassword({ uid: row.uid, password: value }).then((data) => {
+      ElMessageBox.alert("password:" + value);
+    });
+  });
 }
 
 async function getOPtions() {
@@ -459,19 +449,20 @@ async function getOPtions() {
     ["label", "title"],
     ["value", "id"],
   ]);
+  console.log("🚀 ~ getOPtions ~ roleOptions.value:", roleOptions.value);
 }
 getOPtions();
 /**
  * 打开弹窗
- *
- * @param id 用户ID
  */
 async function handleOpenDialog(item?: UserPageVO) {
   dialog.visible = true;
   if (item) {
     dialog.title = "修改用户";
-    Object.assign(formData, item);
-    formData.roles = item.roles?.map((item) => item.id);
+    nextTick(() => {
+      Object.assign(formData, item);
+      formData.roles = item.roles?.map((item) => item.id);
+    });
   } else {
     dialog.title = "新增用户";
   }
@@ -479,12 +470,16 @@ async function handleOpenDialog(item?: UserPageVO) {
 
 /** 关闭弹窗 */
 function handleCloseDialog() {
-  dialog.visible = false;
   userFormRef.value.resetFields();
   userFormRef.value.clearValidate();
 
+  dialog.visible = false;
   formData.uid = undefined;
   formData.status = 1;
+}
+function selectableHandler(row: UserPageVO) {
+  if (row.uid === 1) return false;
+  return true;
 }
 
 /** 表单提交 */
@@ -494,9 +489,8 @@ const handleSubmit = useThrottleFn(() => {
       const userId = formData.uid;
       loading.value = true;
       if (userId) {
-        UserAPI.update(userId, formData)
+        UserAPI.update(formData)
           .then(() => {
-            ElMessage.success("修改用户成功");
             handleCloseDialog();
             handleResetQuery();
           })
@@ -504,7 +498,6 @@ const handleSubmit = useThrottleFn(() => {
       } else {
         UserAPI.add(formData)
           .then(() => {
-            ElMessage.success("新增用户成功");
             handleCloseDialog();
             handleResetQuery();
           })
@@ -523,37 +516,25 @@ function handleDelete(uid?: number) {
   }
 
   ElMessageBox.confirm("确认删除用户?", "警告", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
     type: "warning",
-  }).then(
-    function () {
-      loading.value = true;
-      UserAPI.deleteByIds(userIds)
-        .then(() => {
-          ElMessage.success("删除成功");
-          handleResetQuery();
-        })
-        .finally(() => (loading.value = false));
-    },
-    function () {
-      ElMessage.info("已取消删除");
-    }
-  );
+  }).then(function () {
+    loading.value = true;
+    UserAPI.deleteByIds(userIds)
+      .then(() => {
+        handleResetQuery();
+      })
+      .finally(() => (loading.value = false));
+  });
 }
 
 function changeStatus(item: UserPageVO) {
-  UserAPI.update(item.id as number, {
+  item.roles = item.roles?.map((item) => item.id);
+  UserAPI.update({
     ...item,
     status: item.status == StatusEnum.True ? StatusEnum.False : StatusEnum.True,
-  })
-    .then(() => {
-      ElMessage.success("操作成功");
-      handleQuery();
-    })
-    .catch(() => {
-      ElMessage.error("操作失败");
-    });
+  }).then(() => {
+    handleQuery();
+  });
 }
 onMounted(() => {
   handleQuery();

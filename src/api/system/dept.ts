@@ -74,7 +74,7 @@ const DeptAPI = {
    * @param ids
    * @returns 请求结果
    */
-  deleteByIds(ids: string[]) {
+  deleteByIds(ids: number[]) {
     return request({
       url: `${DEPT_BASE_URL}/delete`,
       method: "delete",

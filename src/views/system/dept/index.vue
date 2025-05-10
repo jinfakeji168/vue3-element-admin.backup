@@ -41,7 +41,7 @@
     <el-card shadow="never" class="table-wrapper">
       <template #header>
         <el-button
-          v-hasPerm="['sys:dept:add']"
+          v-hasPerm="['dept:add']"
           type="success"
           @click="handleOpenDialog(0, undefined)"
         >
@@ -51,7 +51,7 @@
           新增
         </el-button>
         <el-button
-          v-hasPerm="['sys:dept:delete']"
+          v-hasPerm="['dept:delete']"
           type="danger"
           :disabled="ids.length === 0"
           @click="handleDelete()"
@@ -87,7 +87,7 @@
         <el-table-column label="操作" fixed="right" align="left" width="400">
           <template #default="scope">
             <el-button
-              v-hasPerm="['sys:dept:add']"
+              v-hasPerm="['dept:add']"
               type="primary"
               link
               size="small"
@@ -99,7 +99,7 @@
               新增
             </el-button>
             <el-button
-              v-hasPerm="['sys:dept:edit']"
+              v-hasPerm="['dept:edit']"
               type="primary"
               link
               size="small"
@@ -111,7 +111,7 @@
               编辑
             </el-button>
             <el-button
-              v-hasPerm="['sys:dept:delete']"
+              v-hasPerm="['dept:delete']"
               type="danger"
               link
               size="small"
@@ -123,7 +123,7 @@
               删除
             </el-button>
             <el-button
-              v-hasPerm="['sys:dept:delete']"
+              v-hasPerm="['dept:status']"
               :type="
                 scope.row.status == StatusEnum.False ? 'danger' : 'success'
               "
@@ -269,7 +269,7 @@ function handleSelectionChange(selection: any) {
  */
 async function handleOpenDialog(parent_id?: number, item?: DeptVO) {
   // 加载部门下拉数据
-  const { data } = await DeptAPI.getOptions({ limit: 9999 });
+  const data = await DeptAPI.getOptions({ limit: 9999 });
   deptOptions.value = [
     {
       value: 0,
@@ -284,8 +284,10 @@ async function handleOpenDialog(parent_id?: number, item?: DeptVO) {
   dialog.visible = true;
   if (item) {
     dialog.title = "修改部门";
-    Object.assign(formData, item);
-    formData.parent_id = parent_id ?? item.parent_id;
+    nextTick(() => {
+      Object.assign(formData, item);
+      formData.parent_id = parent_id ?? item.parent_id;
+    });
   } else if (parent_id) {
     dialog.title = "新增子部门";
     formData.parent_id = parent_id;
@@ -304,7 +306,6 @@ function handleSubmit() {
       if (deptId) {
         DeptAPI.update(deptId, formData)
           .then(() => {
-            ElMessage.success("修改成功");
             handleCloseDialog();
             handleQuery();
           })
@@ -312,7 +313,6 @@ function handleSubmit() {
       } else {
         DeptAPI.add(formData)
           .then(() => {
-            ElMessage.success("新增成功");
             handleCloseDialog();
             handleQuery();
           })
@@ -324,7 +324,7 @@ function handleSubmit() {
 
 /** 删除部门 */
 function handleDelete(deptId?: number) {
-  const deptIds = [...ids.value, deptId];
+  const deptIds: number[] = [...ids.value, deptId as number];
 
   if (!deptIds) {
     ElMessage.warning("请勾选删除项");
@@ -332,50 +332,35 @@ function handleDelete(deptId?: number) {
   }
 
   ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
     type: "warning",
-  }).then(
-    () => {
-      loading.value = true;
-      DeptAPI.deleteByIds(deptIds)
-        .then(() => {
-          ElMessage.success("删除成功");
-          handleResetQuery();
-        })
-        .finally(() => (loading.value = false));
-    },
-    () => {
-      ElMessage.info("已取消删除");
-    }
-  );
+  }).then(() => {
+    loading.value = true;
+    DeptAPI.deleteByIds(deptIds)
+      .then(() => {
+        handleResetQuery();
+      })
+      .finally(() => (loading.value = false));
+  });
 }
 
 function changeStatus(item: DeptVO) {
   DeptAPI.update(item.id as number, {
     ...item,
     status: item.status == StatusEnum.True ? StatusEnum.False : StatusEnum.True,
-  })
-    .then(() => {
-      ElMessage.success("操作成功");
-      handleQuery();
-    })
-    .catch(() => {
-      ElMessage.error("操作失败");
-    });
+  }).then(() => {
+    handleQuery();
+  });
 }
 
 /** 关闭弹窗 */
 function handleCloseDialog() {
-  dialog.visible = false;
-
   deptFormRef.value.resetFields();
   deptFormRef.value.clearValidate();
-
   formData.id = undefined;
   formData.parent_id = 0;
   formData.status = 1;
   formData.sort = 1;
+  dialog.visible = false;
 }
 
 onMounted(() => {

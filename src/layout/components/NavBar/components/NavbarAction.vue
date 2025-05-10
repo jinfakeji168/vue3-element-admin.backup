@@ -108,7 +108,9 @@ function logout() {
         tagsViewStore.delAllViews();
       })
       .then(() => {
-        router.push(`/login?redirect=${route.fullPath}`);
+        setTimeout(() => {
+          router.push(`/login`);
+        }, 1000);
       });
   });
 }

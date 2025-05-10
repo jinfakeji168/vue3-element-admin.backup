@@ -87,7 +87,6 @@ const transformRoutes = (routes: RouteVO[]) => {
     if (tmpRoute.component?.toString() == "Layout") {
       tmpRoute.component = Layout;
     } else {
-      console.log("tmpRoute.component===>", tmpRoute.component);
       // 其他菜单，根据组件路径动态加载组件
       const component = modules[`../../views/${tmpRoute.component}.vue`];
       if (component) {

@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { useAppStore, useSettingsStore } from "@/store";
+import { useAppStore, useSettingsStore, useUserStore } from "@/store";
 import defaultSettings from "@/settings";
 import { ThemeEnum } from "@/enums/ThemeEnum";
 import { SizeEnum } from "@/enums/SizeEnum";
@@ -34,4 +34,6 @@ const fontColor = computed(() => {
     ? "rgba(255, 255, 255, .15)"
     : "rgba(0, 0, 0, .15)";
 });
+const { getUserInfo } = useUserStore();
+getUserInfo();
 </script>

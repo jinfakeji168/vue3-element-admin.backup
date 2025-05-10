@@ -56,11 +56,9 @@ const UserAPI = {
 
   /**
    * 修改用户
-   *
-   * @param id 用户ID
    * @param data 用户表单数据
    */
-  update(id: number, data: UserForm) {
+  update(data: UserForm) {
     return request({
       url: `${USER_BASE_URL}/edit`,
       method: "put",
@@ -74,11 +72,11 @@ const UserAPI = {
    * @param id 用户ID
    * @param password 新密码
    */
-  resetPassword(id: number, password: string) {
+  resetPassword(data: { uid: number; password: string }) {
     return request({
-      url: `${USER_BASE_URL}/${id}/password/reset`,
+      url: `${USER_BASE_URL}/passwd`,
       method: "put",
-      params: { password: password },
+      params: { ...data, confirmPassword: data.password },
     });
   },
 
@@ -224,7 +222,7 @@ export interface UserInfo {
   avatar?: string;
 
   /** 角色 */
-  roles: string[];
+  roles: { id: number; name: string }[];
 
   /** 权限 */
   perms: string[];
@@ -263,7 +261,7 @@ export interface UserPageVO {
   /** 性别 */
   genderLabel?: string;
   /** 用户ID */
-  id?: number;
+  uid?: number;
   /** 手机号 */
   mobile?: string;
   /** 用户昵称 */

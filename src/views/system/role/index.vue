@@ -37,13 +37,18 @@
 
     <el-card shadow="never" class="table-wrapper">
       <template #header>
-        <el-button type="success" @click="handleOpenDialog()">
+        <el-button
+          v-hasPerm="['role:add']"
+          type="success"
+          @click="handleOpenDialog()"
+        >
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
         <el-button
+          v-hasPerm="['role:delete']"
           type="danger"
           :disabled="ids.length === 0"
           @click="handleDelete()"
@@ -62,7 +67,12 @@
         border
         @selection-change="handleSelectionChange"
       >
-        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column
+          type="selection"
+          :selectable="selectableHandler"
+          width="55"
+          align="center"
+        />
         <el-table-column label="角色名称" prop="title" min-width="100" />
         <el-table-column label="角色编码" prop="name" width="150" />
 
@@ -79,50 +89,54 @@
 
         <el-table-column fixed="right" label="操作" width="300">
           <template #default="scope">
-            <el-button
-              type="primary"
-              size="small"
-              link
-              @click="handleOpenAssignPermDialog(scope.row)"
-            >
-              <template #icon>
-                <Position />
-              </template>
-              分配权限
-            </el-button>
-            <el-button
-              type="primary"
-              size="small"
-              link
-              @click="handleOpenDialog(scope.row)"
-            >
-              <template #icon>
-                <Edit />
-              </template>
-              编辑
-            </el-button>
-            <el-button
-              type="danger"
-              size="small"
-              link
-              @click="handleDelete(scope.row.id)"
-            >
-              <template #icon>
-                <Delete />
-              </template>
-              删除
-            </el-button>
-            <el-button
-              v-hasPerm="['sys:dept:delete']"
-              :type="
-                scope.row.status == StatusEnum.False ? 'danger' : 'success'
-              "
-              link
-              size="small"
-              @click.stop="changeStatus(scope.row)"
-            >
-              {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
-            </el-button>
+            <template v-if="scope.row.id !== 1">
+              <el-button
+                type="primary"
+                size="small"
+                link
+                @click="handleOpenAssignPermDialog(scope.row)"
+              >
+                <template #icon>
+                  <Position />
+                </template>
+                分配权限
+              </el-button>
+              <el-button
+                v-hasPerm="['role:edit']"
+                type="primary"
+                size="small"
+                link
+                @click="handleOpenDialog(scope.row)"
+              >
+                <template #icon>
+                  <Edit />
+                </template>
+                编辑
+              </el-button>
+              <el-button
+                v-hasPerm="['role:delete']"
+                type="danger"
+                size="small"
+                link
+                @click="handleDelete(scope.row.id)"
+              >
+                <template #icon>
+                  <Delete />
+                </template>
+                删除
+              </el-button>
+              <el-button
+                v-hasPerm="['role:status']"
+                :type="
+                  scope.row.status == StatusEnum.False ? 'danger' : 'success'
+                "
+                link
+                size="small"
+                @click.stop="changeStatus(scope.row)"
+              >
+                {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
+              </el-button>
+            </template>
           </template>
         </el-table-column>
       </el-table>
@@ -319,6 +333,11 @@ const rules = reactive({
   status: [{ required: true, message: "请选择状态", trigger: "blur" }],
 });
 
+function selectableHandler(row: RolePageVO) {
+  if (row.id === 1) return false;
+  return true;
+}
+
 // 选中的角色
 interface CheckedRole {
   id?: number;
@@ -362,7 +381,9 @@ function handleOpenDialog(item?: RolePageVO) {
   dialog.visible = true;
   if (item) {
     dialog.title = "修改角色";
-    Object.assign(formData, item);
+    nextTick(() => {
+      Object.assign(formData, item);
+    });
   } else {
     dialog.title = "新增角色";
     formData.name = "";
@@ -386,7 +407,6 @@ function handleSubmit() {
       if (roleId) {
         RoleAPI.update(roleId, formData)
           .then(() => {
-            ElMessage.success("修改成功");
             handleCloseDialog();
             handleResetQuery();
           })
@@ -394,7 +414,6 @@ function handleSubmit() {
       } else {
         RoleAPI.add(formData)
           .then(() => {
-            ElMessage.success("新增成功");
             handleCloseDialog();
             handleResetQuery();
           })
@@ -425,23 +444,15 @@ function handleDelete(roleId?: number) {
   }
 
   ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
     type: "warning",
-  }).then(
-    () => {
-      loading.value = true;
-      RoleAPI.delete(roleIds)
-        .then(() => {
-          ElMessage.success("删除成功");
-          handleResetQuery();
-        })
-        .finally(() => (loading.value = false));
-    },
-    () => {
-      ElMessage.info("已取消删除");
-    }
-  );
+  }).then(() => {
+    loading.value = true;
+    RoleAPI.delete(roleIds)
+      .then(() => {
+        handleResetQuery();
+      })
+      .finally(() => (loading.value = false));
+  });
 }
 
 // 获取所有的菜单
@@ -494,7 +505,6 @@ function handleAssignPermSubmit() {
 
     RoleAPI.updateRoleMenus(roleId, <number[]>checkedMenuIds)
       .then(() => {
-        ElMessage.success("分配权限成功");
         assignPermDialogVisible.value = false;
         handleResetQuery();
       })
@@ -541,14 +551,9 @@ function changeStatus(item: RolePageVO) {
   RoleAPI.update(item.id as number, {
     ...item,
     status: item.status == StatusEnum.True ? StatusEnum.False : StatusEnum.True,
-  })
-    .then(() => {
-      ElMessage.success("操作成功");
-      handleQuery();
-    })
-    .catch(() => {
-      ElMessage.error("操作失败");
-    });
+  }).then(() => {
+    handleQuery();
+  });
 }
 onMounted(() => {
   handleQuery();

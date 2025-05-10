@@ -65,7 +65,7 @@ function handleNodeClick(data: { [key: string]: any }) {
 }
 
 onBeforeMount(() => {
-  DeptAPI.getOptions().then((data) => {
+  DeptAPI.getList().then((data) => {
     deptList.value = [{ id: "", title: "全部", children: data }];
   });
 });

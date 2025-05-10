@@ -92,6 +92,10 @@ declare global {
     label: string;
     /** 子列表  */
     children?: OptionType[];
+    /** 是否禁用 */
+    disabled?: boolean;
+    /**源数据 */
+    item: any;
   }
 }
 export {};

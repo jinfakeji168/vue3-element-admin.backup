@@ -23,7 +23,6 @@ export const useUserStore = defineStore("user", () => {
           const { access_token } = data;
           console.log(access_token);
           setToken("Bearer " + access_token); // Bearer eyJhbGciOiJIUzI1NiJ9.xxx.xxx
-
           resolve();
         })
         .catch((error) => {
@@ -63,14 +62,12 @@ export const useUserStore = defineStore("user", () => {
    * 登出
    */
   function logout() {
-    return new Promise<void>((resolve, reject) => {
+    return new Promise<void>((resolve) => {
       AuthAPI.logout()
-        .then(() => {
+        .then()
+        .finally(() => {
           clearUserSession();
           resolve();
-        })
-        .catch((error) => {
-          reject(error);
         });
     });
   }

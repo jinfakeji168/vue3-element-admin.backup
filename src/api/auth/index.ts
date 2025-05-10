@@ -8,8 +8,6 @@ const AuthAPI = {
     const formData = new FormData();
     formData.append("username", data.username);
     formData.append("password", data.password);
-    // formData.append("captchaKey", data.captchaKey);
-    // formData.append("captchaCode", data.captchaCode);
     return request<any, LoginResult>({
       url: `/admin/auth/login`,
       method: "post",
@@ -23,8 +21,8 @@ const AuthAPI = {
   /** 注销 接口*/
   logout() {
     return request({
-      url: `/api/admin/auth/token`,
-      method: "delete",
+      url: `/admin/auth/logout`,
+      method: "post",
     });
   },
 

@@ -1,3 +1,5 @@
+import { StatusEnum } from "@/enums/MenuTypeEnum";
+
 /**
  * Check if an element has a class
  * @param {HTMLElement} ele
@@ -45,6 +47,7 @@ export function deepChangeOption<T = any[]>(list: any[], keys: string[][]): T {
   return list.map((item: any) => {
     return {
       item: item,
+      disabled: item.status == StatusEnum.True,
       ...Object.assign(
         {},
         ...keys.map((keyItem) => ({ [keyItem[0]]: item[keyItem[1]] }))
