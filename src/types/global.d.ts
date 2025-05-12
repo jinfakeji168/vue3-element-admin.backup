@@ -96,7 +96,7 @@ declare global {
     /** 是否禁用 */
     disabled?: boolean;
     /**源数据 */
-    item: any;
+    item?: any;
   }
 }
 export {};

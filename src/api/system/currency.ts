@@ -1,7 +1,7 @@
 import type { StatusEnum } from "@/enums/MenuTypeEnum";
 import request from "@/utils/request";
 
-import init from "./basicAPI";
+import init from "../basicAPI";
 const BasePath = "/admin/system/coinChannel";
 
 export default {
@@ -37,12 +37,13 @@ export interface Form {
   min_withdraw_fee?: number;
   max_withdraw_fee?: number;
   withdraw_fee_ratio?: number;
-  withdraw_type?: string;
+  withdraw_type?: 1 | 2;
   withdraw_config?: string;
   exchange_rate?: string;
   exchange_rate_update_time?: string;
   merchant_num?: string;
   merchant_key?: string;
+  recharge_address?: string;
   remark_original?: string;
   remark_translation?: RemarkTranslationItem[];
 }

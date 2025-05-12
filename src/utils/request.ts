@@ -1,7 +1,4 @@
-import axios, {
-  type InternalAxiosRequestConfig,
-  type AxiosResponse,
-} from "axios";
+import axios, { type InternalAxiosRequestConfig, type AxiosResponse } from "axios";
 import qs from "qs";
 import { useUserStoreHook } from "@/store/modules/user";
 import { ResultEnum, ResultMsg } from "@/enums/ResultEnum";
@@ -20,11 +17,16 @@ const service = axios.create({
 
 // 请求拦截器
 service.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
+  async (config: InternalAxiosRequestConfig) => {
     const accessToken = getToken();
-    console.log("🚀 ~ accessToken:", config.url?.match(/(?<=\/)login/));
     if (accessToken || config.url?.match(/(?<=\/)login/)) {
       config.headers.Authorization = accessToken;
+      if (config.method == "delete") {
+        //进行二次判断
+        const res = await ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
+          type: "warning",
+        });
+      }
       return config;
     } else {
       return Promise.reject("未登录");

@@ -35,15 +35,8 @@ export default function init<Query, Form>(BasePath: string) {
     });
   }
 
-  function changeStatus(id: number, status: StatusEnum) {
-    return request<any, any>({
-      url: `${BasePath}/edit`,
-      method: "put",
-      data: {
-        id,
-        status,
-      },
-    });
+  function changeStatus(data: Form, status: StatusEnum) {
+    return edit({ ...data, status });
   }
   return {
     getList,

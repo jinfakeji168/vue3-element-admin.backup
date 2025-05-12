@@ -3,7 +3,7 @@
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="queryParams.name" @keyup.enter="handleQuery" />
+          <el-input v-model="queryParams.name" @keyup.enter="queryHandler" />
         </el-form-item>
 
         <el-form-item label="状态" prop="status">
@@ -13,7 +13,7 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button class="filter-item" type="primary" @click="handleQuery">
+          <el-button class="filter-item" type="primary" @click="queryHandler">
             <template #icon>
               <Search />
             </template>
@@ -44,20 +44,20 @@
           删除
         </el-button>
       </template>
-      <el-table v-loading="loading" :data="list" row-key="id">
+      <el-table v-loading="loading" :data="list" row-key="id" @selection-change="selectionChangeHandler">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="show_name" label="名称" min-width="120" />
         <el-table-column prop="icon" label="" min-width="100">
           <template #default="{ row }">
-            <img :src="row.icon" />
+            <img :src="row.icon" class="icon" />
           </template>
         </el-table-column>
 
         <el-table-column prop="min_withdraw" label="最小提现金额" min-width="120" />
         <el-table-column prop="max_withdraw" label="最小提现金额" min-width="120" />
-        <el-table-column prop="withdraw_fee_ratio" label="提现手续费%" min-width="120" />
-        <el-table-column prop="max_withdraw_fee" label="最大手续费" min-width="120" />
-        <el-table-column prop="min_withdraw_fee" label="最小手续费" min-width="120" />
+        <el-table-column prop="withdraw_fee_ratio" label="提现手续费(%)" min-width="120" />
+        <el-table-column prop="max_withdraw_fee" label="最大手续费(按当前币种单位)" min-width="120" />
+        <el-table-column prop="min_withdraw_fee" label="最小手续费(按当前币种单位)" min-width="120" />
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">
             <el-tag v-if="row.status == StatusEnum.False" type="success">正常</el-tag>
@@ -111,7 +111,7 @@
       </el-table>
     </el-card>
 
-    <editPart v-model="visible" :data="currentData"></editPart>
+    <editPart v-model="visible" :data="currentData" @finally="queryHandler" />
   </div>
 </template>
 
@@ -129,7 +129,7 @@ const queryParams = reactive<Query>({
 const list = ref<Form[]>();
 
 /** 查询部门 */
-async function handleQuery() {
+async function queryHandler() {
   loading.value = true;
   const temp = await api.getList(queryParams);
   list.value = temp.list;
@@ -139,7 +139,7 @@ async function handleQuery() {
 /** 重置查询 */
 function handleResetQuery() {
   queryFormRef.value.resetFields();
-  handleQuery();
+  queryHandler();
 }
 
 const visible = ref(false);
@@ -148,13 +148,31 @@ function editHandler(item?: Form) {
   visible.value = true;
   currentData.value = item;
 }
-function deleteHandler(id?: number) {}
+
+let selectList: number[] = [];
+function selectionChangeHandler(data: Form[]) {
+  selectList = data.map((val) => <number>val.id);
+}
+
+async function deleteHandler(id?: number) {
+  const params = id ? [id] : selectList;
+  const res = await api.delete(params);
+  if (res) queryHandler();
+}
 async function changeStatus(item: Form) {
-  await api.changeStatus(<number>item.id, item.status == StatusEnum.True ? StatusEnum.False : StatusEnum.True);
-  handleQuery();
+  await api.changeStatus(item, item.status == StatusEnum.True ? StatusEnum.False : StatusEnum.True);
+  queryHandler();
 }
 
 onMounted(() => {
-  handleQuery();
+  queryHandler();
 });
 </script>
+
+<style scoped lang="scss">
+.icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+</style>
