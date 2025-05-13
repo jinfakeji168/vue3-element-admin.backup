@@ -6,13 +6,15 @@ const BasePath = "/admin/system/coinChannel";
 
 export default {
   ...init<Query, Form>(BasePath),
-  updateRemark() {
+  updateRemark(data: remarkForm) {
     return request({
       url: `${BasePath}/remark`,
       method: "put",
+      data,
     });
   },
 };
+export type remarkForm = Pick<Form, "id" | "remark_original" | "remark_translation">;
 
 export interface Query {
   name?: string;
@@ -45,9 +47,5 @@ export interface Form {
   merchant_key?: string;
   recharge_address?: string;
   remark_original?: string;
-  remark_translation?: RemarkTranslationItem[];
-}
-export interface RemarkTranslationItem {
-  lang?: string;
-  content?: string;
+  remark_translation?: TranslationItem[];
 }

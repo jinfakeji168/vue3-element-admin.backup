@@ -56,13 +56,17 @@ service.interceptors.response.use(
       }
       return data;
     } else {
-      ElMessage.error(ResultMsg[code as ResultEnum]);
       if (code === ResultEnum.TOKEN_INVALID) {
         //跳到登录页
-        console.log("eeeeeeeeeeee");
-
-        router.push("/login");
+        ElMessage.error(ResultMsg[code as ResultEnum]);
+        setTimeout(() => {
+          router.push("/login");
+        }, 1000);
+      } else if (code === ResultEnum.FAIL) {
+        ElMessage.error(message);
+        return;
       }
+      ElMessage.error(ResultMsg[code as ResultEnum]);
       return Promise.reject(message);
     }
   },

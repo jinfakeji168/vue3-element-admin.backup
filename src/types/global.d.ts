@@ -12,8 +12,8 @@ declare global {
    * 分页查询参数
    */
   interface PageQuery {
-    pageNum: number;
-    pageSize: number;
+    page: number;
+    limit: number;
   }
 
   /**
@@ -97,6 +97,12 @@ declare global {
     disabled?: boolean;
     /**源数据 */
     item?: any;
+  }
+  /**多语言对象 */
+  export interface TranslationItem {
+    name?: string;
+    lang?: string;
+    content?: string;
   }
 }
 export {};

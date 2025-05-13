@@ -1,8 +1,4 @@
-import type {
-  NavigationGuardNext,
-  RouteLocationNormalized,
-  RouteRecordRaw,
-} from "vue-router";
+import type { NavigationGuardNext, RouteLocationNormalized, RouteRecordRaw } from "vue-router";
 import NProgress from "@/utils/nprogress";
 import { getToken } from "@/utils/auth";
 import router from "@/router";
@@ -29,8 +25,7 @@ export function setupPermission() {
             next("/404");
           } else {
             // 动态设置页面标题
-            const title =
-              (to.params.title as string) || (to.query.title as string);
+            const title = (to.params.title as string) || (to.query.title as string);
             if (title) {
               to.meta.title = title;
             }
@@ -40,9 +35,9 @@ export function setupPermission() {
           try {
             // 生成动态路由
             const dynamicRoutes = await permissionStore.generateRoutes();
-            dynamicRoutes.forEach((route: RouteRecordRaw) =>
-              router.addRoute(route)
-            );
+            dynamicRoutes.forEach((route: RouteRecordRaw) => {
+              router.addRoute(route);
+            });
             next({ ...to, replace: true }); // 添加动态路由后重新导航
           } catch (error) {
             console.error(error);
@@ -72,10 +67,7 @@ export function setupPermission() {
 }
 
 /** 重定向到登录页 */
-function redirectToLogin(
-  to: RouteLocationNormalized,
-  next: NavigationGuardNext
-) {
+function redirectToLogin(to: RouteLocationNormalized, next: NavigationGuardNext) {
   const params = new URLSearchParams(to.query as Record<string, string>);
   const queryString = params.toString();
   const redirect = queryString ? `${to.path}?${queryString}` : to.path;
@@ -83,10 +75,7 @@ function redirectToLogin(
 }
 
 /** 判断是否有权限 */
-export function hasAuth(
-  value: string | string[],
-  type: "button" | "role" = "button"
-) {
+export function hasAuth(value: string | string[], type: "button" | "role" = "button") {
   const { roles, perms } = useUserStore().userInfo;
 
   // 超级管理员 拥有所有权限
@@ -95,7 +84,5 @@ export function hasAuth(
   }
 
   const auths = type === "button" ? perms : roles;
-  return typeof value === "string"
-    ? auths.includes(value)
-    : value.some((perm) => auths.includes(perm));
+  return typeof value === "string" ? auths.includes(value) : value.some((perm) => auths.includes(perm));
 }

@@ -14,7 +14,7 @@
         <el-input-number v-model="formData.max_withdraw" :min="0" />
       </el-form-item>
       <el-form-item label="提现手续费(%)" prop="withdraw_fee_ratio">
-        <el-input-number v-model="formData.withdraw_fee_ratio" :min="0.0" :formatter="(value: number) => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')" />
+        <el-input v-model="formData.withdraw_fee_ratio" type="text" :formatter="(value: number) => `${value}`.replace(/(?<=(^(?!\d\.\d)\d+)$)/, '.00')" />
       </el-form-item>
       <el-form-item label="最大手续费(当前币种单位)" prop="max_withdraw_fee">
         <el-input-number v-model="formData.max_withdraw_fee" :min="0" />

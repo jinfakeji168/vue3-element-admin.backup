@@ -22,6 +22,13 @@ export default {
       },
     });
   },
+  /**获取开启的语言列表 */
+  getOpenOptions() {
+    return request<any, Form[]>({
+      url: "/admin/global/getLangList?status=1",
+      method: "get",
+    });
+  },
 };
 
 export interface Query {
@@ -35,10 +42,16 @@ export interface Query {
 
 /** 部门类型 */
 export interface Form {
-  id: string;
+  id?: string;
   name?: string;
   mark?: string;
   status?: StatusEnum;
-  sort?: string;
+  sort?: number;
   display_name?: string;
 }
+
+/**全局content组件vmodel参数 */
+export type contentModel = {
+  original: string;
+  translation: { lang: string; content: string; name: string }[];
+};

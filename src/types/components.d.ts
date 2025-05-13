@@ -95,6 +95,7 @@ declare module "vue" {
     MultiImageUpload: (typeof import("./../components/Upload/MultiImageUpload.vue"))["default"];
     SingleImageUpload: (typeof import("./../components/Upload/SingleImageUpload.vue"))["default"];
     WangEditor: (typeof import("./../components/WangEditor/index.vue"))["default"];
+    Content: (typeof import("./../components/WangEditor/content.vue"))["default"];
   }
   export interface ComponentCustomProperties {
     vLoading: (typeof import("element-plus/es"))["ElLoadingDirective"];

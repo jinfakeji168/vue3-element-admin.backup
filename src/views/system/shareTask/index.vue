@@ -46,47 +46,36 @@
       </template>
       <el-table v-loading="loading" :data="list" row-key="id" @selection-change="selectionChangeHandler">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="show_name" label="名称" min-width="120" />
-        <el-table-column prop="icon" label="" min-width="100">
+        <el-table-column prop="icon" label="分享任务图片" min-width="100">
           <template #default="{ row }">
             <img :src="row.icon" class="icon" />
           </template>
         </el-table-column>
 
-        <el-table-column prop="min_withdraw" label="最小提现金额" min-width="120" />
-        <el-table-column prop="max_withdraw" label="最小提现金额" min-width="120" />
-        <el-table-column prop="withdraw_fee_ratio" label="提现手续费(%)" min-width="120" />
-        <el-table-column prop="max_withdraw_fee" label="最大手续费(按当前币种单位)" min-width="120" />
-        <el-table-column prop="min_withdraw_fee" label="最小手续费(按当前币种单位)" min-width="120" />
+        <el-table-column prop="type" label="奖励类型" min-width="100">
+          <template #default="{ row }">
+            <el-tag v-if="row.type == 1" type="success">账户佣金</el-tag>
+            <el-tag v-else-if="row.type == 2" type="info">奖励VIP</el-tag>
+            <el-tag v-else type="warning">基础账户</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="reward_type" label="奖励次数(类型)" min-width="100">
+          <template #default="{ row }">
+            <el-tag v-if="row.reward_type == 1" type="success">总共一次</el-tag>
+            <el-tag v-else-if="row.reward_type == 2" type="info">每日一次</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="share_amount" label="佣金金额" min-width="120" />
+
+        <el-table-column prop="reward_vip_level" label="奖励VIP等级" min-width="120" />
+        <el-table-column prop="reward_vip_days" label="奖励VIP天数" min-width="120" />
+
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">
             <el-tag v-if="row.status == StatusEnum.False" type="success">正常</el-tag>
             <el-tag v-else type="info">禁用</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="充值" width="100">
-          <template #default="{ row }">
-            <el-tag v-if="row.open_recharge == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="status" label="提现" width="100">
-          <template #default="{ row }">
-            <el-tag v-if="row.open_withdraw == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="withdraw_type" label="提款金额类型" min-width="120">
-          <template #default="{ row }">
-            {{ row.withdraw_type == 1 ? "用户输入" : "固定金额" }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="withdraw_config" label="提款金额配置" min-width="120" />
-        <el-table-column prop="exchange_rate" label="汇率  " min-width="120" />
-        <el-table-column prop="exchange_rate_update_time" label="汇率更新时间" min-width="120" />
-        <el-table-column prop="merchant_num" label="商户号" min-width="120" />
-        <el-table-column prop="merchant_key" label="商户key " min-width="120" />
-        <!-- <el-table-column prop="remark_original" label="说明原文  " min-width="120" /> -->
         <el-table-column prop="sort" label="排序" width="100" />
 
         <el-table-column label="操作" fixed="right" align="left" width="200">
@@ -96,12 +85,6 @@
                 <Edit />
               </template>
               编辑
-            </el-button>
-            <el-button v-hasPerm="['currency:editExplain']" type="primary" link size="small" @click.stop="editHandler(row, 1)">
-              <template #icon>
-                <Edit />
-              </template>
-              充值说明
             </el-button>
             <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="deleteHandler(row.id)">
               <template #icon>
@@ -118,14 +101,12 @@
     </el-card>
 
     <editPart v-model="visible[0]" :data="currentData" @finally="queryHandler" />
-    <explain v-model="visible[1]" :data="currentData" @finally="queryHandler" />
   </div>
 </template>
 
 <script setup lang="ts">
 import editPart from "./components/edit.vue";
-import explain from "./components/explain.vue";
-import api, { type Form, Query } from "@/api/system/currency";
+import api, { type Form, Query } from "@/api/system/shareTask";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 
 const queryFormRef = ref(ElForm);

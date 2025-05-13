@@ -3,7 +3,7 @@
     <el-upload ref="upload" class="upload-demo" :on-change="onchange" :auto-upload="false" :limit="1" :show-file-list="false">
       <img v-if="previewURL" :src="previewURL" class="previewImg" />
       <!-- <template #trigger></template> -->
-      <el-button type="primary">选择</el-button>
+      <el-button type="primary" style="margin-left: 10px">选择</el-button>
     </el-upload>
     <el-button class="ml-3" type="success" @click="visible = true">选择</el-button>
   </div>

@@ -1,21 +1,9 @@
 <template>
   <div class="editor-wrapper">
     <!-- 工具栏 -->
-    <Toolbar
-      id="toolbar-container"
-      :editor="editorRef"
-      :default-config="toolbarConfig"
-      :mode="mode"
-    />
+    <Toolbar id="toolbar-container" :editor="editorRef" :default-config="toolbarConfig" :mode="mode" />
     <!-- 编辑器 -->
-    <Editor
-      id="editor-container"
-      v-model="modelValue"
-      :default-config="editorConfig"
-      :mode="mode"
-      @on-change="handleChange"
-      @on-created="handleCreated"
-    />
+    <Editor id="editor-container" v-model="modelValue" :default-config="editorConfig" :mode="mode" @on-change="handleChange" @on-created="handleCreated" />
   </div>
 </template>
 
@@ -23,7 +11,7 @@
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 
 // API 引用
-import FileAPI from "@/api/file";
+import FileAPI from "@/api/file/index";
 
 const props = defineProps({
   modelValue: {
@@ -52,8 +40,8 @@ const editorConfig = ref({
     uploadImage: {
       // 自定义图片上传
       async customUpload(file: any, insertFn: any) {
-        FileAPI.upload(file).then((data) => {
-          insertFn(data.url);
+        FileAPI.upload(file).then((res) => {
+          insertFn(import.meta.env.VITE_APP_File_API_URL + res.path);
         });
       },
     },
