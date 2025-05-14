@@ -49,7 +49,7 @@
         <el-table-column prop="show_name" label="名称" min-width="120" />
         <el-table-column prop="icon" label="" min-width="100">
           <template #default="{ row }">
-            <img :src="row.icon" class="icon" />
+            <el-image :src="row.icon" class="icon" fit="contain" :preview-src-list="[row.icon]" preview-teleported :z-index="9999" />
           </template>
         </el-table-column>
 

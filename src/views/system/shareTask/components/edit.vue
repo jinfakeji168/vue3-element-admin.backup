@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" :title="title" width="600px" @closed="closeHandler">
+  <el-dialog v-model="visible" :title="title" width="800px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
       <el-form-item label="分享任务图片" prop="icon">
         <upload-part v-model="formData.icon"></upload-part>
@@ -18,7 +18,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="佣金金额" prop="share_amount">
-        <el-input-number v-model="formData.share_amount" :min="0" />
+        <el-input v-model="formData.share_amount" :min="0" />
       </el-form-item>
 
       <el-form-item label="奖励VIP等级" prop="reward_vip_level">
@@ -37,12 +37,14 @@
     </el-form>
     <div class="tabBar">
       <div class="header">
-        <div>标题</div>
-        <div>步骤</div>
-        <div>内容</div>
+        <div :class="{ checked: currentIndex == 0 }" @click="currentIndex = 0">标题</div>
+        <div :class="{ checked: currentIndex == 1 }" @click="currentIndex = 1">步骤</div>
+        <div :class="{ checked: currentIndex == 2 }" @click="currentIndex = 2">内容</div>
       </div>
       <div class="content">
-        <Content v-model="contentData[0]"></Content>
+        <Content ref="contentRef" v-model="formData" :keys="['title_original', 'title_translation']" type="public" v-show="currentIndex == 0"></Content>
+        <Content v-model="formData" :keys="['step_original', 'step_translation']" v-show="currentIndex == 1" />
+        <Content v-model="formData" :keys="['content_original', 'content_translation']" v-show="currentIndex == 2" />
       </div>
     </div>
     <template #footer>
@@ -59,7 +61,7 @@ import api, { type Form } from "@/api/system/shareTask";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { FormInstance } from "element-plus";
 import uploadPart from "@/components/Upload/uploadPart.vue";
-import { contentModel } from "@/api/system/lang";
+import Content from "@/components/WangEditor/content.vue";
 
 const props = defineProps<{
   data?: Form;
@@ -75,7 +77,7 @@ watch(
       formData.value = { ...props.data };
     } else {
       title.value = "新增";
-      formData.value = { status: StatusEnum.False };
+      formData.value = { sort: 1, reward_type: 1, type: 1, status: StatusEnum.False };
     }
   },
   {
@@ -85,32 +87,53 @@ watch(
 const formData = ref<Form>({});
 
 const rules = {
-  show_name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
-  min_withdraw: [{ required: true, message: "最小提现金额不能为空", trigger: "blur" }],
+  share_amount: [{ required: true, message: "填写佣金金额", trigger: "blur" }],
 };
 
 const formRef = ref<FormInstance>();
-const emit = defineEmits(["finally"]);
-function submitHandler() {
-  unref(formRef)?.validate(async (valid) => {
-    if (!valid) return;
-    console.log(formData.value);
-    if (props.data) {
-      await api.edit(formData.value);
-    } else {
-      await api.add(formData.value);
-    }
-    visible.value = false;
-    emit("finally");
-  });
+const contentRef = ref<InstanceType<typeof Content>>();
+
+const emits = defineEmits(["finally"]);
+async function submitHandler() {
+  const valid = await unref(formRef)?.validate();
+  const valid1 = await unref(contentRef)?.validate();
+  if (!valid || !valid1) return;
+  if (props.data) {
+    await api.edit(formData.value);
+  } else {
+    await api.add(formData.value);
+  }
+  visible.value = false;
+  emits("finally");
 }
 function closeHandler() {
   unref(formRef)?.clearValidate();
   unref(formRef)?.resetFields();
+  unref(contentRef)?.clearValidate();
   visible.value = false;
 }
 
-const contentData = ref<contentModel[]>([]);
+const currentIndex = ref(0);
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.tabBar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  .header {
+    display: flex;
+    gap: 8px;
+    & > div {
+      padding: 10px 20px;
+      font-size: 16px;
+      color: black;
+      cursor: pointer;
+    }
+    .checked {
+      color: darkgreen;
+      border-bottom: 2px solid darkgreen;
+    }
+  }
+}
+</style>

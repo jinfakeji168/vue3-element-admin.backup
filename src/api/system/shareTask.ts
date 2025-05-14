@@ -20,8 +20,8 @@ export interface Form {
   icon?: string;
   sort?: number;
   status?: StatusEnum;
-  type?: string;
-  reward_type?: string;
+  type?: number;
+  reward_type?: number;
   share_amount?: number;
   reward_vip_level?: string;
   reward_vip_days?: string;

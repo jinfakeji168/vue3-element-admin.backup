@@ -1,16 +1,21 @@
 <template>
   <div class="flex-y-center">
-    <el-upload ref="upload" class="upload-demo" :on-change="onchange" :auto-upload="false" :limit="1" :show-file-list="false">
-      <img v-if="previewURL" :src="previewURL" class="previewImg" />
-      <!-- <template #trigger></template> -->
-      <el-button type="primary" style="margin-left: 10px">选择</el-button>
+    <el-upload ref="upload" class="upload-demo" :on-change="onchange" :auto-upload="false" :limit="1" :show-file-list="false" :on-preview="handlePictureCardPreview">
+      <el-image v-if="previewURL" :src="previewURL" class="previewImg" fit="contain" :preview-src-list="[previewURL]" preview-teleported :z-index="9999" />
+      <template #trigger>
+        <el-button type="primary" style="margin-left: 10px">选择</el-button>
+      </template>
+      <el-button class="ml-3" type="success" @click="visible = true">选择</el-button>
     </el-upload>
-    <el-button class="ml-3" type="success" @click="visible = true">选择</el-button>
   </div>
   <uploadList v-model="visible" @choose="chooseHandler"></uploadList>
+
+  <el-dialog v-model="dialogVisible">
+    <img w-full :src="dialogImageUrl" alt="Preview Image" />
+  </el-dialog>
 </template>
 <script setup lang="ts">
-import { UploadFile, UploadInstance } from "element-plus";
+import { UploadFile, UploadInstance, UploadProps } from "element-plus";
 import uploadList from "./uploadList.vue";
 import api from "@/api/file/index";
 const visible = ref(false);
@@ -30,14 +35,24 @@ function onchange(data: any) {
 function chooseHandler(url: string) {
   previewURL.value = url;
 }
+
+const dialogVisible = ref(false);
+const dialogImageUrl = ref("");
+const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
+  dialogImageUrl.value = uploadFile.url!;
+  dialogVisible.value = true;
+};
 </script>
 
 <style lang="scss" scoped>
-.upload-demo {
+:deep(.upload-demo) {
   max-height: 100px;
+  gap: 10px;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  > div:first-of-type {
+    order: 3;
+  }
 }
 .previewImg {
   width: 100px;

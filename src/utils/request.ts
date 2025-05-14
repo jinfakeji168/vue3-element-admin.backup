@@ -57,14 +57,15 @@ service.interceptors.response.use(
       return data;
     } else {
       if (code === ResultEnum.TOKEN_INVALID) {
-        //跳到登录页
+        //没有权限错误 跳去登录页
         ElMessage.error(ResultMsg[code as ResultEnum]);
         setTimeout(() => {
           router.push("/login");
         }, 1000);
       } else if (code === ResultEnum.FAIL) {
+        //500错误 打印错误并reject
         ElMessage.error(message);
-        return;
+        return Promise.reject(message);
       }
       ElMessage.error(ResultMsg[code as ResultEnum]);
       return Promise.reject(message);

@@ -3,11 +3,11 @@
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="queryParams.type" @keyup.enter="table.queryHandler()" />
+          <!-- <el-input v-model="queryParams.name" @keyup.enter="queryHandler" /> -->
         </el-form-item>
 
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="queryParams.status" clearable class="!w-[100px]">
+        <el-form-item label="状态" prop="state">
+          <el-select v-model="queryParams.state" clearable class="!w-[100px]">
             <el-option :value="StatusEnum.False" label="正常" />
             <el-option :value="StatusEnum.True" label="禁用" />
           </el-select>
@@ -44,38 +44,42 @@
           删除
         </el-button>
       </template>
-      <el-table v-loading="table.loading.value" :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
+      <el-table v-loading="table.loading.value" :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event, 'id')">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="icon" label="分享任务图片" min-width="100">
-          <template #default="{ row }">
-            <el-image :src="row.icon" class="icon" fit="contain" :preview-src-list="[row.icon]" preview-teleported :z-index="9999" />
-          </template>
-        </el-table-column>
 
-        <el-table-column prop="type" label="奖励类型" min-width="100">
+        <el-table-column prop="type" label="类型" min-width="140">
           <template #default="{ row }">
-            <el-tag v-if="row.type == 1" type="info">账户佣金</el-tag>
-            <el-tag v-else-if="row.type == 2" type="info">奖励VIP</el-tag>
-            <el-tag v-else type="info">基础账户</el-tag>
+            <el-tag v-if="row.type == 1" type="info">拼手气红包</el-tag>
+            <el-tag v-else-if="row.type == 2" type="info">普通红包</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="reward_type" label="奖励次数(类型)" min-width="100">
+        <el-table-column prop="state" label="状态" min-width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.reward_type == 1" type="info">总共一次</el-tag>
-            <el-tag v-else-if="row.reward_type == 2" type="info">每日一次</el-tag>
+            <el-tag v-if="row.state == 1" type="info">未开始</el-tag>
+            <el-tag v-else-if="row.state == 2" type="success">进行中</el-tag>
+            <el-tag v-else type="warning">已结束</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="share_amount" label="佣金金额" min-width="120" />
+        <el-table-column prop="red_link" label="红包链接" min-width="120" />
 
-        <el-table-column prop="reward_vip_level" label="奖励VIP等级" min-width="120" />
-        <el-table-column prop="reward_vip_days" label="奖励VIP天数" min-width="120" />
-
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="red_num" label="红包个数" min-width="120" />
+        <el-table-column prop="red_amount" label="红包金额" min-width="120" />
+        <el-table-column prop="max_win_amount" label="最大中奖金额" min-width="120" />
+        <el-table-column prop="receive_num" label="已领取个数" min-width="120" />
+        <el-table-column prop="receive_amount" label="已领取金额" min-width="120" />
+        <el-table-column prop="start_time" label="开始时间" min-width="120">
           <template #default="{ row }">
-            <el-tag v-if="row.status == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
+            {{ parseTime(row.start_time) }}
           </template>
         </el-table-column>
+        <el-table-column prop="end_time" label="结束时间" min-width="120">
+          <template #default="{ row }">
+            {{ parseTime(row.end_time) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="created_at" label="创建时间" min-width="120" />
+        <el-table-column prop="updated_at" label="更新时间" min-width="120" />
+
         <el-table-column prop="sort" label="排序" width="100" />
 
         <el-table-column label="操作" fixed="right" align="left" width="200">
@@ -92,9 +96,6 @@
               </template>
               删除
             </el-button>
-            <el-button v-hasPerm="['currency:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
-              {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
-            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -102,21 +103,25 @@
         <el-pagination background :total="table.pageTotal.value" :page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
       </template>
     </el-card>
-
     <editPart v-model="table.visible.value[0]" :data="table.currentData.value" @finally="table.queryHandler()" />
   </div>
 </template>
 
 <script setup lang="ts">
 import editPart from "./components/edit.vue";
-import api, { type Form, Query } from "@/api/system/shareTask";
+import api, { type Form, Query } from "@/api/system/redPacket";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
+import { dayjs } from "element-plus";
 import TableInstance from "@/utils/tableInstance";
 
 const queryFormRef = ref(ElForm);
-
 const queryParams = reactive<Query>({});
+
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
+
+function parseTime(timeStamp: string) {
+  return dayjs(timeStamp).format("YYYY-MM-DD HH:mm:ss");
+}
 
 onMounted(() => {
   table.queryHandler();
