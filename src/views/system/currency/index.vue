@@ -3,7 +3,7 @@
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="名称" prop="name">
-          <el-input v-model="queryParams.name" @keyup.enter="queryHandler" />
+          <el-input v-model="queryParams.name" />
         </el-form-item>
 
         <el-form-item label="状态" prop="status">
@@ -13,13 +13,13 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button class="filter-item" type="primary" @click="queryHandler">
+          <el-button class="filter-item" type="primary" @click="table.queryHandler()">
             <template #icon>
               <Search />
             </template>
             搜索
           </el-button>
-          <el-button @click="handleResetQuery">
+          <el-button @click="table.handleResetQuery()">
             <template #icon>
               <Refresh />
             </template>
@@ -31,20 +31,20 @@
 
     <el-card shadow="never" class="table-wrapper">
       <template #header>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="editHandler()">
+        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button v-hasPerm="['currency:delete']" type="danger" @click="deleteHandler()" :disabled="selectList.length <= 0">
+        <el-button v-hasPerm="['currency:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
           删除
         </el-button>
       </template>
-      <el-table v-loading="loading" :data="list" row-key="id" @selection-change="selectionChangeHandler">
+      <el-table v-loading="table.loading.value" :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="show_name" label="名称" min-width="120" />
         <el-table-column prop="icon" label="" min-width="100">
@@ -91,34 +91,37 @@
 
         <el-table-column label="操作" fixed="right" align="left" width="200">
           <template #default="{ row }">
-            <el-button v-hasPerm="['currency:edit']" type="primary" link size="small" @click.stop="editHandler(row, 0)">
+            <el-button v-hasPerm="['currency:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon>
                 <Edit />
               </template>
               编辑
             </el-button>
-            <el-button v-hasPerm="['currency:editExplain']" type="primary" link size="small" @click.stop="editHandler(row, 1)">
+            <el-button v-hasPerm="['currency:editExplain']" type="primary" link size="small" @click.stop="table.editHandler(row, 1)">
               <template #icon>
                 <Edit />
               </template>
               充值说明
             </el-button>
-            <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="deleteHandler(row.id)">
+            <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
               删除
             </el-button>
-            <el-button v-hasPerm="['currency:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="changeStatus(row)">
+            <el-button v-hasPerm="['currency:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
           </template>
         </el-table-column>
       </el-table>
+      <template #footer>
+        <el-pagination background :total="table.pageTotal.value" :page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
+      </template>
     </el-card>
 
-    <editPart v-model="visible[0]" :data="currentData" @finally="queryHandler" />
-    <explain v-model="visible[1]" :data="currentData" @finally="queryHandler" />
+    <editPart v-model="table.visible.value[0]" :data="table.currentData.value" @finally="table.queryHandler()" />
+    <explain v-model="table.visible.value[1]" :data="table.currentData.value" @finally="table.queryHandler()" />
   </div>
 </template>
 
@@ -127,53 +130,16 @@ import editPart from "./components/edit.vue";
 import explain from "./components/explain.vue";
 import api, { type Form, Query } from "@/api/system/currency";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
+import TableInstance from "@/utils/tableInstance";
 
 const queryFormRef = ref(ElForm);
-const loading = ref(false);
-const queryParams = reactive<Query>({
-  page: 1,
-  limit: 20,
-});
-const list = ref<Form[]>();
 
-/** 查询 */
-async function queryHandler() {
-  loading.value = true;
-  const temp = await api.getList(queryParams);
-  list.value = temp.list;
-  loading.value = false;
-}
+const queryParams = reactive<Query>({});
 
-/** 重置查询 */
-function handleResetQuery() {
-  queryFormRef.value.resetFields();
-  queryHandler();
-}
-
-const visible = ref([false, false]);
-const currentData = ref<Form>();
-function editHandler(item?: Form, type: 0 | 1 = 0) {
-  visible.value[type] = true;
-  currentData.value = item;
-}
-
-const selectList = ref<number[]>([]);
-function selectionChangeHandler(data: Form[]) {
-  selectList.value = data.map((val) => <number>val.id);
-}
-
-async function deleteHandler(id?: number) {
-  const params = id ? [id] : unref(selectList);
-  const res = await api.delete(params);
-  if (res) queryHandler();
-}
-async function changeStatus(item: Form) {
-  await api.changeStatus(item, item.status == StatusEnum.True ? StatusEnum.False : StatusEnum.True);
-  queryHandler();
-}
+const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 
 onMounted(() => {
-  queryHandler();
+  table.queryHandler();
 });
 </script>
 

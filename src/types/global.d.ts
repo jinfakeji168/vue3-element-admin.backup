@@ -12,8 +12,8 @@ declare global {
    * 分页查询参数
    */
   interface PageQuery {
-    page: number;
-    limit: number;
+    page?: number;
+    limit?: number;
   }
 
   /**

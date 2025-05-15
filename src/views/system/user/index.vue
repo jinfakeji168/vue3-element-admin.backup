@@ -4,10 +4,7 @@
     <el-row :gutter="20">
       <!-- 部门树 -->
       <el-col :lg="4" :xs="24" class="mb-[12px]">
-        <DeptTree
-          v-model="queryParams.department_id"
-          @node-click="handleQuery"
-        />
+        <DeptTree v-model="queryParams.department_id" @node-click="handleQuery" />
       </el-col>
 
       <!-- 用户列表 -->
@@ -15,39 +12,16 @@
         <div class="search-bar">
           <el-form ref="queryFormRef" :model="queryParams" :inline="true">
             <el-form-item label="关键字" prop="username">
-              <el-input
-                v-model="queryParams.username"
-                placeholder="用户名/昵称"
-                clearable
-                style="width: 200px"
-                @keyup.enter="handleQuery"
-              />
+              <el-input v-model="queryParams.username" placeholder="用户名/昵称" clearable style="width: 200px" @keyup.enter="handleQuery" />
             </el-form-item>
             <el-form-item label="手机号" prop="mobile">
-              <el-input
-                v-model="queryParams.mobile"
-                placeholder="手机号"
-                clearable
-                style="width: 200px"
-                @keyup.enter="handleQuery"
-              />
+              <el-input v-model="queryParams.mobile" placeholder="手机号" clearable style="width: 200px" @keyup.enter="handleQuery" />
             </el-form-item>
             <el-form-item label="邮箱" prop="emai">
-              <el-input
-                v-model="queryParams.email"
-                placeholder="邮箱"
-                clearable
-                style="width: 200px"
-                @keyup.enter="handleQuery"
-              />
+              <el-input v-model="queryParams.email" placeholder="邮箱" clearable style="width: 200px" @keyup.enter="handleQuery" />
             </el-form-item>
             <el-form-item label="状态" prop="status">
-              <el-select
-                v-model="queryParams.status"
-                placeholder="全部"
-                clearable
-                class="!w-[100px]"
-              >
+              <el-select v-model="queryParams.status" placeholder="全部" clearable class="!w-[100px]">
                 <el-option label="正常" :value="StatusEnum.False" />
                 <el-option label="禁用" :value="StatusEnum.True" />
               </el-select>
@@ -69,20 +43,11 @@
           <template #header>
             <div class="flex-x-between">
               <div>
-                <el-button
-                  v-hasPerm="['user:add']"
-                  type="success"
-                  @click="handleOpenDialog()"
-                >
+                <el-button v-hasPerm="['user:add']" type="success" @click="handleOpenDialog()">
                   <template #icon><Plus /></template>
                   新增
                 </el-button>
-                <el-button
-                  v-hasPerm="['user:delete']"
-                  type="danger"
-                  :disabled="removeIds.length === 0"
-                  @click="handleDelete()"
-                >
+                <el-button v-hasPerm="['user:delete']" type="danger" :disabled="removeIds.length === 0" @click="handleDelete()">
                   <template #icon><Delete /></template>
                   删除
                 </el-button>
@@ -90,103 +55,41 @@
             </div>
           </template>
 
-          <el-table
-            v-loading="loading"
-            :data="pageData"
-            @selection-change="handleSelectionChange"
-          >
-            <el-table-column
-              type="selection"
-              :selectable="selectableHandler"
-              width="50"
-              align="center"
-            />
-            <el-table-column
-              key="uid"
-              label="编号"
-              align="center"
-              prop="uid"
-              width="80"
-            />
-            <el-table-column
-              key="username"
-              label="用户名"
-              align="center"
-              prop="username"
-            />
+          <el-table v-loading="loading" :data="pageData" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" :selectable="selectableHandler" width="50" align="center" />
+            <el-table-column key="uid" label="编号" align="center" prop="uid" width="80" />
+            <el-table-column key="username" label="用户名" align="center" prop="username" />
             <el-table-column label="用户昵称" align="center" prop="nickname" />
 
-            <el-table-column
-              label="部门"
-              width="150"
-              align="center"
-              prop="department.title"
-            />
-            <el-table-column
-              label="手机号码"
-              align="center"
-              prop="mobile"
-              width="120"
-            />
+            <el-table-column label="部门" width="150" align="center" prop="department.title" />
+            <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
 
-            <el-table-column
-              label="状态"
-              align="center"
-              prop="status"
-              width="100"
-            >
+            <el-table-column label="状态" align="center" prop="status" width="100">
               <template #default="scope">
                 <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
                   {{ scope.row.status == StatusEnum.False ? "正常" : "禁用" }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column
-              label="最后登录时间"
-              align="center"
-              prop="last_login_at"
-              width="180"
-            />
+            <el-table-column label="最后登录时间" align="center" prop="last_login_at" width="180" />
             <el-table-column label="操作" fixed="right" width="300">
               <template #default="scope">
-                <el-button
-                  v-hasPerm="['user:edit']"
-                  type="primary"
-                  size="small"
-                  link
-                  @click="hancleResetPassword(scope.row)"
-                >
+                <el-button v-hasPerm="['user:edit']" type="primary" size="small" link @click="hancleResetPassword(scope.row)">
                   <template #icon><RefreshLeft /></template>
                   重置密码
                 </el-button>
                 <template v-if="scope.row.uid !== 1">
-                  <el-button
-                    v-hasPerm="['user:edit']"
-                    type="primary"
-                    link
-                    size="small"
-                    @click="handleOpenDialog(scope.row)"
-                  >
+                  <el-button v-hasPerm="['user:edit']" type="primary" link size="small" @click="handleOpenDialog(scope.row)">
                     <template #icon><Edit /></template>
                     编辑
                   </el-button>
-                  <el-button
-                    v-hasPerm="['user:delete']"
-                    type="danger"
-                    link
-                    size="small"
-                    @click="handleDelete(scope.row.uid)"
-                  >
+                  <el-button v-hasPerm="['user:delete']" type="danger" link size="small" @click="handleDelete(scope.row.uid)">
                     <template #icon><Delete /></template>
                     删除
                   </el-button>
                   <el-button
                     v-hasPerm="['user:status']"
-                    :type="
-                      scope.row.status == StatusEnum.False
-                        ? 'danger'
-                        : 'success'
-                    "
+                    :type="scope.row.status == StatusEnum.False ? 'danger' : 'success'"
                     link
                     size="small"
                     @click.stop="changeStatus(scope.row)"
@@ -198,36 +101,16 @@
             </el-table-column>
           </el-table>
 
-          <pagination
-            v-if="total > 0"
-            v-model:total="total"
-            v-model:page="queryParams.pageNum"
-            v-model:limit="queryParams.pageSize"
-            @pagination="handleQuery"
-          />
+          <pagination v-if="total > 0" v-model:total="total" v-model:page="queryParams.page" v-model:limit="queryParams.limit" @pagination="handleQuery" />
         </el-card>
       </el-col>
     </el-row>
 
     <!-- 用户表单弹窗 -->
-    <el-drawer
-      v-model="dialog.visible"
-      :title="dialog.title"
-      append-to-body
-      @close="handleCloseDialog"
-    >
-      <el-form
-        ref="userFormRef"
-        :model="formData"
-        :rules="rules"
-        label-width="80px"
-      >
+    <el-drawer v-model="dialog.visible" :title="dialog.title" append-to-body @close="handleCloseDialog">
+      <el-form ref="userFormRef" :model="formData" :rules="rules" label-width="80px">
         <el-form-item label="用户名" prop="username">
-          <el-input
-            v-model="formData.username"
-            :readonly="!!formData.uid"
-            placeholder="请输入用户名"
-          />
+          <el-input v-model="formData.username" :readonly="!!formData.uid" placeholder="请输入用户名" />
         </el-form-item>
 
         <el-form-item label="用户昵称" prop="nickname">
@@ -235,67 +118,31 @@
         </el-form-item>
 
         <el-form-item label="所属部门" prop="department_id">
-          <el-tree-select
-            v-model="formData.department_id"
-            placeholder="请选择所属部门"
-            :data="deptOptions"
-            filterable
-            check-strictly
-            :render-after-expand="false"
-          />
+          <el-tree-select v-model="formData.department_id" placeholder="请选择所属部门" :data="deptOptions" filterable check-strictly :render-after-expand="false" />
         </el-form-item>
 
         <el-form-item label="角色" prop="roles">
           <el-select v-model="formData.roles" multiple placeholder="请选择">
-            <el-option
-              v-for="item in roleOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-              :disabled="item.disabled"
-            />
+            <el-option v-for="item in roleOptions" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled" />
           </el-select>
         </el-form-item>
         <template v-if="!formData.uid">
           <el-form-item label="密码" prop="password">
-            <el-input
-              v-model="formData.password"
-              placeholder="请输入密码"
-              maxlength="50"
-            />
+            <el-input v-model="formData.password" placeholder="请输入密码" maxlength="50" />
           </el-form-item>
           <el-form-item label="确认密码" prop="password2">
-            <el-input
-              v-model="formData.password2"
-              placeholder="请输入确认密码"
-              maxlength="50"
-            />
+            <el-input v-model="formData.password2" placeholder="请输入确认密码" maxlength="50" />
           </el-form-item>
         </template>
         <el-form-item label="手机号码" prop="mobile">
-          <el-input
-            v-model="formData.mobile"
-            placeholder="请输入手机号码"
-            maxlength="11"
-          />
+          <el-input v-model="formData.mobile" placeholder="请输入手机号码" maxlength="11" />
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input
-            v-model="formData.email"
-            placeholder="请输入邮箱"
-            maxlength="50"
-          />
+          <el-input v-model="formData.email" placeholder="请输入邮箱" maxlength="50" />
         </el-form-item>
 
         <el-form-item label="状态" prop="status">
-          <el-switch
-            v-model="formData.status"
-            inline-prompt
-            active-text="正常"
-            inactive-text="禁用"
-            :active-value="1"
-            :inactive-value="0"
-          />
+          <el-switch v-model="formData.status" inline-prompt active-text="正常" inactive-text="禁用" :active-value="1" :inactive-value="0" />
         </el-form-item>
       </el-form>
 
@@ -315,11 +162,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
-import UserAPI, {
-  UserForm,
-  UserPageQuery,
-  UserPageVO,
-} from "@/api/system/user";
+import UserAPI, { UserForm, UserPageQuery, UserPageVO } from "@/api/system/user";
 import DeptAPI from "@/api/system/dept";
 import RoleAPI from "@/api/system/role";
 
@@ -340,8 +183,8 @@ const deptOptions = ref<OptionType[]>();
 const roleOptions = ref<OptionType[]>();
 /** 用户查询参数  */
 const queryParams = reactive<UserPageQuery>({
-  pageNum: 1,
-  pageSize: 10,
+  page: 1,
+  limit: 20,
 });
 
 /**  用户弹窗对象  */
@@ -362,9 +205,7 @@ const formData = reactive<UserForm>({
 const rules = reactive({
   username: [{ required: true, message: "用户名不能为空", trigger: "blur" }],
   nickname: [{ required: true, message: "用户昵称不能为空", trigger: "blur" }],
-  department_id: [
-    { required: true, message: "所属部门不能为空", trigger: "blur" },
-  ],
+  department_id: [{ required: true, message: "所属部门不能为空", trigger: "blur" }],
   roles: [{ required: true, message: "用户角色不能为空", trigger: "blur" }],
   password: [
     {
@@ -408,7 +249,7 @@ function handleQuery() {
 /** 重置查询 */
 function handleResetQuery() {
   queryFormRef.value.resetFields();
-  queryParams.pageNum = 1;
+  queryParams.page = 1;
   queryParams.department_id = undefined;
   queryParams.createTime = undefined;
   handleQuery();
@@ -421,10 +262,7 @@ function handleSelectionChange(selection: any) {
 
 /** 重置密码 */
 function hancleResetPassword(row: { [key: string]: any }) {
-  ElMessageBox.prompt(
-    "请输入用户「" + row.username + "」的新密码",
-    "重置密码"
-  ).then(({ value }) => {
+  ElMessageBox.prompt("请输入用户「" + row.username + "」的新密码", "重置密码").then(({ value }) => {
     if (!value || value.length < 8) {
       // 检查密码是否为空或少于8位
       ElMessage.warning("密码至少需要8位字符，请重新输入");
@@ -449,7 +287,6 @@ async function getOPtions() {
     ["label", "title"],
     ["value", "id"],
   ]);
-  console.log("🚀 ~ getOPtions ~ roleOptions.value:", roleOptions.value);
 }
 getOPtions();
 /**

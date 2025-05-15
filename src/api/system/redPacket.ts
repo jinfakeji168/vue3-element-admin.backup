@@ -14,6 +14,7 @@ export interface Query extends PageQuery {
   type?: 1 | 2;
   /**1.未开始 2.进行中 3.已结束   */
   state?: 1 | 2 | 3;
+  timeRange?: any[];
   start_time?: string[];
   end_time?: string[];
   created_at?: string[];

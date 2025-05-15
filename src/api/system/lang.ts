@@ -22,10 +22,10 @@ export default {
       },
     });
   },
-  /**获取开启的语言列表 */
-  getOpenOptions() {
+  /**获取开启的语言列表  1启用 2禁用 不传全部*/
+  getOptions(type?: 1 | 2) {
     return request<any, Form[]>({
-      url: "/admin/global/getLangList?status=1",
+      url: `/admin/global/getLangList${!type ? "" : `?status=${type}`}`,
       method: "get",
     });
   },

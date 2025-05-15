@@ -20,7 +20,7 @@ export const enum MenuTypeEnum {
    */
   EXTLINK = "link",
 }
-
+/**是否禁用 */
 export const enum StatusEnum {
   True = 2,
   False = 1,

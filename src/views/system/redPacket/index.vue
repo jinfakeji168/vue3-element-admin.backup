@@ -2,15 +2,28 @@
   <div class="app-container">
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="名称" prop="name">
-          <!-- <el-input v-model="queryParams.name" @keyup.enter="queryHandler" /> -->
+        <el-form-item label="类型" prop="type">
+          <el-select v-model="queryParams.type" clearable class="!w-[100px]">
+            <el-option :value="1" label="拼手气红包" />
+            <el-option :value="2" label="普通红包" />
+          </el-select>
         </el-form-item>
 
         <el-form-item label="状态" prop="state">
           <el-select v-model="queryParams.state" clearable class="!w-[100px]">
-            <el-option :value="StatusEnum.False" label="正常" />
-            <el-option :value="StatusEnum.True" label="禁用" />
+            <el-option :value="1" label="未开始" />
+            <el-option :value="2" label="进行中" />
+            <el-option :value="3" label="已结束" />
           </el-select>
+        </el-form-item>
+        <el-form-item label="开始时间范围" prop="start_time">
+          <el-date-picker v-model="queryParams.start_time" type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
+        </el-form-item>
+        <el-form-item label="结束时间范围" prop="end_time">
+          <el-date-picker v-model="queryParams.end_time" type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
+        </el-form-item>
+        <el-form-item label="添加时间范围" prop="created_at">
+          <el-date-picker v-model="queryParams.created_at" type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
         </el-form-item>
         <el-form-item>
           <el-button class="filter-item" type="primary" @click="table.queryHandler()">
@@ -119,8 +132,8 @@ const queryParams = reactive<Query>({});
 
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 
-function parseTime(timeStamp: string) {
-  return dayjs(timeStamp).format("YYYY-MM-DD HH:mm:ss");
+function parseTime(timeStamp: number) {
+  return dayjs.unix(timeStamp).format("YYYY-MM-DD HH:mm:ss");
 }
 
 onMounted(() => {

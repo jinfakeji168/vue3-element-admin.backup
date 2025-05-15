@@ -2,10 +2,19 @@
   <div class="app-container">
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="queryParams.type" @keyup.enter="table.queryHandler()" />
+        <el-form-item label="奖励类型" prop="type">
+          <el-select v-model="queryParams.type" clearable class="!w-[100px]">
+            <el-option :value="1" label="佣金账户" />
+            <el-option :value="2" label="奖励VIP" />
+            <el-option :value="3" label="基础账户" />
+          </el-select>
         </el-form-item>
-
+        <el-form-item label="奖励次数(类型)" prop="reward_type">
+          <el-select v-model="queryParams.reward_type" clearable class="!w-[100px]">
+            <el-option :value="1" label="总共一次" />
+            <el-option :value="2" label="每日一次" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" clearable class="!w-[100px]">
             <el-option :value="StatusEnum.False" label="正常" />

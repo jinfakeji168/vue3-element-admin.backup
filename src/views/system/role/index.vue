@@ -3,20 +3,10 @@
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item prop="title" label="关键字">
-          <el-input
-            v-model="queryParams.title"
-            placeholder="角色名称"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.title" placeholder="角色名称" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item prop="name" label="角色编码">
-          <el-input
-            v-model="queryParams.name"
-            placeholder="角色编码"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.name" placeholder="角色编码" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">
@@ -37,22 +27,13 @@
 
     <el-card shadow="never" class="table-wrapper">
       <template #header>
-        <el-button
-          v-hasPerm="['role:add']"
-          type="success"
-          @click="handleOpenDialog()"
-        >
+        <el-button v-hasPerm="['role:add']" type="success" @click="handleOpenDialog()">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button
-          v-hasPerm="['role:delete']"
-          type="danger"
-          :disabled="ids.length === 0"
-          @click="handleDelete()"
-        >
+        <el-button v-hasPerm="['role:delete']" type="danger" :disabled="ids.length === 0" @click="handleDelete()">
           <template #icon>
             <Delete />
           </template>
@@ -60,27 +41,14 @@
         </el-button>
       </template>
 
-      <el-table
-        ref="dataTableRef"
-        v-loading="loading"
-        :data="roleList"
-        border
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column
-          type="selection"
-          :selectable="selectableHandler"
-          width="55"
-          align="center"
-        />
+      <el-table ref="dataTableRef" v-loading="loading" :data="roleList" border @selection-change="handleSelectionChange">
+        <el-table-column type="selection" :selectable="selectableHandler" width="55" align="center" />
         <el-table-column label="角色名称" prop="title" min-width="100" />
         <el-table-column label="角色编码" prop="name" width="150" />
 
         <el-table-column label="状态" align="center" width="100">
           <template #default="scope">
-            <el-tag v-if="scope.row.status === StatusEnum.False" type="success">
-              正常
-            </el-tag>
+            <el-tag v-if="scope.row.status === StatusEnum.False" type="success">正常</el-tag>
             <el-tag v-else type="info">禁用</el-tag>
           </template>
         </el-table-column>
@@ -90,50 +58,25 @@
         <el-table-column fixed="right" label="操作" width="300">
           <template #default="scope">
             <template v-if="scope.row.id !== 1">
-              <el-button
-                type="primary"
-                size="small"
-                link
-                @click="handleOpenAssignPermDialog(scope.row)"
-              >
+              <el-button type="primary" size="small" link @click="handleOpenAssignPermDialog(scope.row)">
                 <template #icon>
                   <Position />
                 </template>
                 分配权限
               </el-button>
-              <el-button
-                v-hasPerm="['role:edit']"
-                type="primary"
-                size="small"
-                link
-                @click="handleOpenDialog(scope.row)"
-              >
+              <el-button v-hasPerm="['role:edit']" type="primary" size="small" link @click="handleOpenDialog(scope.row)">
                 <template #icon>
                   <Edit />
                 </template>
                 编辑
               </el-button>
-              <el-button
-                v-hasPerm="['role:delete']"
-                type="danger"
-                size="small"
-                link
-                @click="handleDelete(scope.row.id)"
-              >
+              <el-button v-hasPerm="['role:delete']" type="danger" size="small" link @click="handleDelete(scope.row.id)">
                 <template #icon>
                   <Delete />
                 </template>
                 删除
               </el-button>
-              <el-button
-                v-hasPerm="['role:status']"
-                :type="
-                  scope.row.status == StatusEnum.False ? 'danger' : 'success'
-                "
-                link
-                size="small"
-                @click.stop="changeStatus(scope.row)"
-              >
+              <el-button v-hasPerm="['role:status']" :type="scope.row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="changeStatus(scope.row)">
                 {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
               </el-button>
             </template>
@@ -141,28 +84,12 @@
         </el-table-column>
       </el-table>
 
-      <pagination
-        v-if="total > 0"
-        v-model:total="total"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
-        @pagination="handleQuery"
-      />
+      <pagination v-if="total > 0" v-model:total="total" v-model:page="queryParams.page" v-model:limit="queryParams.limit" @pagination="handleQuery" />
     </el-card>
 
     <!-- 角色表单弹窗 -->
-    <el-dialog
-      v-model="dialog.visible"
-      :title="dialog.title"
-      width="500px"
-      @close="handleCloseDialog"
-    >
-      <el-form
-        ref="roleFormRef"
-        :model="formData"
-        :rules="rules"
-        label-width="100px"
-      >
+    <el-dialog v-model="dialog.visible" :title="dialog.title" width="500px" @close="handleCloseDialog">
+      <el-form ref="roleFormRef" :model="formData" :rules="rules" label-width="100px">
         <el-form-item label="角色名称" prop="title">
           <el-input v-model="formData.title" placeholder="请输入角色名称" />
         </el-form-item>
@@ -188,12 +115,7 @@
         </el-form-item>
 
         <el-form-item label="排序" prop="sort">
-          <el-input-number
-            v-model="formData.sort"
-            controls-position="right"
-            :min="0"
-            style="width: 100px"
-          />
+          <el-input-number v-model="formData.sort" controls-position="right" :min="0" style="width: 100px" />
         </el-form-item>
       </el-form>
 
@@ -206,18 +128,9 @@
     </el-dialog>
 
     <!-- 分配权限弹窗 -->
-    <el-drawer
-      v-model="assignPermDialogVisible"
-      :title="'【' + checkedRole.name + '】权限分配'"
-      size="500"
-    >
+    <el-drawer v-model="assignPermDialogVisible" :title="'【' + checkedRole.name + '】权限分配'" size="500">
       <div class="flex-x-between">
-        <el-input
-          v-model="permKeywords"
-          clearable
-          class="w-[150px]"
-          placeholder="菜单权限名称"
-        >
+        <el-input v-model="permKeywords" clearable class="w-[150px]" placeholder="菜单权限名称">
           <template #prefix>
             <Search />
           </template>
@@ -230,21 +143,11 @@
             </template>
             {{ isExpanded ? "收缩" : "展开" }}
           </el-button>
-          <el-checkbox
-            v-model="parentChildLinked"
-            class="ml-5"
-            @change="handleparentChildLinkedChange"
-          >
-            父子联动
-          </el-checkbox>
+          <el-checkbox v-model="parentChildLinked" class="ml-5" @change="handleparentChildLinkedChange">父子联动</el-checkbox>
 
           <el-tooltip placement="bottom">
-            <template #content>
-              如果只需勾选菜单权限，不需要勾选子菜单或者按钮权限，请关闭父子联动
-            </template>
-            <el-icon
-              class="ml-1 color-[--el-color-primary] inline-block cursor-pointer"
-            >
+            <template #content>如果只需勾选菜单权限，不需要勾选子菜单或者按钮权限，请关闭父子联动</template>
+            <el-icon class="ml-1 color-[--el-color-primary] inline-block cursor-pointer">
               <QuestionFilled />
             </el-icon>
           </el-tooltip>
@@ -268,9 +171,7 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleAssignPermSubmit">
-            确 定
-          </el-button>
+          <el-button type="primary" @click="handleAssignPermSubmit">确 定</el-button>
           <el-button @click="assignPermDialogVisible = false">取 消</el-button>
         </div>
       </template>
@@ -284,11 +185,7 @@ defineOptions({
   inheritAttrs: false,
 });
 
-import RoleAPI, {
-  RolePageVO,
-  RoleForm,
-  RolePageQuery,
-} from "@/api/system/role";
+import RoleAPI, { RolePageVO, RoleForm, RolePageQuery } from "@/api/system/role";
 import MenuAPI from "@/api/system/menu";
 import { deepChangeOption } from "@/utils";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
@@ -302,8 +199,8 @@ const ids = ref<number[]>([]);
 const total = ref(0);
 
 const queryParams = reactive<RolePageQuery>({
-  pageNum: 1,
-  pageSize: 10,
+  page: 1,
+  limit: 20,
   title: "",
   name: "",
 });
