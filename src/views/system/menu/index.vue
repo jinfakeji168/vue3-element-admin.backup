@@ -3,20 +3,10 @@
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="权限标识" prop="name">
-          <el-input
-            v-model="queryParams.name"
-            placeholder="权限标识"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.name" placeholder="权限标识" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item label="菜单名字" prop="title">
-          <el-input
-            v-model="queryParams.title"
-            placeholder="菜单名字"
-            clearable
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.title" placeholder="菜单名字" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">
@@ -37,11 +27,7 @@
 
     <el-card shadow="never" class="table-wrapper">
       <template #header>
-        <el-button
-          v-hasPerm="['menu:add']"
-          type="success"
-          @click="handleOpenDialog(0)"
-        >
+        <el-button v-hasPerm="['menu:add']" type="success" @click="handleOpenDialog(0)">
           <template #icon>
             <Plus />
           </template>
@@ -63,9 +49,7 @@
       >
         <el-table-column label="菜单名称" min-width="200">
           <template #default="scope">
-            <template
-              v-if="scope.row.icon && scope.row.icon.startsWith('el-icon')"
-            >
+            <template v-if="scope.row.icon && scope.row.icon.startsWith('el-icon')">
               <el-icon style="vertical-align: -0.15em">
                 <component :is="scope.row.icon.replace('el-icon-', '')" />
               </el-icon>
@@ -82,53 +66,21 @@
 
         <el-table-column label="类型" align="center" width="80">
           <template #default="scope">
-            <el-tag v-if="scope.row.component === 'Layout'" type="warning">
-              目录
-            </el-tag>
-            <el-tag
-              v-else-if="scope.row.type === MenuTypeEnum.MENU"
-              type="success"
-            >
-              菜单
-            </el-tag>
-            <el-tag
-              v-else-if="scope.row.type === MenuTypeEnum.BUTTON"
-              type="danger"
-            >
-              按钮
-            </el-tag>
-            <el-tag
-              v-else-if="scope.row.type === MenuTypeEnum.EXTLINK"
-              type="info"
-            >
-              外链
-            </el-tag>
+            <el-tag v-if="scope.row.component === 'Layout'" type="warning">目录</el-tag>
+            <el-tag v-else-if="scope.row.type === MenuTypeEnum.MENU" type="success">菜单</el-tag>
+            <el-tag v-else-if="scope.row.type === MenuTypeEnum.BUTTON" type="danger">按钮</el-tag>
+            <el-tag v-else-if="scope.row.type === MenuTypeEnum.EXTLINK" type="info">外链</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column
-          label="权限标识"
-          align="left"
-          width="150"
-          prop="name"
-        />
+        <el-table-column label="权限标识" align="left" width="150" prop="name" />
 
-        <el-table-column
-          label="路由路径"
-          align="left"
-          width="150"
-          prop="path"
-        />
+        <el-table-column label="路由路径" align="left" width="150" prop="path" />
 
-        <el-table-column
-          label="组件路径"
-          align="left"
-          width="250"
-          prop="component"
-        />
+        <el-table-column label="组件路径" align="left" width="250" prop="component" />
         <el-table-column label="状态" align="center" width="80">
           <template #default="scope">
-            <el-tag v-if="scope.row.visible === 1" type="success">显示</el-tag>
+            <el-tag v-if="scope.row.status === StatusEnum.False" type="success">显示</el-tag>
             <el-tag v-else type="info">隐藏</el-tag>
           </template>
         </el-table-column>
@@ -137,39 +89,20 @@
 
         <el-table-column fixed="right" align="center" label="操作" width="220">
           <template #default="scope">
-            <el-button
-              v-if="scope.row.type == MenuTypeEnum.MENU"
-              v-hasPerm="['menu:add']"
-              type="primary"
-              link
-              size="small"
-              @click.stop="handleOpenDialog(scope.row.id)"
-            >
+            <el-button v-if="scope.row.type == MenuTypeEnum.MENU" v-hasPerm="['menu:add']" type="primary" link size="small" @click.stop="handleOpenDialog(scope.row.id)">
               <template #icon>
                 <Plus />
               </template>
               新增
             </el-button>
 
-            <el-button
-              v-hasPerm="['menu:edit']"
-              type="primary"
-              link
-              size="small"
-              @click.stop="handleOpenDialog(undefined, scope.row)"
-            >
+            <el-button v-hasPerm="['menu:edit']" type="primary" link size="small" @click.stop="handleOpenDialog(undefined, scope.row)">
               <template #icon>
                 <Edit />
               </template>
               编辑
             </el-button>
-            <el-button
-              v-hasPerm="['menu:delete']"
-              type="danger"
-              link
-              size="small"
-              @click.stop="handleDelete(scope.row.id)"
-            >
+            <el-button v-hasPerm="['menu:delete']" type="danger" link size="small" @click.stop="handleDelete(scope.row.id)">
               <template #icon>
                 <Delete />
               </template>
@@ -180,27 +113,10 @@
       </el-table>
     </el-card>
 
-    <el-drawer
-      v-model="dialog.visible"
-      :title="dialog.title"
-      size="50%"
-      @close="handleCloseDialog"
-    >
-      <el-form
-        ref="menuFormRef"
-        :model="formData"
-        :rules="rules"
-        label-width="100px"
-      >
+    <el-drawer v-model="dialog.visible" :title="dialog.title" size="50%" @close="handleCloseDialog">
+      <el-form ref="menuFormRef" :model="formData" :rules="rules" label-width="100px">
         <el-form-item label="父级菜单" prop="parent_id">
-          <el-tree-select
-            v-model="formData.parent_id"
-            placeholder="选择上级菜单"
-            :data="menuOptions"
-            filterable
-            check-strictly
-            :render-after-expand="false"
-          />
+          <el-tree-select v-model="formData.parent_id" placeholder="选择上级菜单" :data="menuOptions" filterable check-strictly :render-after-expand="false" />
         </el-form-item>
 
         <el-form-item label="名称" prop="title">
@@ -221,10 +137,7 @@
           <el-input v-model="formData.name" placeholder="请输入权限标识" />
         </el-form-item>
         <el-form-item label="菜单类型" prop="type">
-          <el-radio-group
-            v-model="formData.type"
-            @change="handleMenuTypeChange"
-          >
+          <el-radio-group v-model="formData.type" @change="handleMenuTypeChange">
             <!-- <el-radio value="CATALOG">目录</el-radio> -->
             <el-radio value="menu">菜单</el-radio>
             <el-radio value="button">按钮</el-radio>
@@ -233,11 +146,7 @@
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item
-          v-if="formData.type == MenuTypeEnum.EXTLINK"
-          label="外链地址"
-          prop="path"
-        >
+        <el-form-item v-if="formData.type == MenuTypeEnum.EXTLINK" label="外链地址" prop="path">
           <el-input v-model="formData.path" placeholder="请输入外链完整路径" />
         </el-form-item>
 
@@ -246,29 +155,18 @@
             <div class="flex-y-center">
               路由路径
               <el-tooltip placement="bottom" effect="light">
-                <template #content>
-                  定义应用中不同页面对应的 URL 路径，目录需以 /
-                  开头，菜单项不用。例如：系统管理目录
-                  /system，系统管理下的用户管理菜单 user。
-                </template>
+                <template #content>定义应用中不同页面对应的 URL 路径，目录需以 / 开头，菜单项不用。例如：系统管理目录 /system，系统管理下的用户管理菜单 user。</template>
                 <el-icon class="ml-1 cursor-pointer">
                   <QuestionFilled />
                 </el-icon>
               </el-tooltip>
             </div>
           </template>
-          <el-input
-            v-if="formData.type == MenuTypeEnum.MENU"
-            v-model="formData.path"
-            placeholder="system"
-          />
+          <el-input v-if="formData.type == MenuTypeEnum.MENU" v-model="formData.path" placeholder="system" />
           <el-input v-else v-model="formData.path" placeholder="user" />
         </el-form-item>
 
-        <el-form-item
-          v-if="formData.type == MenuTypeEnum.MENU"
-          prop="component"
-        >
+        <el-form-item v-if="formData.type == MenuTypeEnum.MENU" prop="component">
           <template #label>
             <div class="flex-y-center">
               组件路径
@@ -281,17 +179,9 @@
             </div>
           </template>
 
-          <el-input
-            v-model="formData.component"
-            placeholder="system/user/index"
-            style="width: 95%"
-          >
-            <template v-if="formData.type == MenuTypeEnum.MENU" #prepend>
-              src/views/
-            </template>
-            <template v-if="formData.type == MenuTypeEnum.MENU" #append>
-              .vue
-            </template>
+          <el-input v-model="formData.component" placeholder="system/user/index" style="width: 95%">
+            <template v-if="formData.type == MenuTypeEnum.MENU" #prepend>src/views/</template>
+            <template v-if="formData.type == MenuTypeEnum.MENU" #append>.vue</template>
           </el-input>
         </el-form-item>
 
@@ -300,9 +190,7 @@
             <div class="flex-y-center">
               路由参数
               <el-tooltip placement="bottom" effect="light">
-                <template #content>
-                  组件页面使用 `useRoute().query.参数名` 获取路由参数值。
-                </template>
+                <template #content>组件页面使用 `useRoute().query.参数名` 获取路由参数值。</template>
                 <el-icon class="ml-1 cursor-pointer">
                   <QuestionFilled />
                 </el-icon>
@@ -311,59 +199,33 @@
           </template>
 
           <div v-if="!formData.params || formData.params.length === 0">
-            <el-button
-              type="success"
-              plain
-              @click="formData.params = [{ key: '', value: '' }]"
-            >
-              添加路由参数
-            </el-button>
+            <el-button type="success" plain @click="formData.params = [{ key: '', value: '' }]">添加路由参数</el-button>
           </div>
 
           <div v-else>
             <div v-for="(item, index) in formData.params" :key="index">
-              <el-input
-                v-model="item.key"
-                placeholder="参数名"
-                style="width: 100px"
-              />
+              <el-input v-model="item.key" placeholder="参数名" style="width: 100px" />
 
               <span class="mx-1">=</span>
 
-              <el-input
-                v-model="item.value"
-                placeholder="参数值"
-                style="width: 100px"
-              />
+              <el-input v-model="item.value" placeholder="参数值" style="width: 100px" />
 
               <el-icon
-                v-if="
-                  formData.params.indexOf(item) === formData.params.length - 1
-                "
+                v-if="formData.params.indexOf(item) === formData.params.length - 1"
                 class="ml-2 cursor-pointer color-[var(--el-color-success)]"
                 style="vertical-align: -0.15em"
                 @click="formData.params.push({ key: '', value: '' })"
               >
                 <CirclePlusFilled />
               </el-icon>
-              <el-icon
-                class="ml-2 cursor-pointer color-[var(--el-color-danger)]"
-                style="vertical-align: -0.15em"
-                @click="
-                  formData.params.splice(formData.params.indexOf(item), 1)
-                "
-              >
+              <el-icon class="ml-2 cursor-pointer color-[var(--el-color-danger)]" style="vertical-align: -0.15em" @click="formData.params.splice(formData.params.indexOf(item), 1)">
                 <DeleteFilled />
               </el-icon>
             </div>
           </div>
         </el-form-item>
 
-        <el-form-item
-          v-if="formData.type !== MenuTypeEnum.BUTTON"
-          prop="hidden"
-          label="显示状态"
-        >
+        <el-form-item v-if="formData.type !== MenuTypeEnum.BUTTON" prop="hidden" label="显示状态">
           <el-radio-group v-model="formData.hidden">
             <el-radio :value="1">显示</el-radio>
             <el-radio :value="2">隐藏</el-radio>
@@ -411,27 +273,15 @@
         </el-form-item> -->
 
         <el-form-item label="排序" prop="sort">
-          <el-input-number
-            v-model="formData.sort"
-            style="width: 100px"
-            controls-position="right"
-            :min="0"
-          />
+          <el-input-number v-model="formData.sort" style="width: 100px" controls-position="right" :min="0" />
         </el-form-item>
 
-        <el-form-item
-          v-if="formData.type !== MenuTypeEnum.BUTTON"
-          label="图标"
-          prop="icon"
-        >
+        <el-form-item v-if="formData.type !== MenuTypeEnum.BUTTON" label="图标" prop="icon">
           <!-- 图标选择器 -->
           <icon-select v-model="formData.icon" />
         </el-form-item>
 
-        <el-form-item
-          v-if="formData.type == MenuTypeEnum.CATALOG"
-          label="跳转路由"
-        >
+        <el-form-item v-if="formData.type == MenuTypeEnum.CATALOG" label="跳转路由">
           <el-input v-model="formData.redirect" placeholder="跳转路由" />
         </el-form-item>
       </el-form>

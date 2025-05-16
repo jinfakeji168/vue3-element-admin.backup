@@ -1,6 +1,6 @@
 <template>
-  <el-dialog v-model="visible">
-    <el-card>
+  <el-dialog v-model="visible" title="图片列表">
+    <el-card shadow="never">
       <template #header>
         <el-upload ref="upload" class="upload-demo" :on-change="upLoadFileHandler" :auto-upload="false" :limit="1" :show-file-list="false">
           <el-button>

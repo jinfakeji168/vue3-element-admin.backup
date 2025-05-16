@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="90%" @closed="closeHandler">
-    <content v-model="formData" :keys="['remark_original', 'remark_translation']" />
+    <content v-model="formData" :keys="['remark_original', 'remark_translation']" style="height: 70vh; overflow: auto" />
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" @click="submitHandler">确 定</el-button>

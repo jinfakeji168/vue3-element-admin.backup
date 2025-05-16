@@ -50,21 +50,21 @@
         <el-form-item label="抽奖说明">
           <el-button type="primary" @click="visible[0] = true">查看/编辑</el-button>
         </el-form-item>
-        <hr style="height: 1px; background: #ccc" />
+        <hr />
         <el-form-item label="注册赠送抽奖次数" props="lottery_register_give_num">
           <el-input-number v-model="formData.lottery_register_give_num" :min="0" />
         </el-form-item>
         <el-form-item label="注册奖品设置">
           <el-button type="primary" @click="visible[1] = true">查看/编辑</el-button>
         </el-form-item>
-        <hr style="height: 1px; background: #ccc" />
+        <hr />
         <el-form-item label="邀请用户充值金额" props="lottery_spread_recharge_give">
           <el-input-number v-model="formData.lottery_spread_recharge_give" :min="0" />
         </el-form-item>
         <el-form-item label="邀请奖品设置">
           <el-button type="primary" @click="visible[2] = true">查看/编辑</el-button>
         </el-form-item>
-        <hr style="height: 1px; background: #ccc" />
+        <hr />
         <el-form-item label="用户充值赠送抽奖次数类型" props="lottery_send_type">
           <el-radio-group v-model="formData.lottery_send_type">
             <el-radio :value="1">按每日充值总额赠送</el-radio>
@@ -84,13 +84,17 @@
       </template>
     </el-card>
     <explain :data="formData" v-model="visible[0]" @finally="getData" />
-    <prizeList :data="formData" v-model="visible[1]" @finally="getData" />
+    <prizeList :data="formData" v-model="visible[1]" @finally="getData" _key="lottery_register_prize_set" />
+    <prizeList :data="formData" v-model="visible[2]" @finally="getData" _key="lottery_invite_prize_set" />
+    <prizeList :data="formData" v-model="visible[3]" @finally="getData" _key="lottery_recharge_prize_set" />
+    <recharge v-model="visible[4]" />
   </div>
 </template>
 
 <script setup lang="ts">
 import explain from "./components/explain.vue";
 import prizeList from "./components/prizeList.vue";
+import recharge from "./components/recharge.vue";
 import api, { type Form } from "@/api/system/lotteryConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 const formData = reactive<Form>({});

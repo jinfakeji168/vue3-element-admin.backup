@@ -1,28 +1,38 @@
 <template>
-  <div style="height: 70vh; overflow-y: scroll">
-    <el-form ref="formRef" :model="formData" :rules="rules" label-width="100px">
-      <el-form-item class="row_item" label="说明原文" :prop="keys[0]">
+  <div style="overflow-y: scroll">
+    <div class="main_container">
+      <el-card class="container">
+        <template #header>
+          <div class="flex_row">
+            <span>原文</span>
+            <el-button type="primary" @click="currentEditIndex == -1 ? (currentEditIndex = -2) : (currentEditIndex = -1)">
+              {{ currentEditIndex == -1 ? "预览" : "编辑" }}
+            </el-button>
+          </div>
+        </template>
         <div class="content_item" v-if="type == 'rich'">
           <div v-html="formData![keys[0]]" v-if="currentEditIndex != -1"></div>
           <WangEditor class="origin" v-model="formData![keys[0]]" v-else />
-          <el-button style="margin-top: 10px" type="primary" @click="currentEditIndex == -1 ? (currentEditIndex = -2) : (currentEditIndex = -1)">
-            {{ currentEditIndex == -1 ? "确认" : "编辑" }}
-          </el-button>
         </div>
         <el-input v-model="formData![keys[0]]" v-else />
-      </el-form-item>
+      </el-card>
 
-      <el-form-item class="row_item" :label="item.name" prop="" v-for="(item, index) of formData![keys[1]]" :key="item.lang">
+      <el-card class="container" v-for="(item, index) of formData![keys[1]]" :key="item.lang">
+        <template #header>
+          <div class="flex_row">
+            <span>{{ item.name }}</span>
+            <el-button type="primary" @click="currentEditIndex == index ? (currentEditIndex = -2) : (currentEditIndex = index)">
+              {{ currentEditIndex == index ? "预览" : "编辑" }}
+            </el-button>
+          </div>
+        </template>
         <div class="content_item" v-if="type == 'rich'">
           <div v-html="formData![keys[1]]![index].content" v-if="currentEditIndex != index"></div>
           <WangEditor v-model="formData![keys[1]]![index].content" v-else />
-          <el-button style="margin-top: 10px" type="primary" @click="currentEditIndex == index ? (currentEditIndex = -2) : (currentEditIndex = index)">
-            {{ currentEditIndex == index ? "确认" : "编辑" }}
-          </el-button>
         </div>
         <el-input v-model="formData![keys[1]]![index].content" v-else />
-      </el-form-item>
-    </el-form>
+      </el-card>
+    </div>
   </div>
 </template>
 
@@ -32,7 +42,6 @@ import { FormInstance } from "element-plus";
 const store = useStore();
 
 const formData = defineModel<any>();
-const visible = defineModel<boolean>("visible");
 /**keys 对应原文和翻译list的key */
 const props = withDefaults(defineProps<{ keys: string[]; type?: "rich" | "public" }>(), {
   type: "rich",
@@ -49,10 +58,13 @@ const rules = {
   ],
 };
 
+const emits = defineEmits(["initBefore"]);
 watch(formData, (val) => {
   if (!val) return;
   val[props.keys[1]] ??= [];
   val[props.keys[0]] ??= "";
+  console.log("eeeeeeee");
+
   getLangOptions();
 });
 
@@ -76,6 +88,7 @@ async function getLangOptions() {
       });
     }
   }
+  emits("initBefore");
 }
 
 const formRef = ref<FormInstance>();
@@ -89,15 +102,35 @@ defineExpose({ validate, clearValidate });
 </script>
 
 <style lang="scss" scoped>
-.content_item {
-  width: 100%;
-  & > div:first-of-type {
-    border: 1px solid #eee;
-    padding: 10px;
-    min-height: 80px;
-    border-radius: 5px;
-    background: white;
-    width: 100%;
+.main_container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+:deep(.container) {
+  .flex_row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  > .el-card__body {
+    .content_item {
+      width: 100%;
+      max-height: 50vh;
+      grid-column: 1/3;
+      overflow: auto;
+      & > div:first-of-type {
+        border: 1px solid #eee;
+        padding: 10px;
+        min-height: 80px;
+        border-radius: 5px;
+        background: white;
+        width: 100%;
+      }
+      .editor-wrapper {
+        z-index: 999;
+      }
+    }
   }
 }
 .row_item {

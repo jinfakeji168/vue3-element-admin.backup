@@ -3,9 +3,9 @@
     <el-upload ref="upload" class="upload-demo" :on-change="onchange" :auto-upload="false" :limit="1" :show-file-list="false" :on-preview="handlePictureCardPreview">
       <el-image v-if="previewURL" :src="previewURL" class="previewImg" fit="contain" :preview-src-list="[previewURL]" preview-teleported :z-index="9999" />
       <template #trigger>
-        <el-button type="primary" style="margin-left: 10px">选择</el-button>
+        <el-button type="primary" style="margin-left: 10px">上传图片</el-button>
       </template>
-      <el-button class="ml-3" type="success" @click="visible = true">选择</el-button>
+      <el-button class="ml-3" type="success" @click="visible = true" style="order: 3">从列表选择</el-button>
     </el-upload>
   </div>
   <uploadList v-model="visible" @choose="chooseHandler"></uploadList>
@@ -51,7 +51,7 @@ const handlePictureCardPreview: UploadProps["onPreview"] = (uploadFile) => {
   display: flex;
   align-items: center;
   > div:first-of-type {
-    order: 3;
+    order: 2;
   }
 }
 .previewImg {

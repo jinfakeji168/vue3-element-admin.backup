@@ -1,14 +1,27 @@
 <template>
-  <el-dialog v-model="visible" :title="title" width="90%" @closed="closeHandler">
-    <el-form ref="formRef" :model="formData[key]" label-width="100px">
-      <el-form-item label="抽奖说明" prop="" v-for="item of formData[key]">
-        <e-input v-model="item.prize_id" placeholder="请输入抽奖说明" />
+  <el-dialog v-model="visible" :title="title" width="70%" @closed="closeHandler">
+    <el-form class="el_form" ref="formRef" :model="formData[_key]" label-width="100px">
+      <el-form-item :label="`奖项${index + 1}`" prop="" v-for="(item, index) of formData[_key]">
+        <div class="input_row">
+          <div class="input_item">
+            <span>最小金额/U</span>
+            <el-input class="el_input" v-model="item.min_prize_num" placeholder="请输入最小金额" />
+          </div>
+          <div class="input_item">
+            <span>最大金额/U</span>
+            <el-input class="el_input" v-model="item.prize_id" placeholder="请输入最大金额" />
+          </div>
+          <div class="input_item">
+            <span>概率/%</span>
+            <el-input-number class="el_input" v-model="item.probability" :min="0" :max="100" placeholder="请输入概率" />
+          </div>
+        </div>
       </el-form-item>
     </el-form>
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitHandler">确 定</el-button>
+        <el-button type="primary" @click="submitHandler">保存</el-button>
         <el-button @click="closeHandler">取 消</el-button>
       </div>
     </template>
@@ -21,7 +34,7 @@ import { FormInstance } from "element-plus";
 
 const props = defineProps<{
   data: Form;
-  key: "lottery_invite_prize_set" | "lottery_recharge_prize_set" | "lottery_register_prize_set";
+  _key: "lottery_invite_prize_set" | "lottery_recharge_prize_set" | "lottery_register_prize_set";
 }>();
 const visible = defineModel<boolean>();
 const title = ref("");
@@ -31,7 +44,6 @@ watch(
     if (!visible.value) return;
     title.value = "抽奖说明";
     formData.value = { ...props.data };
-    console.log("🚀 ~ props.data:", props.data);
   },
   {
     flush: "post",
@@ -42,10 +54,7 @@ const formData = ref<Form>({});
 const formRef = ref<FormInstance>();
 const emit = defineEmits(["finally"]);
 async function submitHandler() {
-  await api.setLotteryConfigTranslation({
-    lottery_remark_original: unref(formData).lottery_remark_original,
-    lottery_remark_translation: unref(formData).lottery_remark_translation?.filter((item: TranslationItem) => item.content),
-  });
+  await api.setLotteryConfig(unref(formData));
   visible.value = false;
   emit("finally");
 }
@@ -55,3 +64,21 @@ function closeHandler() {
   visible.value = false;
 }
 </script>
+<style scoped lang="scss">
+.el_form {
+  max-height: 70vh;
+  overflow-y: auto;
+  .input_row {
+    display: flex;
+    gap: 10px;
+    .input_item {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .el_input {
+      width: 150px;
+    }
+  }
+}
+</style>

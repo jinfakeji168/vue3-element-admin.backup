@@ -1,8 +1,10 @@
 import type { StatusEnum } from "@/enums/MenuTypeEnum";
 import request from "@/utils/request";
+import init from "../basicAPI";
 
 const BasePath = "/admin/system/lotteryConfig";
 
+const rechargeListPath = "/admin/system/lotteryConfig/gift";
 export default {
   /** @description: 获取抽奖配置*/
   getLotteryConfig() {
@@ -25,6 +27,7 @@ export default {
       data,
     });
   },
+  ...init(rechargeListPath),
 };
 
 export interface Form {
@@ -57,11 +60,21 @@ export interface TranslationItem {
 export interface lottery_item {
   prize_id?: string;
   min_prize_num?: string;
-  probability?: string;
+  probability?: number;
 }
 
 export interface RootName {
   code: number;
   message: string;
-  data?: Data;
+  data?: Date;
+}
+
+export interface rechargeForm {
+  id?: number;
+  type?: 1 | 2;
+  status?: StatusEnum;
+  gift_num?: number;
+  min_amount?: number;
+  max_amount?: number;
+  reach_amount?: number;
 }
