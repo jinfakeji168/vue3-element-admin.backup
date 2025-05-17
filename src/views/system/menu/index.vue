@@ -25,7 +25,7 @@
       </el-form>
     </div>
 
-    <el-card shadow="never" class="table-wrapper">
+    <el-card shadow="never" class="table-wrapper" v-loading="loading">
       <template #header>
         <el-button v-hasPerm="['menu:add']" type="success" @click="handleOpenDialog(0)">
           <template #icon>
@@ -36,7 +36,6 @@
       </template>
 
       <el-table
-        v-loading="loading"
         :data="menuTableData"
         row-key="id"
         :expand-row-keys="['1']"
@@ -185,7 +184,7 @@
           </el-input>
         </el-form-item>
 
-        <el-form-item v-if="formData.type == MenuTypeEnum.MENU">
+        <!-- <el-form-item v-if="formData.type == MenuTypeEnum.MENU">
           <template #label>
             <div class="flex-y-center">
               路由参数
@@ -223,7 +222,7 @@
               </el-icon>
             </div>
           </div>
-        </el-form-item>
+        </el-form-item> -->
 
         <el-form-item v-if="formData.type !== MenuTypeEnum.BUTTON" prop="hidden" label="显示状态">
           <el-radio-group v-model="formData.hidden">

@@ -42,22 +42,22 @@
       </el-form>
     </div>
 
-    <el-card shadow="never" class="table-wrapper">
+    <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
+        <el-button v-hasPerm="['redPacket:add']" type="success" @click="table.editHandler()">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button v-hasPerm="['currency:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
+        <el-button v-hasPerm="['redPacket:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
           删除
         </el-button>
       </template>
-      <el-table v-loading="table.loading.value" :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event, 'id')">
+      <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event, 'id')">
         <el-table-column type="selection" width="55" />
 
         <el-table-column prop="type" label="类型" min-width="140">
@@ -97,13 +97,13 @@
 
         <el-table-column label="操作" fixed="right" align="left" width="200">
           <template #default="{ row }">
-            <el-button v-hasPerm="['currency:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
+            <el-button v-hasPerm="['redPacket:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon>
                 <Edit />
               </template>
               编辑
             </el-button>
-            <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
+            <el-button v-hasPerm="['redPacket:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>

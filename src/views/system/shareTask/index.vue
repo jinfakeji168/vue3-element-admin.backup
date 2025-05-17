@@ -3,14 +3,14 @@
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="奖励类型" prop="type">
-          <el-select v-model="queryParams.type" clearable class="!w-[100px]">
+          <el-select v-model="queryParams.type" clearable class="!w-[140px]">
             <el-option :value="1" label="佣金账户" />
             <el-option :value="2" label="奖励VIP" />
             <el-option :value="3" label="基础账户" />
           </el-select>
         </el-form-item>
         <el-form-item label="奖励次数(类型)" prop="reward_type">
-          <el-select v-model="queryParams.reward_type" clearable class="!w-[100px]">
+          <el-select v-model="queryParams.reward_type" clearable class="!w-[140px]">
             <el-option :value="1" label="总共一次" />
             <el-option :value="2" label="每日一次" />
           </el-select>
@@ -38,22 +38,22 @@
       </el-form>
     </div>
 
-    <el-card shadow="never" class="table-wrapper">
+    <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
+        <el-button v-hasPerm="['shareTask:add']" type="success" @click="table.editHandler()">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button v-hasPerm="['currency:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
+        <el-button v-hasPerm="['shareTask:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
           删除
         </el-button>
       </template>
-      <el-table v-loading="table.loading.value" :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
+      <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="icon" label="分享任务图片" min-width="100">
           <template #default="{ row }">
@@ -89,19 +89,19 @@
 
         <el-table-column label="操作" fixed="right" align="left" width="200">
           <template #default="{ row }">
-            <el-button v-hasPerm="['currency:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
+            <el-button v-hasPerm="['shareTask:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon>
                 <Edit />
               </template>
               编辑
             </el-button>
-            <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
+            <el-button v-hasPerm="['shareTask:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
               删除
             </el-button>
-            <el-button v-hasPerm="['currency:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
+            <el-button v-hasPerm="['shareTask:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
           </template>

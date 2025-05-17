@@ -35,18 +35,17 @@
         <el-input-number v-model="formData.sort" :min="0" />
       </el-form-item>
     </el-form>
-    <div class="tabBar">
-      <div class="header">
-        <div :class="{ checked: currentIndex == 0 }" @click="currentIndex = 0">标题</div>
-        <div :class="{ checked: currentIndex == 1 }" @click="currentIndex = 1">步骤</div>
-        <div :class="{ checked: currentIndex == 2 }" @click="currentIndex = 2">内容</div>
-      </div>
-      <div class="content">
-        <Content ref="contentRef" v-model="formData" :keys="['title_original', 'title_translation']" type="public" v-show="currentIndex == 0"></Content>
-        <Content v-model="formData" :keys="['step_original', 'step_translation']" v-show="currentIndex == 1" />
-        <Content v-model="formData" :keys="['content_original', 'content_translation']" v-show="currentIndex == 2" />
-      </div>
-    </div>
+    <el-tabs v-model="currentIndex">
+      <el-tab-pane label="标题" :name="0">
+        <Content class="content" ref="contentRef" v-model="formData" :keys="['title_original', 'title_translation']" type="public"></Content>
+      </el-tab-pane>
+      <el-tab-pane label="步骤" :name="1">
+        <Content class="content" v-model="formData" :keys="['step_original', 'step_translation']" />
+      </el-tab-pane>
+      <el-tab-pane label="内容" :name="2">
+        <Content class="content" v-model="formData" :keys="['content_original', 'content_translation']" />
+      </el-tab-pane>
+    </el-tabs>
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" @click="submitHandler">确 定</el-button>

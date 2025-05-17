@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="90%" @closed="closeHandler">
-    <content v-model="formData" v-model:visible="visible" :keys="['lottery_remark_original', 'lottery_remark_translation']" />
+    <content v-model="formData" :disabled="!hasEditAuth" :keys="['lottery_remark_original', 'lottery_remark_translation']" />
     <template #footer>
       <div class="dialog-footer">
         <el-button type="primary" @click="submitHandler">确 定</el-button>
@@ -14,6 +14,9 @@
 import api, { type Form } from "@/api/system/lotteryConfig";
 import { FormInstance } from "element-plus";
 import content from "@/components/WangEditor/content.vue";
+import { hasAuth } from "@/plugins/permission";
+const hasEditAuth = hasAuth("lotteryConfig:explain:edit");
+
 const props = defineProps<{
   data: Form;
 }>();

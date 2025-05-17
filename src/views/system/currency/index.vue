@@ -29,7 +29,7 @@
       </el-form>
     </div>
 
-    <el-card shadow="never" class="table-wrapper">
+    <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
         <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
           <template #icon>
@@ -44,7 +44,7 @@
           删除
         </el-button>
       </template>
-      <el-table v-loading="table.loading.value" :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
+      <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="show_name" label="名称" min-width="120" />
         <el-table-column prop="icon" label="" min-width="100">

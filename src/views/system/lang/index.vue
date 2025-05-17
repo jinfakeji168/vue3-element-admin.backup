@@ -29,8 +29,8 @@
       </el-form>
     </div>
 
-    <el-card shadow="never" class="table-wrapper">
-      <el-table v-loading="table.loading.value" :data="table.list.value" row-key="id">
+    <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
+      <el-table :data="table.list.value" row-key="id">
         <el-table-column prop="id" label="ID" min-width="100" />
         <el-table-column prop="name" label="名称" min-width="200" />
         <el-table-column prop="mark" label="标识" min-width="200" />

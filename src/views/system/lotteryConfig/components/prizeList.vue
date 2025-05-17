@@ -5,15 +5,15 @@
         <div class="input_row">
           <div class="input_item">
             <span>最小金额/U</span>
-            <el-input class="el_input" v-model="item.min_prize_num" placeholder="请输入最小金额" />
+            <el-input class="el_input" :disabled="disabled" v-model="item.min_prize_num" placeholder="请输入最小金额" />
           </div>
           <div class="input_item">
             <span>最大金额/U</span>
-            <el-input class="el_input" v-model="item.prize_id" placeholder="请输入最大金额" />
+            <el-input class="el_input" :disabled="disabled" v-model="item.prize_id" placeholder="请输入最大金额" />
           </div>
           <div class="input_item">
             <span>概率/%</span>
-            <el-input-number class="el_input" v-model="item.probability" :min="0" :max="100" placeholder="请输入概率" />
+            <el-input-number class="el_input" :disabled="disabled" v-model="item.probability" :min="0" :max="100" placeholder="请输入概率" />
           </div>
         </div>
       </el-form-item>
@@ -21,7 +21,7 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitHandler">保存</el-button>
+        <el-button type="primary" @click="submitHandler" :disabled="disabled">保存</el-button>
         <el-button @click="closeHandler">取 消</el-button>
       </div>
     </template>
@@ -35,6 +35,7 @@ import { FormInstance } from "element-plus";
 const props = defineProps<{
   data: Form;
   _key: "lottery_invite_prize_set" | "lottery_recharge_prize_set" | "lottery_register_prize_set";
+  disabled: boolean;
 }>();
 const visible = defineModel<boolean>();
 const title = ref("");

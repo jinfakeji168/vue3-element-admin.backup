@@ -3,20 +3,11 @@
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="关键字" prop="title">
-          <el-input
-            v-model="queryParams.title"
-            placeholder="部门名称"
-            @keyup.enter="handleQuery"
-          />
+          <el-input v-model="queryParams.title" placeholder="部门名称" @keyup.enter="handleQuery" />
         </el-form-item>
 
         <el-form-item label="部门状态" prop="status">
-          <el-select
-            v-model="queryParams.status"
-            placeholder="全部"
-            clearable
-            class="!w-[100px]"
-          >
+          <el-select v-model="queryParams.status" placeholder="全部" clearable class="!w-[100px]">
             <el-option :value="StatusEnum.False" label="正常" />
             <el-option :value="StatusEnum.True" label="禁用" />
           </el-select>
@@ -38,24 +29,15 @@
       </el-form>
     </div>
 
-    <el-card shadow="never" class="table-wrapper">
+    <el-card shadow="never" class="table-wrapper" v-loading="loading">
       <template #header>
-        <el-button
-          v-hasPerm="['dept:add']"
-          type="success"
-          @click="handleOpenDialog(0, undefined)"
-        >
+        <el-button v-hasPerm="['dept:add']" type="success" @click="handleOpenDialog(0, undefined)">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button
-          v-hasPerm="['dept:delete']"
-          type="danger"
-          :disabled="ids.length === 0"
-          @click="handleDelete()"
-        >
+        <el-button v-hasPerm="['dept:delete']" type="danger" :disabled="ids.length === 0" @click="handleDelete()">
           <template #icon>
             <Delete />
           </template>
@@ -63,14 +45,7 @@
         </el-button>
       </template>
 
-      <el-table
-        v-loading="loading"
-        :data="deptList"
-        row-key="id"
-        default-expand-all
-        :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
-        @selection-change="handleSelectionChange"
-      >
+      <el-table :data="deptList" row-key="id" default-expand-all :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="title" label="部门名称" min-width="200" />
         <el-table-column prop="name" label="部门编号" width="200" />
@@ -86,51 +61,25 @@
 
         <el-table-column label="操作" fixed="right" align="left" width="400">
           <template #default="scope">
-            <el-button
-              v-hasPerm="['dept:add']"
-              type="primary"
-              link
-              size="small"
-              @click.stop="handleOpenDialog(scope.row.id, undefined)"
-            >
+            <el-button v-hasPerm="['dept:add']" type="primary" link size="small" @click.stop="handleOpenDialog(scope.row.id, undefined)">
               <template #icon>
                 <Plus />
               </template>
               新增
             </el-button>
-            <el-button
-              v-hasPerm="['dept:edit']"
-              type="primary"
-              link
-              size="small"
-              @click.stop="handleOpenDialog(scope.row.parent_id, scope.row)"
-            >
+            <el-button v-hasPerm="['dept:edit']" type="primary" link size="small" @click.stop="handleOpenDialog(scope.row.parent_id, scope.row)">
               <template #icon>
                 <Edit />
               </template>
               编辑
             </el-button>
-            <el-button
-              v-hasPerm="['dept:delete']"
-              type="danger"
-              link
-              size="small"
-              @click.stop="handleDelete(scope.row.id)"
-            >
+            <el-button v-hasPerm="['dept:delete']" type="danger" link size="small" @click.stop="handleDelete(scope.row.id)">
               <template #icon>
                 <Delete />
               </template>
               删除
             </el-button>
-            <el-button
-              v-hasPerm="['dept:status']"
-              :type="
-                scope.row.status == StatusEnum.False ? 'danger' : 'success'
-              "
-              link
-              size="small"
-              @click.stop="changeStatus(scope.row)"
-            >
+            <el-button v-hasPerm="['dept:status']" :type="scope.row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="changeStatus(scope.row)">
               {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
           </template>
@@ -138,27 +87,10 @@
       </el-table>
     </el-card>
 
-    <el-dialog
-      v-model="dialog.visible"
-      :title="dialog.title"
-      width="600px"
-      @closed="handleCloseDialog"
-    >
-      <el-form
-        ref="deptFormRef"
-        :model="formData"
-        :rules="rules"
-        label-width="80px"
-      >
+    <el-dialog v-model="dialog.visible" :title="dialog.title" width="600px" @closed="handleCloseDialog">
+      <el-form ref="deptFormRef" :model="formData" :rules="rules" label-width="80px">
         <el-form-item label="上级部门" prop="parent_id">
-          <el-tree-select
-            v-model="formData.parent_id"
-            placeholder="选择上级部门"
-            :data="deptOptions"
-            filterable
-            check-strictly
-            :render-after-expand="false"
-          />
+          <el-tree-select v-model="formData.parent_id" placeholder="选择上级部门" :data="deptOptions" filterable check-strictly :render-after-expand="false" />
         </el-form-item>
         <el-form-item label="部门名称" prop="title">
           <el-input v-model="formData.title" placeholder="请输入部门名称" />
@@ -167,18 +99,10 @@
           <el-input v-model="formData.name" placeholder="请输入部门编号" />
         </el-form-item>
         <el-form-item label="部门描述" prop="description">
-          <el-input
-            v-model="formData.description"
-            placeholder="请输入部门描述"
-          />
+          <el-input v-model="formData.description" placeholder="请输入部门描述" />
         </el-form-item>
         <el-form-item label="显示排序" prop="sort">
-          <el-input-number
-            v-model="formData.sort"
-            controls-position="right"
-            style="width: 100px"
-            :min="0"
-          />
+          <el-input-number v-model="formData.sort" controls-position="right" style="width: 100px" :min="0" />
         </el-form-item>
         <!-- <el-form-item label="部门状态">
           <el-radio-group v-model="formData.status">
@@ -233,9 +157,7 @@ const formData = reactive<DeptForm>({
 });
 
 const rules = reactive({
-  parent_id: [
-    { required: true, message: "上级部门不能为空", trigger: "change" },
-  ],
+  parent_id: [{ required: true, message: "上级部门不能为空", trigger: "change" }],
   title: [{ required: true, message: "部门名称不能为空", trigger: "blur" }],
   name: [{ required: true, message: "部门编号不能为空", trigger: "blur" }],
   sort: [{ required: true, message: "显示排序不能为空", trigger: "blur" }],

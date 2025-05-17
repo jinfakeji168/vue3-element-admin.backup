@@ -53,7 +53,7 @@ export default class TableInstance<FormT> {
     const temp = await this.api.getList({ ...this.pageInfo, ...this.queryParams, ...obj });
     this.pageTotal.value = temp.total;
     this.loading.value = false;
-    this.list.value = temp.list;
+    this.list.value = Object.hasOwn(temp, "list") ? temp.list : temp.data;
   }
   async deleteHandler(id?: number) {
     const params = id ? [id] : unref(this.selectList.value);

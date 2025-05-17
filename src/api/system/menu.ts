@@ -23,7 +23,7 @@ const MenuAPI = {
    * @param queryParams 查询参数
    * @returns 菜单树形列表
    */
-  index(queryParams: MenuQuery & { is_tree?: boolean }) {
+  index(queryParams: MenuQuery & { is_tree?: 1 | 2 }) {
     return request<any, MenuVO[]>({
       url: `${MENU_BASE_URL}/index`,
       method: "get",
@@ -41,18 +41,6 @@ const MenuAPI = {
       url: `${MENU_BASE_URL}/options`,
       method: "get",
       params: { onlyParent: onlyParent },
-    });
-  },
-
-  /**
-   * 获取菜单表单数据
-   *
-   * @param id 菜单ID
-   */
-  form(id: number) {
-    return request<any, MenuForm>({
-      url: `${MENU_BASE_URL}/${id}/form`,
-      method: "get",
     });
   },
 

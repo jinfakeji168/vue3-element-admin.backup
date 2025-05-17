@@ -1,7 +1,23 @@
 @use "./reset";
 
+//全局样式 设置高度，滚动条
 .app-container {
   padding: 15px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  > .el-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    > .el-card__body {
+      flex-grow: 1;
+      overflow: auto;
+      > .el-table {
+        height: 100%;
+      }
+    }
+  }
 }
 
 .search-bar {

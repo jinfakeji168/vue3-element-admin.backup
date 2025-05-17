@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="70vw">
-    <el-card shadow="never" class="table-wrapper">
+    <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
         <el-button v-hasPerm="['lotteryConfig:add']" type="success" @click="table.editHandler()">
           <template #icon>
@@ -15,7 +15,7 @@
           删除
         </el-button>
       </template>
-      <el-table v-loading="table.loading.value" :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
+      <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="奖品ID" min-width="120" />
         <el-table-column prop="reach_amount" label="充值金额满足" min-width="120" />

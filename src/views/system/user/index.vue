@@ -1,14 +1,14 @@
 <!-- 用户管理 -->
 <template>
   <div class="app-container">
-    <el-row :gutter="20">
+    <div class="flex_row">
       <!-- 部门树 -->
       <el-col :lg="4" :xs="24" class="mb-[12px]">
         <DeptTree v-model="queryParams.department_id" @node-click="handleQuery" />
       </el-col>
 
       <!-- 用户列表 -->
-      <el-col :lg="20" :xs="24">
+      <div class="row_item">
         <div class="search-bar">
           <el-form ref="queryFormRef" :model="queryParams" :inline="true">
             <el-form-item label="关键字" prop="username">
@@ -58,8 +58,8 @@
           <el-table v-loading="loading" :data="pageData" @selection-change="handleSelectionChange">
             <el-table-column type="selection" :selectable="selectableHandler" width="50" align="center" />
             <el-table-column key="uid" label="编号" align="center" prop="uid" width="80" />
-            <el-table-column key="username" label="用户名" align="center" prop="username" />
-            <el-table-column label="用户昵称" align="center" prop="nickname" />
+            <el-table-column key="username" label="用户名" align="center" prop="username" width="200" />
+            <el-table-column label="用户昵称" align="center" prop="nickname" width="200" />
 
             <el-table-column label="部门" width="150" align="center" prop="department.title" />
             <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
@@ -72,7 +72,7 @@
               </template>
             </el-table-column>
             <el-table-column label="最后登录时间" align="center" prop="last_login_at" width="180" />
-            <el-table-column label="操作" fixed="right" width="300">
+            <el-table-column label="操作" fixed="right">
               <template #default="scope">
                 <el-button v-hasPerm="['user:edit']" type="primary" size="small" link @click="hancleResetPassword(scope.row)">
                   <template #icon><RefreshLeft /></template>
@@ -101,10 +101,12 @@
             </el-table-column>
           </el-table>
 
-          <pagination v-if="total > 0" v-model:total="total" v-model:page="queryParams.page" v-model:limit="queryParams.limit" @pagination="handleQuery" />
+          <template #footer>
+            <pagination v-if="total > 0" v-model:total="total" v-model:page="queryParams.page" v-model:limit="queryParams.limit" @pagination="handleQuery" />
+          </template>
         </el-card>
-      </el-col>
-    </el-row>
+      </div>
+    </div>
 
     <!-- 用户表单弹窗 -->
     <el-drawer v-model="dialog.visible" :title="dialog.title" append-to-body @close="handleCloseDialog">
@@ -377,3 +379,32 @@ onMounted(() => {
   handleQuery();
 });
 </script>
+<style lang="scss" scoped>
+.flex_row {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  height: 100%;
+  width: 100%;
+  .row_item {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 80%;
+    :deep(.table-wrapper) {
+      width: 100%;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      .el-card__body {
+        flex-grow: 1;
+      }
+      .el-table {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+      }
+    }
+  }
+}
+</style>

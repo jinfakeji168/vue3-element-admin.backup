@@ -1,21 +1,21 @@
 <template>
   <el-dialog v-model="visible" title="邀请阶梯设置" width="70vw">
-    <el-card shadow="never" class="table-wrapper">
+    <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button v-hasPerm="['lotteryConfig:add']" type="success" @click="table.editHandler()">
+        <el-button v-hasPerm="['inviteAward:ladderList:add']" type="success" @click="table.editHandler()">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button v-hasPerm="['lotteryConfig:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
+        <el-button v-hasPerm="['inviteAward:ladderList:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
           删除
         </el-button>
       </template>
-      <el-table v-loading="table.loading.value" :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
+      <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
 
         <el-table-column prop="people_invited" label="邀请几个人" min-width="120" />
@@ -28,16 +28,16 @@
         </el-table-column> -->
         <el-table-column label="操作" fixed="right" align="left" width="200">
           <template #default="{ row }">
-            <el-button v-hasPerm="['lotteryConfig:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
+            <el-button v-hasPerm="['inviteAward:ladderList:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon>
                 <Edit />
               </template>
               编辑
             </el-button>
-            <!-- <el-button v-hasPerm="['lotteryConfig:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
+            <!-- <el-button v-hasPerm="['inviteAward:ladderList:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button> -->
-            <el-button v-hasPerm="['lotteryConfig:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
+            <el-button v-hasPerm="['inviteAward:ladderList:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>

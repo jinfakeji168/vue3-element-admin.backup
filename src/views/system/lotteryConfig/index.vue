@@ -80,13 +80,13 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="primary" @click="submitHandler" :loading="loading[1]">保存</el-button>
+        <el-button v-hasPerm="['lotteryConfig:save']" type="primary" @click="submitHandler" :loading="loading[1]">保存</el-button>
       </template>
     </el-card>
     <explain :data="formData" v-model="visible[0]" @finally="getData" />
-    <prizeList :data="formData" v-model="visible[1]" @finally="getData" _key="lottery_register_prize_set" />
-    <prizeList :data="formData" v-model="visible[2]" @finally="getData" _key="lottery_invite_prize_set" />
-    <prizeList :data="formData" v-model="visible[3]" @finally="getData" _key="lottery_recharge_prize_set" />
+    <prizeList :data="formData" v-model="visible[1]" :disabled="!hasAuth('lotteryConfig:registPrize')" @finally="getData" _key="lottery_register_prize_set" />
+    <prizeList :data="formData" v-model="visible[2]" :disabled="!hasAuth('lotteryConfig:invitePrize')" @finally="getData" _key="lottery_invite_prize_set" />
+    <prizeList :data="formData" v-model="visible[3]" :disabled="!hasAuth('lotteryConfig:rechargePrize')" @finally="getData" _key="lottery_recharge_prize_set" />
     <recharge v-model="visible[4]" />
   </div>
 </template>
@@ -97,6 +97,8 @@ import prizeList from "./components/prizeList.vue";
 import recharge from "./components/recharge.vue";
 import api, { type Form } from "@/api/system/lotteryConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
+import { hasAuth } from "@/plugins/permission";
+
 const formData = reactive<Form>({});
 const visible = ref([false]);
 const loading = reactive<boolean[]>([]);

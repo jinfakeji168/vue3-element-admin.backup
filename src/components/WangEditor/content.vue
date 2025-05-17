@@ -4,33 +4,37 @@
       <el-card class="container">
         <template #header>
           <div class="flex_row">
-            <span>原文</span>
-            <el-button type="primary" @click="currentEditIndex == -1 ? (currentEditIndex = -2) : (currentEditIndex = -1)">
+            <span :class="{ isnull: !notNull }">
+              <span style="color: red">*</span>
+              原文
+              {{ notNull ? "" : "(请输入原文内容)" }}
+            </span>
+            <el-button size="small" :disabled="disabled" type="primary" @click="currentEditIndex == -1 ? (currentEditIndex = -2) : (currentEditIndex = -1)">
               {{ currentEditIndex == -1 ? "预览" : "编辑" }}
             </el-button>
           </div>
         </template>
         <div class="content_item" v-if="type == 'rich'">
-          <div v-html="formData![keys[0]]" v-if="currentEditIndex != -1"></div>
-          <WangEditor class="origin" v-model="formData![keys[0]]" v-else />
+          <div v-html="formData![keys[0]]" v-show="currentEditIndex != -1"></div>
+          <WangEditor class="origin" v-model="formData![keys[0]]" v-show="currentEditIndex == -1" />
         </div>
-        <el-input v-model="formData![keys[0]]" v-else />
+        <el-input :disabled="currentEditIndex != -1" v-model="formData![keys[0]]" v-else />
       </el-card>
 
       <el-card class="container" v-for="(item, index) of formData![keys[1]]" :key="item.lang">
         <template #header>
           <div class="flex_row">
             <span>{{ item.name }}</span>
-            <el-button type="primary" @click="currentEditIndex == index ? (currentEditIndex = -2) : (currentEditIndex = index)">
+            <el-button size="small" :disabled="disabled" type="primary" @click="currentEditIndex == index ? (currentEditIndex = -2) : (currentEditIndex = index)">
               {{ currentEditIndex == index ? "预览" : "编辑" }}
             </el-button>
           </div>
         </template>
         <div class="content_item" v-if="type == 'rich'">
-          <div v-html="formData![keys[1]]![index].content" v-if="currentEditIndex != index"></div>
-          <WangEditor v-model="formData![keys[1]]![index].content" v-else />
+          <div v-html="formData![keys[1]]![index].content" v-show="currentEditIndex != index"></div>
+          <WangEditor v-model="formData![keys[1]]![index].content" v-show="currentEditIndex == index" />
         </div>
-        <el-input v-model="formData![keys[1]]![index].content" v-else />
+        <el-input :disabled="currentEditIndex != index" v-model="formData![keys[1]]![index].content" v-else />
       </el-card>
     </div>
   </div>
@@ -43,7 +47,7 @@ const store = useStore();
 
 const formData = defineModel<any>();
 /**keys 对应原文和翻译list的key */
-const props = withDefaults(defineProps<{ keys: string[]; type?: "rich" | "public" }>(), {
+const props = withDefaults(defineProps<{ keys: string[]; type?: "rich" | "public"; disabled?: boolean }>(), {
   type: "rich",
 });
 const currentEditIndex = ref(-2);
@@ -63,8 +67,6 @@ watch(formData, (val) => {
   if (!val) return;
   val[props.keys[1]] ??= [];
   val[props.keys[0]] ??= "";
-  console.log("eeeeeeee");
-
   getLangOptions();
 });
 
@@ -90,14 +92,12 @@ async function getLangOptions() {
   }
   emits("initBefore");
 }
+const notNull = computed(() => unref(formData)[props.keys[0]] && unref(formData)[props.keys[0]] != "<p><br></p>");
 
-const formRef = ref<FormInstance>();
 function validate() {
-  return formRef.value?.validate();
+  return Promise.resolve(notNull.value);
 }
-function clearValidate() {
-  formRef.value?.clearValidate();
-}
+function clearValidate() {}
 defineExpose({ validate, clearValidate });
 </script>
 
@@ -108,21 +108,27 @@ defineExpose({ validate, clearValidate });
   gap: 20px;
 }
 :deep(.container) {
-  .flex_row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  > .el-card__header {
+    padding: 8px;
+    .flex_row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .isnull {
+      color: red;
+    }
   }
   > .el-card__body {
+    padding: 8px;
     .content_item {
       width: 100%;
-      max-height: 50vh;
       grid-column: 1/3;
       overflow: auto;
       & > div:first-of-type {
         border: 1px solid #eee;
         padding: 10px;
-        min-height: 80px;
+        min-height: 140px;
         border-radius: 5px;
         background: white;
         width: 100%;
@@ -135,7 +141,7 @@ defineExpose({ validate, clearValidate });
 }
 .row_item {
   :deep(.editor-wrapper) {
-    z-index: 99;
+    // z-index: 99;
   }
 }
 .origin {

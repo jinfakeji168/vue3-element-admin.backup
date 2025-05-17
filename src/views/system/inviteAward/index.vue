@@ -31,7 +31,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="primary" @click="submitHandler" :loading="loading[1]">保存</el-button>
+        <el-button type="primary" :disabled="!hasAuth('inviteAward:save')" @click="submitHandler" :loading="loading[1]">保存</el-button>
       </template>
     </el-card>
     <ladderList v-model="visible[0]" />
@@ -45,6 +45,8 @@ import chargeList from "./components/chargeList.vue";
 import api, { type Form } from "@/api/system/inviteAward";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { useStore } from "@/store/modules/common";
+import { hasAuth } from "@/plugins/permission";
+
 const store = useStore();
 const formData = reactive<Form>({});
 const visible = ref([false]);

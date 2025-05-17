@@ -21,12 +21,12 @@
             <el-option v-for="item of store.vipList.value" :key="item.id" :label="item.title" :value="item.level" />
           </el-select>
         </el-form-item>
-        <el-form-item label="每日充值抽奖次数配置">
+        <el-form-item label="签到奖品设置">
           <el-button type="primary" @click="visible[0] = true">查看/编辑</el-button>
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="primary" @click="submitHandler" :loading="loading[1]">保存</el-button>
+        <el-button type="primary" :disabled="!hasAuth('signinConfig:save')" @click="submitHandler" :loading="loading[1]">保存</el-button>
       </template>
     </el-card>
     <list v-model="visible[0]" />
@@ -38,6 +38,8 @@ import list from "./components/list.vue";
 import api, { type Form } from "@/api/system/signinConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { useStore } from "@/store/modules/common";
+import { hasAuth } from "@/plugins/permission";
+
 const store = useStore();
 const formData = reactive<Form>({});
 const visible = ref([false]);
