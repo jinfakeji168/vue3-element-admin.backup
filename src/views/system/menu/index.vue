@@ -38,12 +38,11 @@
       <el-table
         :data="menuTableData"
         row-key="id"
-        :expand-row-keys="['1']"
+        :expand-row-keys="expand_rowList"
         :tree-props="{
           children: 'children',
           hasChildren: 'hasChildren',
         }"
-        default-expand-all
         @row-click="handleRowClick"
       >
         <el-table-column label="菜单名称" min-width="200">
@@ -62,8 +61,9 @@
             {{ scope.row.title }}
           </template>
         </el-table-column>
+        <el-table-column label="排序" align="center" width="80" prop="sort" />
 
-        <el-table-column label="类型" align="center" width="80">
+        <el-table-column label="类型" align="center">
           <template #default="scope">
             <el-tag v-if="scope.row.component === 'Layout'" type="warning">目录</el-tag>
             <el-tag v-else-if="scope.row.type === MenuTypeEnum.MENU" type="success">菜单</el-tag>
@@ -71,20 +71,17 @@
             <el-tag v-else-if="scope.row.type === MenuTypeEnum.EXTLINK" type="info">外链</el-tag>
           </template>
         </el-table-column>
-
-        <el-table-column label="权限标识" align="left" width="150" prop="name" />
-
-        <el-table-column label="路由路径" align="left" width="150" prop="path" />
-
-        <el-table-column label="组件路径" align="left" width="250" prop="component" />
-        <el-table-column label="状态" align="center" width="80">
+        <el-table-column label="状态" align="center">
           <template #default="scope">
             <el-tag v-if="scope.row.status === StatusEnum.False" type="success">显示</el-tag>
             <el-tag v-else type="info">隐藏</el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="权限标识" align="left" width="150" prop="name" />
 
-        <el-table-column label="排序" align="center" width="80" prop="sort" />
+        <el-table-column label="路由路径" align="left" width="150" prop="path" />
+
+        <el-table-column label="组件路径" align="left" width="250" prop="component" />
 
         <el-table-column fixed="right" align="center" label="操作" width="220">
           <template #default="scope">
@@ -350,12 +347,29 @@ const rules = reactive({
 // 选择表格的行菜单ID
 const selectedMenuId = ref<number | undefined>();
 
+/**默认展开的行 */
+const expand_rowList = ref<string[]>([]);
+/**深度flat 并且排除掉按钮 @stone*/
+function deepFlat(list: any[]): any[] {
+  return list.flatMap((item: any) => {
+    let temp = [];
+    if (item.children && item.children.every((val: any) => val.type == MenuTypeEnum.MENU)) {
+      temp = deepFlat(item.children);
+      return [item, ...temp];
+    } else return [];
+  });
+}
+
 // 查询菜单
 async function handleQuery() {
   loading.value = true;
-  const data = await MenuAPI.index({ ...queryParams, is_tree: true, page: 1 });
+  const data = await MenuAPI.index({ ...queryParams, is_tree: 1, page: 1 });
   menuTableData.value = data;
   loading.value = false;
+
+  expand_rowList.value = deepFlat(data)
+    .filter((val) => val.type == MenuTypeEnum.MENU)
+    .map((val) => String(val.id));
 }
 
 // 重置查询

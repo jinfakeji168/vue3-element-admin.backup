@@ -29,19 +29,18 @@
         <el-table-column label="操作" fixed="right" align="left" width="200">
           <template #default="{ row }">
             <el-button v-hasPerm="['lotteryConfig:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
-              <template #icon>
-                <Edit />
-              </template>
+              <template #icon><EditPen /></template>
               编辑
-            </el-button>
-            <el-button v-hasPerm="['lotteryConfig:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
-              {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
             <el-button v-hasPerm="['lotteryConfig:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
               删除
+            </el-button>
+            <el-button v-hasPerm="['lotteryConfig:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
+              <template #icon><Switch /></template>
+              {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
           </template>
         </el-table-column>

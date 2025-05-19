@@ -53,6 +53,7 @@
               size="small"
               @click.stop="table.changeStatus(scope.row.id)"
             >
+              <template #icon><Switch /></template>
               {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
           </template>

@@ -27,12 +27,23 @@ export default function init<Query, Form>(BasePath: string) {
     });
   }
   /**删除 */
-  function _delete(ids: number[]) {
-    return request({
-      url: `${BasePath}/delete`,
-      method: "delete",
-      data: { ids },
+  async function _delete(ids: number[]) {
+    //进行二次判断
+    const res = await ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
+      type: "warning",
+      beforeClose: async (action, instance, done) => {
+        if (action === "confirm") {
+          instance.confirmButtonLoading = true;
+          await request({
+            url: `${BasePath}/delete`,
+            method: "delete",
+            data: { ids },
+          });
+        }
+        done();
+      },
     });
+    return res;
   }
 
   function changeStatus(data: Form, status: StatusEnum) {

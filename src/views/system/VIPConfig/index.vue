@@ -2,12 +2,20 @@
   <div class="app-container">
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="queryParams.name" />
+        <el-form-item label="会员名称" prop="title">
+          <el-input v-model="queryParams.title" />
         </el-form-item>
-
+        <el-form-item label="会员等级" prop="level">
+          <el-input v-model="queryParams.level" />
+        </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-select v-model="queryParams.status" clearable class="!w-[100px]">
+            <el-option :value="StatusEnum.False" label="正常" />
+            <el-option :value="StatusEnum.True" label="禁用" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否可解锁" prop="is_unlock_purchase">
+          <el-select v-model="queryParams.is_unlock_purchase" clearable class="!w-[100px]">
             <el-option :value="StatusEnum.False" label="正常" />
             <el-option :value="StatusEnum.True" label="禁用" />
           </el-select>
@@ -46,48 +54,50 @@
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="show_name" label="名称" min-width="120" />
-        <el-table-column prop="icon" label="" min-width="100">
+        <el-table-column prop="title" label="会员名称" min-width="120" />
+        <el-table-column prop="icon" label="图片" min-width="100">
           <template #default="{ row }">
             <el-image :src="row.icon" class="icon" fit="contain" :preview-src-list="[row.icon]" preview-teleported :z-index="9999" />
           </template>
         </el-table-column>
+        <el-table-column prop="level" label="会员等级" min-width="80" />
+        <el-table-column prop="min_rate_of_return" label="收益率范围" min-width="120">
+          <template #default="{ row }">{{ row.min_rate_of_return }}%- {{ row.max_rate_of_return }}%</template>
+        </el-table-column>
+        <el-table-column prop="quant_num" label="量化次数" min-width="80" />
+        <el-table-column prop="min_unlock_amount" label="解锁金额" min-width="120" />
+        <el-table-column prop="quant_effect_days" label="量化天数" min-width="100" />
+        <el-table-column prop="service_fee_ratio" label="平台服务费" min-width="120">
+          <template #default="{ row }">{{ row.service_fee_ratio }}%</template>
+        </el-table-column>
 
-        <el-table-column prop="min_withdraw" label="最小提现金额" min-width="120" />
-        <el-table-column prop="max_withdraw" label="最小提现金额" min-width="120" />
-        <el-table-column prop="withdraw_fee_ratio" label="提现手续费(%)" min-width="120" />
-        <el-table-column prop="max_withdraw_fee" label="最大手续费(按当前币种单位)" min-width="120" />
-        <el-table-column prop="min_withdraw_fee" label="最小手续费(按当前币种单位)" min-width="120" />
+        <!-- <el-table-column prop="unlock_invitation_num" label="解锁邀请人数" min-width="100" />
+        <el-table-column prop="invited_comp_level" label="邀请计算层级" min-width="100" />
+        <el-table-column prop="invited_num_effect_recharge" label="邀请人数有效充值" min-width="120" />
+        <el-table-column prop="show_service_fee" label="是否显示服务费" min-width="100">
+          <template #default="{ row }">
+            {{ row.show_service_fee == 1 ? "是" : "否" }}
+          </template>
+        </el-table-column> -->
+
+        <el-table-column prop="recharge_rebate_ratio" label="充值返利%" min-width="100" />
+        <el-table-column prop="quant_rebate_ratio" label="量化返利%" min-width="100" />
+        <el-table-column prop="recharge_yield_ratio" label="复充收益率/封顶" min-width="100">
+          <template #default="{ row }">{{ row.recharge_yield_ratio }}% / {{ row.recharge_cap }}</template>
+        </el-table-column>
+        <el-table-column prop="is_unlock_purchase" label="是否可解锁购买" min-width="120">
+          <template #default="{ row }">
+            <el-tag v-if="row.is_unlock_purchase == StatusEnum.False" type="success">正常</el-tag>
+            <el-tag v-else type="info">禁用</el-tag>
+          </template>
+        </el-table-column>
+
         <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">
             <el-tag v-if="row.status == StatusEnum.False" type="success">正常</el-tag>
             <el-tag v-else type="info">禁用</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="充值" width="100">
-          <template #default="{ row }">
-            <el-tag v-if="row.open_recharge == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="status" label="提现" width="100">
-          <template #default="{ row }">
-            <el-tag v-if="row.open_withdraw == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="withdraw_type" label="提款金额类型" min-width="120">
-          <template #default="{ row }">
-            {{ row.withdraw_type == 1 ? "用户输入" : "固定金额" }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="withdraw_config" label="提款金额配置" min-width="120" />
-        <el-table-column prop="exchange_rate" label="汇率  " min-width="120" />
-        <el-table-column prop="exchange_rate_update_time" label="汇率更新时间" min-width="120" />
-        <el-table-column prop="merchant_num" label="商户号" min-width="120" />
-        <el-table-column prop="merchant_key" label="商户key " min-width="120" />
-        <!-- <el-table-column prop="remark_original" label="说明原文  " min-width="120" /> -->
-        <el-table-column prop="sort" label="排序" width="100" />
 
         <el-table-column label="操作" fixed="right" align="left" width="200">
           <template #default="{ row }">
@@ -125,7 +135,7 @@
 <script setup lang="ts">
 import editPart from "./components/edit.vue";
 import explain from "./components/explain.vue";
-import api, { type Form, Query } from "@/api/system/currency";
+import api, { type Form, Query } from "@/api/system/VipConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import TableInstance from "@/utils/tableInstance";
 

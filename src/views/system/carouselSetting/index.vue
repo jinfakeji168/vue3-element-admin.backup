@@ -2,13 +2,13 @@
   <div class="app-container">
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button v-hasPerm="['consultationSetting:add']" type="success" @click="table.editHandler()">
+        <el-button v-hasPerm="['helpCenter:add']" type="success" @click="table.editHandler()">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button v-hasPerm="['consultationSetting:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
+        <el-button v-hasPerm="['helpCenter:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
@@ -18,36 +18,34 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column prop="sort" label="排序" width="100" />
-        <el-table-column prop="title_original" label="标题" min-width="220" />
+        <el-table-column prop="sort" label="排序" min-width="60" />
+        <el-table-column prop="title" label="名称" />
+        <el-table-column label="图片">
+          <template #default="{ row }">
+            <el-image style="height: 40px" :src="row.img_url" fit="contain" :preview-src-list="[row.img_url]" preview-teleported :z-index="9999" />
+          </template>
+        </el-table-column>
         <el-table-column prop="status" label="状态">
           <template #default="{ row }">
             <el-tag v-if="row.status == StatusEnum.False" type="success">正常</el-tag>
             <el-tag v-else type="info">禁用</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="创建时间" width="200"></el-table-column>
-        <el-table-column prop="updated_at" label="更新时间" width="200"></el-table-column>
+        <el-table-column prop="created_at" label="新增时间" width="200"></el-table-column>
 
         <el-table-column label="操作" fixed="right" align="left" width="200">
           <template #default="{ row }">
-            <el-button v-hasPerm="['consultationSetting:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
+            <el-button v-hasPerm="['helpCenter:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
               编辑
             </el-button>
-            <el-button v-hasPerm="['consultationSetting:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
+            <el-button v-hasPerm="['helpCenter:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
               删除
             </el-button>
-            <el-button
-              v-hasPerm="['consultationSetting:status']"
-              :type="row.status == StatusEnum.False ? 'danger' : 'success'"
-              link
-              size="small"
-              @click.stop="table.changeStatus(row)"
-            >
+            <el-button v-hasPerm="['helpCenter:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               <template #icon><Switch /></template>
               {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
@@ -65,7 +63,7 @@
 
 <script setup lang="ts">
 import editPart from "./components/edit.vue";
-import api, { type Form, Query } from "@/api/system/consultationSetting";
+import api, { type Form, Query } from "@/api/system/carouselSetting";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import TableInstance from "@/utils/tableInstance";
 

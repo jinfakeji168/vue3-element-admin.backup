@@ -29,9 +29,7 @@
         <el-table-column label="操作" fixed="right" align="left" width="200">
           <template #default="{ row }">
             <el-button v-hasPerm="['signinConfig:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
-              <template #icon>
-                <Edit />
-              </template>
+              <template #icon><EditPen /></template>
               编辑
             </el-button>
             <!-- <el-button v-hasPerm="['signinConfig:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">

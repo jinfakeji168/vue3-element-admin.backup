@@ -70,7 +70,7 @@ function handleCurrentChange(val: number) {
 
 <style lang="scss" scoped>
 .pagination {
-  padding: 12px;
+  // padding: 12px;
 
   &.hidden {
     display: none;

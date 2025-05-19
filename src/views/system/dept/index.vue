@@ -68,9 +68,7 @@
               新增
             </el-button>
             <el-button v-hasPerm="['dept:edit']" type="primary" link size="small" @click.stop="handleOpenDialog(scope.row.parent_id, scope.row)">
-              <template #icon>
-                <Edit />
-              </template>
+              <template #icon><EditPen /></template>
               编辑
             </el-button>
             <el-button v-hasPerm="['dept:delete']" type="danger" link size="small" @click.stop="handleDelete(scope.row.id)">
@@ -80,6 +78,7 @@
               删除
             </el-button>
             <el-button v-hasPerm="['dept:status']" :type="scope.row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="changeStatus(scope.row)">
+              <template #icon><Switch /></template>
               {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
           </template>

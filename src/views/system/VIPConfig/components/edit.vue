@@ -1,0 +1,215 @@
+<template>
+  <el-dialog v-model="visible" :title="title" width="600px" @closed="closeHandler">
+    <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
+      <el-form-item label="VIP名称" prop="title">
+        <el-input v-model="formData.title" placeholder="" />
+      </el-form-item>
+      <el-form-item label="VIP等级" prop="level">
+        <el-input-number v-model="formData.level" :min="0" />
+      </el-form-item>
+      <el-form-item label="图标" prop="icon">
+        <upload-part v-model="formData.icon"></upload-part>
+      </el-form-item>
+      <el-form-item label="状态" prop="status">
+        <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
+      </el-form-item>
+      <el-form-item label="量化次数" prop="quant_num">
+        <el-input-number v-model="formData.quant_num" :min="0" />
+      </el-form-item>
+      <el-form-item label="解锁金额" prop="min_unlock_amount">
+        <el-input v-model="formData.min_unlock_amount" />
+      </el-form-item>
+      <el-form-item label="解锁邀请人数" prop="unlock_invitation_num">
+        <template #label>
+          <div class="flex-center">
+            <span>解锁邀请人数</span>
+            <el-tooltip content="购买此等级所需邀请人数(下三级人数都算)，0代表无需邀请" placement="top">
+              <QuestionFilled style="width: 1em; height: 1em" />
+            </el-tooltip>
+          </div>
+        </template>
+        <el-input-number v-model="formData.unlock_invitation_num" :min="0" />
+      </el-form-item>
+      <el-form-item label="邀请计算层级" prop="invited_comp_level">
+        <template #label>
+          <div class="flex-center">
+            <span>邀请计算层级</span>
+            <el-tooltip content="购买此等级所需邀请人数计算层级，1代表计算一级下级，3代表计算三级下级" placement="top">
+              <QuestionFilled style="width: 1em; height: 1em" />
+            </el-tooltip>
+          </div>
+        </template>
+        <el-input-number v-model="formData.invited_comp_level" :min="0" />
+      </el-form-item>
+      <el-form-item label="邀请人数有效充值" prop="invited_num_effect_recharge">
+        <template #label>
+          <div class="flex-center">
+            <span>邀请人数有效充值</span>
+            <el-tooltip content="购买此等级所需邀请人数需要充值满多少才算有效邀请人" placement="top">
+              <QuestionFilled style="width: 1em; height: 1em" />
+            </el-tooltip>
+          </div>
+        </template>
+        <el-input v-model="formData.invited_num_effect_recharge" />
+      </el-form-item>
+      <el-form-item label="量化有效天数" prop="quant_effect_days">
+        <template #label>
+          <div class="flex-center">
+            <span>量化有效天数</span>
+            <el-tooltip content="解锁此等级可以做量化的天数,到期后返还给用户解锁的本金" placement="top">
+              <QuestionFilled style="width: 1em; height: 1em" />
+            </el-tooltip>
+          </div>
+        </template>
+        <el-input-number v-model="formData.quant_effect_days" :min="0" />
+      </el-form-item>
+      <el-form-item label="收益率范围%" prop="min_rate_of_return">
+        <template #label>
+          <div class="flex-center">
+            <span>收益率范围%</span>
+            <el-tooltip content="单次完成量化的收益率范围。每次量化的收益率计算本金会在最小值到最大值中取一个" placement="top">
+              <QuestionFilled style="width: 1em; height: 1em" />
+            </el-tooltip>
+          </div>
+        </template>
+        <template #default>
+          <div class="flex-center gap-4">
+            <el-input v-model="formData.min_rate_of_return" />
+            <span>-</span>
+            <el-input v-model="formData.max_rate_of_return" />
+          </div>
+        </template>
+      </el-form-item>
+      <el-form-item label="平台服务费比例%" prop="service_fee_ratio">
+        <template #label>
+          <div class="flex-center">
+            <span>平台服务费比例%</span>
+            <el-tooltip
+              content="平台服务费比例。用户的收益平台收取的比例，单位百分比，范围0-100，例如设置50，用户收益是1，那么用户最终收益是0.5，平台服务费0.5 用户收益计算公式：用户量化账户金额 * 收益率范围随机值 * 用户最终收益折扣% *（1-平台服务费%），用户最终收益折扣默认100，当前配置预计单次量化收益范围，预计单日量化收益范围"
+              placement="top"
+            >
+              <QuestionFilled style="width: 1em; height: 1em" />
+            </el-tooltip>
+          </div>
+        </template>
+        <el-input v-model="formData.service_fee_ratio" />
+      </el-form-item>
+      <el-form-item label="是否显示服务费" prop="show_service_fee">
+        <el-switch v-model="formData.show_service_fee" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
+      </el-form-item>
+      <el-form-item label="充值返利%" prop="recharge_rebate_ratio">
+        <template #label>
+          <div class="flex-center">
+            <span>充值返利%</span>
+            <el-tooltip content="最多可设置六级返利,格式1,2,3分别代表第一二三下级的充值返利%,最多可设置六级" placement="top">
+              <QuestionFilled style="width: 1em; height: 1em" />
+            </el-tooltip>
+          </div>
+        </template>
+        <el-input v-model="formData.recharge_rebate_ratio" />
+      </el-form-item>
+      <el-form-item label="量化返利%" prop="quant_rebate_ratio">
+        <template #label>
+          <div class="flex-center">
+            <span>量化返利%</span>
+            <el-tooltip content="最多可设置六级返利,格式1,2,3分别代表第一二三下级的量化返利%,最多可设置六级" placement="top">
+              <QuestionFilled style="width: 1em; height: 1em" />
+            </el-tooltip>
+          </div>
+        </template>
+        <el-input v-model="formData.quant_rebate_ratio" />
+      </el-form-item>
+      <el-form-item label="复充收益率%" prop="recharge_yield_ratio">
+        <el-input v-model="formData.recharge_yield_ratio" />
+      </el-form-item>
+      <el-form-item label="复充封顶" prop="recharge_cap">
+        <el-input v-model="formData.recharge_cap" />
+      </el-form-item>
+      <el-form-item label="是否可解锁购买" prop="is_unlock_purchase">
+        <el-switch v-model="formData.is_unlock_purchase" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
+      </el-form-item>
+      <el-form-item label="可提现星期" prop="cash_withdrawal_week">
+        <el-checkbox-group v-model="formData.cash_withdrawal_week">
+          <el-checkbox-button :label="1">星期一</el-checkbox-button>
+          <el-checkbox-button :label="2">星期二</el-checkbox-button>
+          <el-checkbox-button :label="3">星期三</el-checkbox-button>
+          <el-checkbox-button :label="4">星期四</el-checkbox-button>
+          <el-checkbox-button :label="5">星期五</el-checkbox-button>
+          <el-checkbox-button :label="6">星期六</el-checkbox-button>
+          <el-checkbox-button :label="7">星期日</el-checkbox-button>
+        </el-checkbox-group>
+      </el-form-item>
+      <el-form-item label="可提现时间" prop="cash_withdrawal_time">
+        <el-time-picker is-range v-model="formData.cash_withdrawal_time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" format="HH:mm:ss" />
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <div class="dialog-footer">
+        <el-button type="primary" @click="submitHandler">确 定</el-button>
+        <el-button @click="closeHandler">取 消</el-button>
+      </div>
+    </template>
+  </el-dialog>
+</template>
+
+<script setup lang="ts">
+import api, { type Form } from "@/api/system/VipConfig";
+import { StatusEnum } from "@/enums/MenuTypeEnum";
+import { FormInstance } from "element-plus";
+import uploadPart from "@/components/Upload/uploadPart.vue";
+const props = defineProps<{
+  data?: Form;
+}>();
+const visible = defineModel<boolean>();
+const title = ref("");
+watch(
+  visible,
+  () => {
+    if (!visible.value) return;
+    if (props.data) {
+      title.value = "编辑";
+      formData.value = { ...props.data };
+    } else {
+      title.value = "新增";
+      formData.value = { status: StatusEnum.False };
+    }
+  },
+  {
+    flush: "post",
+  }
+);
+const formData = ref<Form>({});
+
+const rules = {
+  show_name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
+  min_withdraw: [{ required: true, message: "最小提现金额不能为空", trigger: "blur" }],
+  max_withdraw: [{ required: true, message: "最大提现金额不能为空", trigger: "blur" }],
+  withdraw_fee_ratio: [{ required: true, message: "提现手续费不能为空", trigger: "blur" }],
+  max_withdraw_fee: [{ required: true, message: "最大手续费(当前币种单位)不能为空", trigger: "blur" }],
+  min_withdraw_fee: [{ required: true, message: "最小手续费(当前币种单位)不能为空", trigger: "blur" }],
+};
+
+const formRef = ref<FormInstance>();
+const emit = defineEmits(["finally"]);
+function submitHandler() {
+  unref(formRef)?.validate(async (valid) => {
+    if (!valid) return;
+    console.log(formData.value);
+    if (props.data) {
+      await api.edit(formData.value);
+    } else {
+      await api.add(formData.value);
+    }
+    visible.value = false;
+    emit("finally");
+  });
+}
+function closeHandler() {
+  unref(formRef)?.clearValidate();
+  unref(formRef)?.resetFields();
+  visible.value = false;
+}
+</script>
+
+<style></style>

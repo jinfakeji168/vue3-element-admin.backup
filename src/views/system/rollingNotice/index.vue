@@ -2,13 +2,13 @@
   <div class="app-container">
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button v-hasPerm="['consultationSetting:add']" type="success" @click="table.editHandler()">
+        <el-button v-hasPerm="['rollingNotice:add']" type="success" @click="table.editHandler()">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button v-hasPerm="['consultationSetting:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
+        <el-button v-hasPerm="['rollingNotice:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
@@ -26,28 +26,22 @@
             <el-tag v-else type="info">禁用</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="创建时间" width="200"></el-table-column>
+        <el-table-column prop="created_at" label="发布时间" width="200"></el-table-column>
         <el-table-column prop="updated_at" label="更新时间" width="200"></el-table-column>
 
         <el-table-column label="操作" fixed="right" align="left" width="200">
           <template #default="{ row }">
-            <el-button v-hasPerm="['consultationSetting:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
+            <el-button v-hasPerm="['rollingNotice:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
               编辑
             </el-button>
-            <el-button v-hasPerm="['consultationSetting:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
+            <el-button v-hasPerm="['rollingNotice:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
               删除
             </el-button>
-            <el-button
-              v-hasPerm="['consultationSetting:status']"
-              :type="row.status == StatusEnum.False ? 'danger' : 'success'"
-              link
-              size="small"
-              @click.stop="table.changeStatus(row)"
-            >
+            <el-button v-hasPerm="['rollingNotice:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               <template #icon><Switch /></template>
               {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
@@ -65,7 +59,7 @@
 
 <script setup lang="ts">
 import editPart from "./components/edit.vue";
-import api, { type Form, Query } from "@/api/system/consultationSetting";
+import api, { type Form, Query } from "@/api/system/rollingNotice";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import TableInstance from "@/utils/tableInstance";
 

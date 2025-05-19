@@ -11,14 +11,14 @@
       <div class="row_item">
         <div class="search-bar">
           <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-            <el-form-item label="关键字" prop="username">
-              <el-input v-model="queryParams.username" placeholder="用户名/昵称" clearable style="width: 200px" @keyup.enter="handleQuery" />
+            <el-form-item label="用户名" prop="username">
+              <el-input v-model="queryParams.username" placeholder="请输入用户名" clearable style="width: 200px" @keyup.enter="handleQuery" />
             </el-form-item>
             <el-form-item label="手机号" prop="mobile">
-              <el-input v-model="queryParams.mobile" placeholder="手机号" clearable style="width: 200px" @keyup.enter="handleQuery" />
+              <el-input v-model="queryParams.mobile" placeholder="请输入手机号" clearable style="width: 200px" @keyup.enter="handleQuery" />
             </el-form-item>
             <el-form-item label="邮箱" prop="emai">
-              <el-input v-model="queryParams.email" placeholder="邮箱" clearable style="width: 200px" @keyup.enter="handleQuery" />
+              <el-input v-model="queryParams.email" placeholder="请输入邮箱" clearable style="width: 200px" @keyup.enter="handleQuery" />
             </el-form-item>
             <el-form-item label="状态" prop="status">
               <el-select v-model="queryParams.status" placeholder="全部" clearable class="!w-[100px]">
@@ -39,7 +39,7 @@
           </el-form>
         </div>
 
-        <el-card shadow="never" class="table-wrapper">
+        <el-card shadow="never" class="table-wrapper" v-loading="loading">
           <template #header>
             <div class="flex-x-between">
               <div>
@@ -55,14 +55,15 @@
             </div>
           </template>
 
-          <el-table v-loading="loading" :data="pageData" @selection-change="handleSelectionChange">
+          <el-table :data="pageData" @selection-change="handleSelectionChange">
             <el-table-column type="selection" :selectable="selectableHandler" width="50" align="center" />
-            <el-table-column key="uid" label="编号" align="center" prop="uid" width="80" />
+            <el-table-column key="uid" label="编号" align="center" prop="uid" width="60" />
             <el-table-column key="username" label="用户名" align="center" prop="username" width="200" />
-            <el-table-column label="用户昵称" align="center" prop="nickname" width="200" />
+            <el-table-column label="用户昵称" align="center" prop="nickname" />
 
             <el-table-column label="部门" width="150" align="center" prop="department.title" />
             <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
+            <el-table-column label="邮箱" align="center" prop="email" width="180" />
 
             <el-table-column label="状态" align="center" prop="status" width="100">
               <template #default="scope">
@@ -80,7 +81,7 @@
                 </el-button>
                 <template v-if="scope.row.uid !== 1">
                   <el-button v-hasPerm="['user:edit']" type="primary" link size="small" @click="handleOpenDialog(scope.row)">
-                    <template #icon><Edit /></template>
+                    <template #icon><EditPen /></template>
                     编辑
                   </el-button>
                   <el-button v-hasPerm="['user:delete']" type="danger" link size="small" @click="handleDelete(scope.row.uid)">
@@ -94,6 +95,7 @@
                     size="small"
                     @click.stop="changeStatus(scope.row)"
                   >
+                    <template #icon><Switch /></template>
                     {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
                   </el-button>
                 </template>

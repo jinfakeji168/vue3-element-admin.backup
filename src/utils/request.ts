@@ -21,12 +21,6 @@ service.interceptors.request.use(
     const accessToken = getToken();
     if (accessToken || config.url?.match(/(?<=\/)login/)) {
       config.headers.Authorization = accessToken;
-      if (config.method == "delete") {
-        //进行二次判断
-        const res = await ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
-          type: "warning",
-        });
-      }
       return config;
     } else {
       return Promise.reject("未登录");

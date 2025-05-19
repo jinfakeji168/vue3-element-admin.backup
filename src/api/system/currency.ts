@@ -25,7 +25,7 @@ export interface Query {
   limit: number;
 }
 
-/** 部门类型 */
+/** 类型 */
 export interface Form {
   id?: number;
   icon?: string;
