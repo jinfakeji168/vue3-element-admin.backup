@@ -29,7 +29,7 @@ export interface Form {
   status?: StatusEnum;
   sort?: number;
   /**会员名称 */
-  title: string;
+  title?: string;
   /**图片 */
   icon?: string;
   /**会员等级 */
@@ -74,5 +74,5 @@ export interface Form {
   created_at?: string;
   /** 更新时间 */
   updated_at?: string;
-  cash_withdrawal_time: any[];
+  cash_withdrawal_time?: any[];
 }

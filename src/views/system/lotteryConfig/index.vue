@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <el-card shadow="never" v-loading="loading[0]">
+      <template #header>抽奖配置</template>
       <el-form :model="formData" label-width="200px">
         <el-form-item label="抽奖开关" prop="lottery_is_open">
           <el-radio-group v-model="formData.lottery_is_open">

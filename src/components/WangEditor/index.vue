@@ -53,7 +53,7 @@ const handleCreated = (editor: any) => {
 };
 
 function handleChange(editor: any) {
-  modelValue.value = editor.getHtml();
+  // modelValue.value = editor.getHtml();
 }
 
 // 组件销毁时，也及时销毁编辑器

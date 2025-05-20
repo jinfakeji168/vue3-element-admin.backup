@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-card shadow="never" v-loading="loading[0]">
-      <template #header>签到配置</template>
+      <template #header>邀请奖励</template>
       <el-form :model="formData" label-width="200px">
         <el-form-item label="邀请下级首存人数阶梯奖励" prop="invite_first_recharge_user">
           <el-radio-group v-model="formData.invite_first_recharge_user">

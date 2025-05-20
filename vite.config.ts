@@ -10,13 +10,7 @@ import mockDevServerPlugin from "vite-plugin-mock-dev-server";
 
 import UnoCSS from "unocss/vite";
 import { resolve } from "path";
-import {
-  name,
-  version,
-  engines,
-  dependencies,
-  devDependencies,
-} from "./package.json";
+import { name, version, engines, dependencies, devDependencies } from "./package.json";
 
 // 平台的名称、版本、运行所需的`node`版本、依赖、构建时间的类型提示
 const __APP_INFO__ = {
@@ -55,7 +49,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
       // 端口号
       port: +env.VITE_APP_PORT,
       // 是否自动在浏览器中打开
-      open: true,
+      open: false,
       // proxy: {
       //   // 代理前缀为 /dev-api 的请求
       //   [env.VITE_APP_BASE_API]: {
@@ -229,9 +223,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
             const info = assetInfo.name.split(".");
             let extType = info[info.length - 1];
             // console.log('文件信息', assetInfo.name)
-            if (
-              /\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)
-            ) {
+            if (/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/i.test(assetInfo.name)) {
               extType = "media";
             } else if (/\.(png|jpe?g|gif|svg)(\?.*)?$/.test(assetInfo.name)) {
               extType = "img";

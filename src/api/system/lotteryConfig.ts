@@ -8,7 +8,7 @@ const rechargeListPath = "/admin/system/lotteryConfig/gift";
 export default {
   /** @description: 获取抽奖配置*/
   getLotteryConfig() {
-    return request<Form>({
+    return request<any, Form>({
       url: `${BasePath}/getLotteryConfig`,
       method: "get",
     });
@@ -50,11 +50,6 @@ export interface Form {
   lottery_invite_prize_set?: lottery_item[];
   lottery_send_type?: number;
   lottery_recharge_prize_set?: lottery_item[];
-}
-
-export interface TranslationItem {
-  lang?: string;
-  content?: string;
 }
 
 export interface lottery_item {

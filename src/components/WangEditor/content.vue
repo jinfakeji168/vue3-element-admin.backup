@@ -1,7 +1,7 @@
 <template>
   <div style="overflow-y: scroll">
     <div class="main_container">
-      <el-card class="container">
+      <el-card class="container" v-if="mounted">
         <template #header>
           <div class="flex_row">
             <span :class="{ isnull: !notNull }">
@@ -47,20 +47,11 @@ const store = useStore();
 
 const formData = defineModel<any>();
 /**keys 对应原文和翻译list的key */
-const props = withDefaults(defineProps<{ keys: string[]; type?: "rich" | "public"; disabled?: boolean }>(), {
+const props = withDefaults(defineProps<{ keys: string[]; type?: "rich" | "public"; disabled?: boolean; required?: boolean }>(), {
   type: "rich",
+  required: true,
 });
 const currentEditIndex = ref(-2);
-
-const rules = {
-  [props.keys[0]]: [
-    {
-      required: true,
-      message: "请输入原文",
-      trigger: "blur",
-    },
-  ],
-};
 
 const emits = defineEmits(["initBefore"]);
 watch(formData, (val) => {
@@ -69,10 +60,10 @@ watch(formData, (val) => {
   val[props.keys[0]] ??= "";
   getLangOptions();
 });
-
+/**用来保证wangeditor在值准备好之后生成，否则会有bug */
+const mounted = ref(false);
 async function getLangOptions() {
-  const langList = await store.getLangList;
-
+  const langList = await store.getLangListAsync();
   //translation
   for (let item of langList) {
     const result = unref(formData)[props.keys[1]]?.findIndex((val: any) => val.lang == item.mark);
@@ -90,9 +81,10 @@ async function getLangOptions() {
       });
     }
   }
+  mounted.value = true;
   emits("initBefore");
 }
-const notNull = computed(() => unref(formData)[props.keys[0]] && unref(formData)[props.keys[0]] != "<p><br></p>");
+const notNull = computed(() => !props.required || (unref(formData)[props.keys[0]] && unref(formData)[props.keys[0]] != "<p><br></p>"));
 
 function validate() {
   return Promise.resolve(notNull.value);

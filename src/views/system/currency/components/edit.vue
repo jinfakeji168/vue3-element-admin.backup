@@ -14,12 +14,7 @@
         <el-input-number v-model="formData.max_withdraw" :min="0" />
       </el-form-item>
       <el-form-item label="提现手续费(%)" prop="withdraw_fee_ratio">
-        <el-input
-          v-model="formData.withdraw_fee_ratio"
-          type="text"
-          :formatter="(value: number) => `${value}`.replace(/(?<=(^(?!\d\.\d)\d+)$)/, '.00')"
-          :parser="(value: number) => `${value}`.replace(/(?<=(^(?!\d\.\d)\d+)$)/, '.00')"
-        />
+        <el-input v-model="formData.withdraw_fee_ratio" type="text" :formatter="parserHandler" :parser="parserHandler" />
       </el-form-item>
       <el-form-item label="最大手续费(当前币种单位)" prop="max_withdraw_fee">
         <el-input-number v-model="formData.max_withdraw_fee" :min="0" />
@@ -82,6 +77,7 @@ import api, { type Form } from "@/api/system/currency";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { FormInstance } from "element-plus";
 import uploadPart from "@/components/Upload/uploadPart.vue";
+import { parserHandler } from "@/utils/index";
 const props = defineProps<{
   data?: Form;
 }>();

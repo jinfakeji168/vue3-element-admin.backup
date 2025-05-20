@@ -24,7 +24,7 @@
           <div class="flex-center">
             <span>解锁邀请人数</span>
             <el-tooltip content="购买此等级所需邀请人数(下三级人数都算)，0代表无需邀请" placement="top">
-              <QuestionFilled style="width: 1em; height: 1em" />
+              <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -35,7 +35,7 @@
           <div class="flex-center">
             <span>邀请计算层级</span>
             <el-tooltip content="购买此等级所需邀请人数计算层级，1代表计算一级下级，3代表计算三级下级" placement="top">
-              <QuestionFilled style="width: 1em; height: 1em" />
+              <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -46,7 +46,7 @@
           <div class="flex-center">
             <span>邀请人数有效充值</span>
             <el-tooltip content="购买此等级所需邀请人数需要充值满多少才算有效邀请人" placement="top">
-              <QuestionFilled style="width: 1em; height: 1em" />
+              <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -57,7 +57,7 @@
           <div class="flex-center">
             <span>量化有效天数</span>
             <el-tooltip content="解锁此等级可以做量化的天数,到期后返还给用户解锁的本金" placement="top">
-              <QuestionFilled style="width: 1em; height: 1em" />
+              <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -68,7 +68,7 @@
           <div class="flex-center">
             <span>收益率范围%</span>
             <el-tooltip content="单次完成量化的收益率范围。每次量化的收益率计算本金会在最小值到最大值中取一个" placement="top">
-              <QuestionFilled style="width: 1em; height: 1em" />
+              <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -88,7 +88,7 @@
               content="平台服务费比例。用户的收益平台收取的比例，单位百分比，范围0-100，例如设置50，用户收益是1，那么用户最终收益是0.5，平台服务费0.5 用户收益计算公式：用户量化账户金额 * 收益率范围随机值 * 用户最终收益折扣% *（1-平台服务费%），用户最终收益折扣默认100，当前配置预计单次量化收益范围，预计单日量化收益范围"
               placement="top"
             >
-              <QuestionFilled style="width: 1em; height: 1em" />
+              <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -101,8 +101,8 @@
         <template #label>
           <div class="flex-center">
             <span>充值返利%</span>
-            <el-tooltip content="最多可设置六级返利,格式1,2,3分别代表第一二三下级的充值返利%,最多可设置六级" placement="top">
-              <QuestionFilled style="width: 1em; height: 1em" />
+            <el-tooltip content="格式1,2,3分别代表第一二三下级的充值返利%,最多可设置六级" placement="top">
+              <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -112,8 +112,8 @@
         <template #label>
           <div class="flex-center">
             <span>量化返利%</span>
-            <el-tooltip content="最多可设置六级返利,格式1,2,3分别代表第一二三下级的量化返利%,最多可设置六级" placement="top">
-              <QuestionFilled style="width: 1em; height: 1em" />
+            <el-tooltip content="格式1,2,3分别代表第一二三下级的量化返利%,最多可设置六级" placement="top">
+              <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
         </template>
@@ -172,7 +172,7 @@ watch(
       formData.value = { ...props.data };
     } else {
       title.value = "新增";
-      formData.value = { status: StatusEnum.False };
+      formData.value = { status: StatusEnum.False, is_unlock_purchase: StatusEnum.False, show_service_fee: StatusEnum.False };
     }
   },
   {
@@ -182,12 +182,27 @@ watch(
 const formData = ref<Form>({});
 
 const rules = {
-  show_name: [{ required: true, message: "名称不能为空", trigger: "blur" }],
-  min_withdraw: [{ required: true, message: "最小提现金额不能为空", trigger: "blur" }],
-  max_withdraw: [{ required: true, message: "最大提现金额不能为空", trigger: "blur" }],
-  withdraw_fee_ratio: [{ required: true, message: "提现手续费不能为空", trigger: "blur" }],
-  max_withdraw_fee: [{ required: true, message: "最大手续费(当前币种单位)不能为空", trigger: "blur" }],
-  min_withdraw_fee: [{ required: true, message: "最小手续费(当前币种单位)不能为空", trigger: "blur" }],
+  title: [{ required: true, message: "VIP名称不能为空", trigger: "blur" }],
+  level: [{ required: true, message: "VIP等级不能为空", trigger: "blur" }],
+  icon: [{ required: true, message: "图标不能为空", trigger: "blur" }],
+  status: [{ required: true, message: "状态不能为空", trigger: "blur" }],
+  quant_num: [{ required: true, message: "量化次数不能为空", trigger: "blur" }],
+  min_unlock_amount: [{ required: true, message: "解锁金额不能为空", trigger: "blur" }],
+  unlock_invitation_num: [{ required: true, message: "解锁邀请人数不能为空", trigger: "blur" }],
+  invited_comp_level: [{ required: true, message: "邀请计算层级不能为空", trigger: "blur" }],
+  invited_num_effect_recharge: [{ required: true, message: "邀请人数有效充值不能为空", trigger: "blur" }],
+  quant_effect_days: [{ required: true, message: "量化有效天数不能为空", trigger: "blur" }],
+  min_rate_of_return: [{ required: true, message: "最小收益率不能为空", trigger: "blur" }],
+  max_rate_of_return: [{ required: true, message: "最大收益率不能为空", trigger: "blur" }],
+  service_fee_ratio: [{ required: true, message: "平台服务费比例不能为空", trigger: "blur" }],
+  show_service_fee: [{ required: true, message: "是否显示服务费不能为空", trigger: "blur" }],
+  recharge_rebate_ratio: [{ required: true, message: "充值返利不能为空", trigger: "blur" }],
+  quant_rebate_ratio: [{ required: true, message: "量化返利不能为空", trigger: "blur" }],
+  recharge_yield_ratio: [{ required: true, message: "复充收益率不能为空", trigger: "blur" }],
+  recharge_cap: [{ required: true, message: "复充封顶不能为空", trigger: "blur" }],
+  is_unlock_purchase: [{ required: true, message: "是否可解锁购买不能为空", trigger: "blur" }],
+  cash_withdrawal_week: [{ required: true, message: "可提现星期不能为空", trigger: "blur" }],
+  cash_withdrawal_time: [{ required: true, message: "可提现时间不能为空", trigger: "blur" }],
 };
 
 const formRef = ref<FormInstance>();

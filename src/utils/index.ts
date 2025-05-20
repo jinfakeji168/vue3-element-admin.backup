@@ -42,19 +42,26 @@ export function isExternal(path: string) {
   return isExternal;
 }
 
-/**keys [new key，old key]的二维数组 */
+/**keys [new key，old key]的二维数组  @stone*/
 export function deepChangeOption<T = any[]>(list: any[], keys: string[][]): T {
   return list.map((item: any) => {
     return {
       item: item,
       disabled: item.status == StatusEnum.True,
-      ...Object.assign(
-        {},
-        ...keys.map((keyItem) => ({ [keyItem[0]]: item[keyItem[1]] }))
-      ),
-      children: item.children
-        ? deepChangeOption(item.children, keys)
-        : item.children,
+      ...Object.assign({}, ...keys.map((keyItem) => ({ [keyItem[0]]: item[keyItem[1]] }))),
+      children: item.children ? deepChangeOption(item.children, keys) : item.children,
     };
   }) as T;
+}
+export function parserHandler(value: string) {
+  //没有小数点的数字
+  const reg = /(?<=(^(?!\d\.\d)\d+)$)/;
+  //有小数一位的数字
+  const reg1 = /(?<=\d+\.\d{1})$/;
+
+  if (value.match(reg)) {
+    return value.replace(reg, ".00");
+  } else if (value.match(reg1)) {
+    return value.replace(reg1, "0");
+  } else return value;
 }
