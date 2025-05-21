@@ -11,8 +11,8 @@ export default function init<Query, Form>(BasePath: string) {
     });
   }
   /**新增 */
-  function add(data: Form) {
-    return request<Form>({
+  function add<T = Form>(data: T) {
+    return request<T>({
       url: `${BasePath}/add`,
       method: "post",
       data,

@@ -76,7 +76,7 @@
         <el-form-item label="充值奖品设置">
           <el-button type="primary" @click="visible[3] = true">查看/编辑</el-button>
         </el-form-item>
-        <el-form-item label="每日充值抽奖次数配置">
+        <el-form-item :label="Listlables[formData.lottery_send_type - 1]">
           <el-button type="primary" @click="visible[4] = true">查看/编辑</el-button>
         </el-form-item>
       </el-form>
@@ -85,10 +85,17 @@
       </template>
     </el-card>
     <explain :data="formData" v-model="visible[0]" @finally="getData" />
-    <prizeList :data="formData" v-model="visible[1]" :disabled="!hasAuth('lotteryConfig:registPrize')" @finally="getData" _key="lottery_register_prize_set" />
-    <prizeList :data="formData" v-model="visible[2]" :disabled="!hasAuth('lotteryConfig:invitePrize')" @finally="getData" _key="lottery_invite_prize_set" />
-    <prizeList :data="formData" v-model="visible[3]" :disabled="!hasAuth('lotteryConfig:rechargePrize')" @finally="getData" _key="lottery_recharge_prize_set" />
-    <recharge v-model="visible[4]" />
+    <prizeList :data="formData" v-model="visible[1]" :disabled="!hasAuth('lotteryConfig:registPrize')" @finally="getData" _key="lottery_register_prize_set" title="注册奖品设置" />
+    <prizeList :data="formData" v-model="visible[2]" :disabled="!hasAuth('lotteryConfig:invitePrize')" @finally="getData" _key="lottery_invite_prize_set" title="邀请奖品设置" />
+    <prizeList
+      :data="formData"
+      v-model="visible[3]"
+      :disabled="!hasAuth('lotteryConfig:rechargePrize')"
+      @finally="getData"
+      _key="lottery_recharge_prize_set"
+      title="充值奖品设置"
+    />
+    <recharge v-model="visible[4]" :title="Listlables[formData.lottery_send_type - 1]" />
   </div>
 </template>
 
@@ -115,6 +122,8 @@ async function submitHandler() {
   await api.setLotteryConfig(formData);
   loading[1] = false;
 }
+
+const Listlables = ["每日充值抽奖次数配置", "单次充值抽奖次数配置", "终身充值抽奖次数配置"];
 </script>
 
 <style></style>

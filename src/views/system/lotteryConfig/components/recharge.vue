@@ -71,13 +71,8 @@ import api, { type rechargeForm } from "@/api/system/lotteryConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import TableInstance from "@/utils/tableInstance";
 import { FormInstance } from "element-plus";
+const props = withDefaults(defineProps<{ title: string }>(), {});
 const visible = defineModel<boolean>();
-const title = ref<string>("");
-watch(visible, (val) => {
-  if (val) {
-    title.value = "充值配置";
-  }
-});
 const formRef = ref<FormInstance>();
 const table = new TableInstance<rechargeForm>(api, {}, 20);
 

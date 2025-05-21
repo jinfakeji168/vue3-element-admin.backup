@@ -2,7 +2,7 @@ import init from "@/api/basicAPI";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { dayjs } from "element-plus";
 
-export default class TableInstance<FormT> {
+export default class TableInstance<FormT extends { status?: StatusEnum }> {
   private api: any;
   loading: Ref<boolean> = ref(false);
   pageInfo = reactive({
@@ -16,9 +16,9 @@ export default class TableInstance<FormT> {
   private queryFormRef: Ref | undefined;
   private editFormRef: Ref | undefined;
   /**多选选择的列表 */
-  private selectList: Ref<number[]> = ref([]);
+  selectList: Ref<any[]> = ref([]);
   /**编辑选中的form对象 */
-  currentData = ref<FormT>();
+  currentData = ref<any>();
   /**控制弹窗显示 */
   visible = ref<boolean[]>([]);
   constructor(api: any, queryParams?: Record<string, any>, limit: number = 20, queryFormRef?: Ref, editFormRef?: Ref) {
@@ -55,13 +55,25 @@ export default class TableInstance<FormT> {
     this.loading.value = false;
     this.list.value = Object.hasOwn(temp, "list") ? temp.list : temp.data;
   }
+  // 异步删除处理函数
   async deleteHandler(id?: number) {
+    // 如果有id参数，则将id作为参数传入，否则将selectList.value的值作为参数传入
     const params = id ? [id] : unref(this.selectList.value);
+    // 调用api.delete方法，传入参数
     const res = await this.api.delete(params);
     if (res) this.queryHandler();
   }
-  selectionChangeHandler(data: any[], key = "id") {
-    this.selectList.value = data.map((val) => <number>val[key]);
+  selectionChangeHandler(data: any[], keys = ["id"]) {
+    this.selectList.value = data.map((val) => {
+      if (keys.length == 1) return val[keys[0]];
+      else {
+        const obj: any = {};
+        keys.forEach((key) => {
+          obj[key] = val[key];
+        });
+        return obj;
+      }
+    });
   }
 
   handleResetQuery() {
@@ -83,6 +95,12 @@ export default class TableInstance<FormT> {
    * index：多个弹窗索引
    */
   editHandler(item?: FormT, index: number = 0) {
+    this.visible.value[index] = true;
+    this.currentData.value = item;
+  }
+
+  /** 打开弹窗 可以传递任何对象*/
+  openHandler(index: number, item?: any) {
     this.visible.value[index] = true;
     this.currentData.value = item;
   }

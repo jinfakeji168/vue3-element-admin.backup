@@ -48,7 +48,7 @@ export interface Form {
   lottery_register_prize_set?: lottery_item[];
   lottery_spread_recharge_give?: number;
   lottery_invite_prize_set?: lottery_item[];
-  lottery_send_type?: number;
+  lottery_send_type: number;
   lottery_recharge_prize_set?: lottery_item[];
 }
 

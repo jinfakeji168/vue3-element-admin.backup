@@ -40,14 +40,14 @@ export interface Query {
   limit: number;
 }
 
-/** 部门类型 */
+/** 语言类型 */
 export interface Form {
-  id?: string;
+  id: number;
   name?: string;
   mark?: string;
   status?: StatusEnum;
   sort?: number;
-  display_name?: string;
+  // display_name?: string;
 }
 
 /**全局content组件vmodel参数 */

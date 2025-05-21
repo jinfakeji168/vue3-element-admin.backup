@@ -36,14 +36,13 @@ const props = defineProps<{
   data: Form;
   _key: "lottery_invite_prize_set" | "lottery_recharge_prize_set" | "lottery_register_prize_set";
   disabled: boolean;
+  title: string;
 }>();
 const visible = defineModel<boolean>();
-const title = ref("");
 watch(
   visible,
   () => {
     if (!visible.value) return;
-    title.value = "抽奖说明";
     formData.value = { ...props.data };
   },
   {
