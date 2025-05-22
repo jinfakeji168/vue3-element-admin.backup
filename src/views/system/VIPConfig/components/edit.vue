@@ -2,10 +2,10 @@
   <el-dialog v-model="visible" :title="title" width="600px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
       <el-form-item label="VIP名称" prop="title">
-        <el-input v-model="formData.title" placeholder="" />
+        <el-input v-model="formData.title" placeholder="请输入VIP名称" />
       </el-form-item>
       <el-form-item label="VIP等级" prop="level">
-        <el-input-number v-model="formData.level" :min="0" />
+        <el-input v-model="formData.level" placeholder="请输入VIP等级" type="number" />
       </el-form-item>
       <el-form-item label="图标" prop="icon">
         <upload-part v-model="formData.icon"></upload-part>
@@ -14,10 +14,10 @@
         <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item>
       <el-form-item label="量化次数" prop="quant_num">
-        <el-input-number v-model="formData.quant_num" :min="0" />
+        <el-input v-model="formData.quant_num" placeholder="请输入量化次数" type="number" />
       </el-form-item>
       <el-form-item label="解锁金额" prop="min_unlock_amount">
-        <el-input v-model="formData.min_unlock_amount" />
+        <el-input v-model="formData.min_unlock_amount" placeholder="请输入解锁所需金额" />
       </el-form-item>
       <el-form-item label="解锁邀请人数" prop="unlock_invitation_num">
         <template #label>
@@ -50,7 +50,7 @@
             </el-tooltip>
           </div>
         </template>
-        <el-input v-model="formData.invited_num_effect_recharge" />
+        <el-input v-model="formData.invited_num_effect_recharge" placeholder="请输入邀请人数需要达到的充值金额" />
       </el-form-item>
       <el-form-item label="量化有效天数" prop="quant_effect_days">
         <template #label>
@@ -74,9 +74,9 @@
         </template>
         <template #default>
           <div class="flex-center gap-4">
-            <el-input v-model="formData.min_rate_of_return" />
+            <el-input v-model="formData.min_rate_of_return" placeholder="最小收益率" @blur="percentageBlurHandler($event, 'min_rate_of_return')" />
             <span>-</span>
-            <el-input v-model="formData.max_rate_of_return" />
+            <el-input v-model="formData.max_rate_of_return" placeholder="最大收益率" @blur="percentageBlurHandler($event, 'max_rate_of_return')" />
           </div>
         </template>
       </el-form-item>
@@ -92,7 +92,7 @@
             </el-tooltip>
           </div>
         </template>
-        <el-input v-model="formData.service_fee_ratio" />
+        <el-input v-model="formData.service_fee_ratio" placeholder="请输入0-100之间的数字" @blur="percentageBlurHandler($event, 'service_fee_ratio')" />
       </el-form-item>
       <el-form-item label="是否显示服务费" prop="show_service_fee">
         <el-switch v-model="formData.show_service_fee" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
@@ -106,7 +106,7 @@
             </el-tooltip>
           </div>
         </template>
-        <el-input v-model="formData.recharge_rebate_ratio" />
+        <el-input v-model="formData.recharge_rebate_ratio" placeholder="请输入返利比例，如：1,2,3" />
       </el-form-item>
       <el-form-item label="量化返利%" prop="quant_rebate_ratio">
         <template #label>
@@ -117,13 +117,13 @@
             </el-tooltip>
           </div>
         </template>
-        <el-input v-model="formData.quant_rebate_ratio" />
+        <el-input v-model="formData.quant_rebate_ratio" placeholder="请输入返利比例，如：1,2,3" />
       </el-form-item>
       <el-form-item label="复充收益率%" prop="recharge_yield_ratio">
-        <el-input v-model="formData.recharge_yield_ratio" />
+        <el-input v-model="formData.recharge_yield_ratio" placeholder="请输入复充收益率" @blur="percentageBlurHandler($event, 'recharge_yield_ratio')" />
       </el-form-item>
       <el-form-item label="复充封顶" prop="recharge_cap">
-        <el-input v-model="formData.recharge_cap" />
+        <el-input v-model="formData.recharge_cap" placeholder="请输入复充封顶金额" />
       </el-form-item>
       <el-form-item label="是否可解锁购买" prop="is_unlock_purchase">
         <el-switch v-model="formData.is_unlock_purchase" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
@@ -181,6 +181,26 @@ watch(
 );
 const formData = ref<Form>({});
 
+/**
+ * 格式化百分比，确保至少两位小数
+ */
+function formatPercentage(value: string): string {
+  if (!value) return "0.00";
+  const num = parseFloat(value);
+  if (isNaN(num)) return "0.00";
+  return num.toFixed(2);
+}
+
+/**
+ * 百分比输入框失焦处理
+ */
+function percentageBlurHandler(event: FocusEvent, field: keyof Form) {
+  const target = event.target as HTMLInputElement;
+  const formattedValue = formatPercentage(target.value);
+  formData.value[field] = formattedValue;
+}
+
+// 修改验证规则，添加数字验证
 const rules = {
   title: [{ required: true, message: "VIP名称不能为空", trigger: "blur" }],
   level: [{ required: true, message: "VIP等级不能为空", trigger: "blur" }],
@@ -192,9 +212,18 @@ const rules = {
   invited_comp_level: [{ required: true, message: "邀请计算层级不能为空", trigger: "blur" }],
   invited_num_effect_recharge: [{ required: true, message: "邀请人数有效充值不能为空", trigger: "blur" }],
   quant_effect_days: [{ required: true, message: "量化有效天数不能为空", trigger: "blur" }],
-  min_rate_of_return: [{ required: true, message: "最小收益率不能为空", trigger: "blur" }],
-  max_rate_of_return: [{ required: true, message: "最大收益率不能为空", trigger: "blur" }],
-  service_fee_ratio: [{ required: true, message: "平台服务费比例不能为空", trigger: "blur" }],
+  min_rate_of_return: [
+    { required: true, message: "最小收益率不能为空", trigger: "blur" },
+    { pattern: /^\d+(\.\d{2})?$/, message: "请输入正确的百分比格式(至少两位小数)", trigger: "blur" },
+  ],
+  max_rate_of_return: [
+    { required: true, message: "最大收益率不能为空", trigger: "blur" },
+    { pattern: /^\d+(\.\d{2})?$/, message: "请输入正确的百分比格式(至少两位小数)", trigger: "blur" },
+  ],
+  service_fee_ratio: [
+    { required: true, message: "平台服务费比例不能为空", trigger: "blur" },
+    { pattern: /^\d+(\.\d{2})?$/, message: "请输入正确的百分比格式(至少两位小数)", trigger: "blur" },
+  ],
   show_service_fee: [{ required: true, message: "是否显示服务费不能为空", trigger: "blur" }],
   recharge_rebate_ratio: [{ required: true, message: "充值返利不能为空", trigger: "blur" }],
   quant_rebate_ratio: [{ required: true, message: "量化返利不能为空", trigger: "blur" }],
@@ -206,18 +235,26 @@ const rules = {
 };
 
 const formRef = ref<FormInstance>();
-const emit = defineEmits(["finally"]);
+const emit = defineEmits(["finish"]);
 function submitHandler() {
   unref(formRef)?.validate(async (valid) => {
     if (!valid) return;
     console.log(formData.value);
     if (props.data) {
-      await api.edit(formData.value);
+      await api.edit({
+        ...unref(formData),
+        quant_rebate_ratio: unref(formData)!.quant_rebate_ratio!.split(","),
+        recharge_rebate_ratio: unref(formData)!.recharge_rebate_ratio!.split(","),
+      });
     } else {
-      await api.add(formData.value);
+      await api.add({
+        ...unref(formData),
+        quant_rebate_ratio: unref(formData)!.quant_rebate_ratio!.split(","),
+        recharge_rebate_ratio: unref(formData)!.recharge_rebate_ratio!.split(","),
+      });
     }
     visible.value = false;
-    emit("finally");
+    emit("finish");
   });
 }
 function closeHandler() {

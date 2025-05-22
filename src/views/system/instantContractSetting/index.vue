@@ -29,7 +29,7 @@
         <el-button v-hasPerm="['lotteryConfig:save']" type="primary" @click="submitHandler" :loading="loading[1]">保存</el-button>
       </template>
     </el-card>
-    <explain :data="formData" v-model="visible[0]" @finally="getData" />
+    <explain :data="formData" v-model="visible[0]" @finish="getData" />
     <timeList v-model="visible[1]" />
   </div>
 </template>

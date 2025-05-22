@@ -36,14 +36,14 @@ watch(
 const formData = ref<Form>({});
 
 const formRef = ref<FormInstance>();
-const emit = defineEmits(["finally"]);
+const emit = defineEmits(["finish"]);
 async function submitHandler() {
   await api.setContractRemark({
     contract_remark_original: unref(formData).contract_remark_original,
     contract_remark_translation: unref(formData).contract_remark_translation?.filter((item: TranslationItem) => item.content),
   });
   visible.value = false;
-  emit("finally");
+  emit("finish");
 }
 function closeHandler() {
   unref(formRef)?.clearValidate();

@@ -1,65 +1,71 @@
 <template>
   <div class="app-container">
-    <div class="search-bar">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="uid" prop="id">
-          <el-input v-model="queryParams.id" />
-        </el-form-item>
+    <search-form v-model="queryParams" ref="queryFormRef" @search="table.queryHandler()" @reset="table.handleResetQuery()" />
 
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="queryParams.status" clearable class="!w-[100px]">
-            <el-option :value="StatusEnum.False" label="正常" />
-            <el-option :value="StatusEnum.True" label="禁用" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button class="filter-item" type="primary" @click="table.queryHandler()">
-            <template #icon>
-              <Search />
-            </template>
-            搜索
-          </el-button>
-          <el-button @click="table.handleResetQuery()">
-            <template #icon>
-              <Refresh />
-            </template>
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </div>
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
-          <template #icon>
-            <Plus />
-          </template>
-          新增
-        </el-button>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="table.openHandler(1, table.selectList.value)">
-          <template #icon>
-            <Plus />
-          </template>
-          批量操作
-        </el-button>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
-          <template #icon>
-            <Plus />
-          </template>
-          导出会员
-        </el-button>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
-          <template #icon>
-            <Plus />
-          </template>
-          批量封禁
-        </el-button>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
-          <template #icon>
-            <Plus />
-          </template>
-          设置分组
-        </el-button>
+        <el-tabs v-model="currentVip">
+          <el-tab-pane v-for="item of vipList" :label="item.title" :name="item.vip_level">
+            <template #label>
+              {{ `${item.title}(${item.number})` }}
+            </template>
+          </el-tab-pane>
+        </el-tabs>
+        <div class="flex">
+          <el-button v-hasPerm="['currency:add']" type="primary" @click="table.editHandler()">
+            <template #icon>
+              <Plus />
+            </template>
+            新增
+          </el-button>
+          <el-button
+            v-hasPerm="['currency:add']"
+            type="success"
+            @click="
+              table.openHandler(1, table.selectList.value);
+              tabIndex = 0;
+            "
+          >
+            <template #icon>
+              <Plus />
+            </template>
+            批量操作
+          </el-button>
+          <el-button v-hasPerm="['currency:add']" type="info" @click="table.editHandler()">
+            <template #icon>
+              <Plus />
+            </template>
+            导出会员
+          </el-button>
+          <el-button
+            v-hasPerm="['currency:add']"
+            type="danger"
+            @click="
+              table.openHandler(1, table.selectList.value);
+              tabIndex = 6;
+            "
+            :disabled="table.selectList.value.length === 0"
+          >
+            <template #icon>
+              <Plus />
+            </template>
+            批量封禁
+          </el-button>
+          <el-button
+            v-hasPerm="['currency:add']"
+            type="warning"
+            @click="
+              table.openHandler(1, table.selectList.value);
+              tabIndex = 13;
+            "
+            :disabled="table.selectList.value.length === 0"
+          >
+            <template #icon>
+              <Plus />
+            </template>
+            设置分组
+          </el-button>
+        </div>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event, ['id', 'account'])">
         <el-table-column type="selection" width="55" />
@@ -91,7 +97,15 @@
         <el-table-column label="状态设置" min-width="200px">
           <template #default="{ row }">
             <div class="flex flex-col">
-              <el-switch v-model="row.status" inline-prompt :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" active-text="正常" inactive-text="禁用" />
+              <el-switch
+                v-model="row.status"
+                inline-prompt
+                :active-value="StatusEnum.False"
+                :inactive-value="StatusEnum.True"
+                active-text="允许登录"
+                inactive-text="禁止登录"
+                @change="statusChangeHandler(row, 'status')"
+              />
               <el-switch
                 v-model="row.withdrawal_status"
                 inline-prompt
@@ -99,9 +113,18 @@
                 :inactive-value="StatusEnum.True"
                 active-text="允许提现"
                 inactive-text="禁止提现"
+                @change="statusChangeHandler(row, 'withdrawal_status')"
               />
 
-              <el-switch v-model="row.is_quant" inline-prompt :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" active-text="开启量化" inactive-text="关闭量化" />
+              <el-switch
+                v-model="row.is_quant"
+                inline-prompt
+                :active-value="StatusEnum.False"
+                :inactive-value="StatusEnum.True"
+                active-text="开启量化"
+                inactive-text="关闭量化"
+                @change="statusChangeHandler(row, 'is_quant')"
+              />
               <el-switch
                 v-model="row.is_upgrade_withdrawal"
                 inline-prompt
@@ -109,6 +132,7 @@
                 :inactive-value="StatusEnum.True"
                 active-text="允许升级提现"
                 inactive-text="禁止升级提现"
+                @change="statusChangeHandler(row, 'is_upgrade_withdrawal')"
               />
 
               <el-switch
@@ -118,6 +142,7 @@
                 :inactive-value="StatusEnum.True"
                 active-text="启用邀请码"
                 inactive-text="禁用邀请码"
+                @change="statusChangeHandler(row, 'is_enabled_invite_code')"
               />
             </div>
           </template>
@@ -282,34 +307,86 @@
           <template #default="{ row }">
             <div class="grid grid-cols-2 gap-2">
               <el-button type="primary" size="small">详情</el-button>
-              <el-button type="primary" size="small">补单</el-button>
-              <el-button type="primary" size="small">查钱</el-button>
-              <el-button type="primary" size="small">改钱</el-button>
-              <el-button type="primary" size="small">下级充值</el-button>
-              <el-button type="primary" size="small">下线</el-button>
-              <el-button type="primary" size="small">模拟登录</el-button>
-              <el-button type="primary" size="small">生成</el-button>
+              <el-button type="success" size="small">补单</el-button>
+              <el-button type="warning" size="small">查钱</el-button>
+              <el-button type="info" size="small" @click="table.openHandler(2, row)">改钱</el-button>
+              <el-button type="success" size="small">下级充值</el-button>
+              <el-button type="danger" size="small">下线</el-button>
+              <el-button type="warning" size="small">模拟登录</el-button>
             </div>
           </template>
         </el-table-column>
       </el-table>
+      <template #footer>
+        <el-pagination background :total="table.pageTotal.value" :page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
+      </template>
     </el-card>
-    <addMember v-model="table.visible.value[0]" @finally="table.queryHandler()" />
-    <batchOperation v-model="table.visible.value[1]" @finally="table.queryHandler()" :account="table.currentData.value" />
+    <addMember v-model="table.visible.value[0]" @finish="table.queryHandler()" />
+    <batchOperation v-model="table.visible.value[1]" :account="table.currentData.value" :tabIndex="tabIndex" @finish="table.queryHandler()" />
+    <changeBalance v-model="table.visible.value[2]" :member-id="table.currentData.value?.id" @finish="table.queryHandler()" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import TableInstance from "@/utils/tableInstance";
-import api, { type Member, MemberQuery } from "@/api/members/memberList";
+import api, { type Member, MemberQuery, VipItem } from "@/api/members/memberList";
 import { FormInstance } from "element-plus";
 import addMember from "./components/addMember.vue";
 import batchOperation from "./components/batchOperation.vue";
+import changeBalance from "./components/changeBalance.vue";
+import searchForm from "./components/searchForm.vue";
+
 const queryFormRef = ref<FormInstance>();
+onMounted(() => {});
+
 const queryParams = reactive<MemberQuery>({});
 const table = new TableInstance<Member>(api, queryParams, 20, queryFormRef);
-table.queryHandler();
+
+const tabIndex = ref(0);
+const currentVip = ref(0);
+watch(
+  currentVip,
+  (val) => {
+    queryParams.vip_level = val || undefined;
+    table.queryHandler();
+  },
+  {
+    immediate: true,
+  }
+);
+const vipList = ref<VipItem[]>([]);
+async function getvipList() {
+  const res = await api.getVipGroupList();
+  if (res) {
+    res.reverse();
+    const number = res.map((val) => val.number).reduce((pre, cur) => pre + cur);
+    res.unshift({ title: "全部", number, vip_level: 0 });
+    vipList.value = res;
+    currentVip.value = res[0].vip_level as number;
+  }
+}
+getvipList();
+
+/**
+ * 处理会员状态变更
+ * @param row 会员数据
+ * @param type 状态类型 'status' | 'withdrawal_status' | 'is_quant' | 'is_upgrade_withdrawal' | 'is_enabled_invite_code'
+ */
+function statusChangeHandler(row: Member, type: keyof Pick<Member, "status" | "withdrawal_status" | "is_quant" | "is_upgrade_withdrawal" | "is_enabled_invite_code">) {
+  const apiMap = {
+    status: api.changeStatus,
+    withdrawal_status: api.changeWithdrawalStatus,
+    is_quant: api.changeQuantStatus,
+    is_upgrade_withdrawal: api.changeUpgradeWithdrawalStatus,
+    is_enabled_invite_code: api.changeInvitationStatus,
+  };
+
+  apiMap[type]({
+    id: row.id,
+    state: row[type],
+  });
+}
 </script>
 
 <style lang="scss" scoped>

@@ -130,7 +130,7 @@ const rules = {
 };
 
 const formRef = ref<FormInstance>();
-const emit = defineEmits(["finally"]);
+const emit = defineEmits(["finish"]);
 function submitHandler() {
   unref(formRef)?.validate(async (valid) => {
     if (!valid) return;
@@ -141,7 +141,7 @@ function submitHandler() {
       await api.add(formData.value);
     }
     visible.value = false;
-    emit("finally");
+    emit("finish");
   });
 }
 function closeHandler() {

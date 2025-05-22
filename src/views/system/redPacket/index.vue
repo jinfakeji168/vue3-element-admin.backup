@@ -116,7 +116,7 @@
         <el-pagination background :total="table.pageTotal.value" :page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
       </template>
     </el-card>
-    <editPart v-model="table.visible.value[0]" :data="table.currentData.value" @finally="table.queryHandler()" />
+    <editPart v-model="table.visible.value[0]" :data="table.currentData.value" @finish="table.queryHandler()" />
   </div>
 </template>
 

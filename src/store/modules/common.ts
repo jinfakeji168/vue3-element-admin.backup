@@ -1,5 +1,6 @@
 import langApi, { Form } from "@/api/system/lang";
 import api from "@/api/common";
+import { StatusEnum } from "@/enums/MenuTypeEnum";
 
 export const useStore = defineStore("common", () => {
   /**语言列表 */
@@ -23,12 +24,27 @@ export const useStore = defineStore("common", () => {
     if (!_vipList.value) getVipListAsync();
     return unref(_vipList) || [];
   });
+
+  /**分组列表 */
+  const _groupList = ref<groupView[]>();
+  async function getGroupListAsync() {
+    if (!_groupList.value) _groupList.value = await api.getGroupList<groupView[]>();
+    return Promise.resolve(_groupList.value);
+  }
+  const groupList = computed<groupView[]>(() => {
+    if (!_groupList.value) getGroupListAsync();
+    return unref(_groupList) || [];
+  });
+
   return {
     getLangListAsync,
     getVipListAsync,
+    getGroupListAsync,
     vipList,
     langList,
+    groupList,
   };
 });
 
 type vipView = { id: number; title: string; level: number };
+type groupView = { id: number; title: string; status: StatusEnum };

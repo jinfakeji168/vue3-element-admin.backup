@@ -75,7 +75,7 @@ const rules = {
 
 const formRef = ref<FormInstance>();
 
-const emits = defineEmits(["finally"]);
+const emits = defineEmits(["finish"]);
 async function submitHandler() {
   const valid = await unref(formRef)?.validate();
   if (!valid) return;
@@ -88,7 +88,7 @@ async function submitHandler() {
   }
   visible.value = false;
 
-  emits("finally");
+  emits("finish");
 }
 function closeHandler() {
   unref(formRef)?.clearValidate();

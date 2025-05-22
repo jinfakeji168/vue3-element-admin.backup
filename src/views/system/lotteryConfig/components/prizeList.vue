@@ -52,11 +52,11 @@ watch(
 const formData = ref<Form>({});
 
 const formRef = ref<FormInstance>();
-const emit = defineEmits(["finally"]);
+const emit = defineEmits(["finish"]);
 async function submitHandler() {
   await api.setLotteryConfig(unref(formData));
   visible.value = false;
-  emit("finally");
+  emit("finish");
 }
 function closeHandler() {
   unref(formRef)?.clearValidate();

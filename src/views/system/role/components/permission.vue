@@ -125,7 +125,7 @@ watch(visible, (res) => {
   if (res) init(<RolePageVO>props.data);
 });
 
-const emit = defineEmits(["finally"]);
+const emit = defineEmits(["finish"]);
 
 const loading = ref(false);
 async function submitHanlder() {
@@ -139,6 +139,6 @@ async function submitHanlder() {
     loading.value = false;
   }
   visible.value = false;
-  emit("finally");
+  emit("finish");
 }
 </script>

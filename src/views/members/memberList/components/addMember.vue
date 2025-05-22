@@ -58,7 +58,7 @@ const rules = reactive({
   lang_id: [{ required: true, message: "请选择语言类型", trigger: "change" }],
 });
 const loading = ref(false);
-const emits = defineEmits(["finally"]);
+const emits = defineEmits(["finish"]);
 async function submitForm() {
   const valid = await formRef.value.validate().catch(() => false);
   if (valid) {
@@ -71,7 +71,7 @@ async function submitForm() {
       loading.value = false;
     }
     dialogVisible.value = false;
-    emits("finally");
+    emits("finish");
   } else {
     console.log("error submit!!");
     return false;

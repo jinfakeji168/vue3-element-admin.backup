@@ -124,8 +124,103 @@ export default {
       data,
     });
   },
-};
 
+  /**通过会员账户获取会员下级 */
+  getSubordinate(account: string) {
+    return request<any, { number: number }>({
+      url: `${BasePath}/getMemberSubordinate`,
+      method: "get",
+      params: { account },
+    });
+  },
+  /**设置分组 */
+  setGroup(data: { ids: number[]; group_id: number }) {
+    return request({
+      url: `${BasePath}/batchGroup`,
+      method: "put",
+      data,
+    });
+  },
+  /**批量封禁 */
+  _batchBan(data: { ids: number[]; status: StatusEnum }) {
+    return request({
+      url: `${BasePath}/batchBaned`,
+      method: "put",
+      data,
+    });
+  },
+  /**获取余额数据 */
+  getBalanceData(member_id: number) {
+    return request<any, AccountBalanceData>({
+      url: `${BasePath}/getChangeBalance`,
+      method: "get",
+      params: { member_id },
+    });
+  },
+  /**修改余额数据 */
+  changeBalance(data: AccountBalanceChangeForm) {
+    return request({
+      url: `${BasePath}/setChangeBalance`,
+      method: "put",
+      data,
+    });
+  },
+  /**导出会员 */
+  exportMember(data: MemberQuery) {
+    return request({
+      url: `${BasePath}/export`,
+      method: "get",
+      data,
+    });
+  },
+  /**获取vip分组列表（带人数） */
+  getVipGroupList() {
+    return request<any, VipItem[]>({
+      url: `${BasePath}/vipLevelNumber`,
+    });
+  },
+  /**列表 修改状态 */
+  changeStatus(data: { id: number; state: StatusEnum }) {
+    return request({
+      url: `${BasePath}/setChangeUserStatus`,
+      method: "put",
+      data,
+    });
+  },
+  /**列表 修改提现状态 */
+  changeWithdrawalStatus(data: { id: number; state: StatusEnum }) {
+    return request({
+      url: `${BasePath}/setChangeWithdrawalStatus`,
+      method: "put",
+      data,
+    });
+  },
+  /**列表 修改量化状态 */
+  changeQuantStatus(data: { id: number; state: StatusEnum }) {
+    return request({
+      url: `${BasePath}/setChangeIsQuant`,
+      method: "put",
+      data,
+    });
+  },
+  /**列表 列表-修改升级提现状态*/
+  changeUpgradeWithdrawalStatus(data: { id: number; state: StatusEnum }) {
+    return request({
+      url: `${BasePath}/setChangeUpgradeWithdrawal`,
+      method: "put",
+      data,
+    });
+  },
+  /**列表 修改邀请码状态*/
+  changeInvitationStatus(data: { id: number; state: StatusEnum }) {
+    return request({
+      url: `${BasePath}/setChangeInviteCode`,
+      method: "put",
+      data,
+    });
+  },
+};
+/* 查询表单 */
 export interface MemberQuery {
   /** id */
   id?: number;
@@ -167,8 +262,10 @@ export interface MemberQuery {
   lang_id?: number;
   /** 状态 */
   status?: StatusEnum;
+  /**等级 */
+  vip_level?: number;
 }
-
+/**会员 */
 export interface Member {
   /** id */
   id: number;
@@ -309,7 +406,7 @@ export interface Member {
   /** 更新时间 */
   updated_at: string;
 }
-
+/* 添加会员 */
 export interface MemberAdd {
   /** 用户类型 1:邮箱 2:手机号 3:用户名 */
   type: number;
@@ -397,4 +494,39 @@ export interface BatchOperationForm {
   withdrawal_invite_user_effective_time?: string;
   /** 新分组ID */
   new_group_id?: number;
+}
+
+/**各类型账户余额 */
+export interface AccountBalanceData {
+  /** 量化账户余额 */
+  quant_account: number;
+  /** 佣金账户余额 */
+  brokerage_account: number;
+  /** 充值账户余额 */
+  recharge_account: number;
+  /** 智能账户余额 */
+  smart_account: number;
+  /** 秒合约余额 */
+  second_contract_account: number;
+  /** 体验金余额 */
+  experience_account: number;
+}
+/**修改账户表单 */
+export interface AccountBalanceChangeForm {
+  /** 会员ID */
+  member_id?: number;
+  /** 操作对象 1.量化账户余额 2.充值金额 3.佣金账户余额 4.智能账户余额 5.体验金余额 6.秒合约余额 */
+  op_type?: 1 | 2 | 3 | 4 | 5 | 6;
+  /** 变动类型 1.减少 2.增加 */
+  change_type?: 1 | 2;
+  /** 变动金额 */
+  change_amount?: number;
+  /** 备注 */
+  change_remark?: string;
+}
+
+export interface VipItem {
+  title: string;
+  vip_level: number;
+  number: number;
 }

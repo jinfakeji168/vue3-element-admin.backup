@@ -38,14 +38,14 @@ watch(
 const formData = ref<Form>({});
 
 const formRef = ref<FormInstance>();
-const emit = defineEmits(["finally"]);
+const emit = defineEmits(["finish"]);
 async function submitHandler() {
   await api.setLotteryConfigTranslation({
     lottery_remark_original: unref(formData).lottery_remark_original,
     lottery_remark_translation: unref(formData).lottery_remark_translation?.filter((item: TranslationItem) => item.content),
   });
   visible.value = false;
-  emit("finally");
+  emit("finish");
 }
 function closeHandler() {
   unref(formRef)?.clearValidate();

@@ -84,8 +84,8 @@
       </template>
     </el-card>
 
-    <editPart v-model="table.visible.value[0]" :data="table.currentData.value" @finally="table.queryHandler()" />
-    <permission v-model="table.visible.value[1]" :data="table.currentData.value" @finally="table.queryHandler()" />
+    <editPart v-model="table.visible.value[0]" :data="table.currentData.value" @finish="table.queryHandler()" />
+    <permission v-model="table.visible.value[1]" :data="table.currentData.value" @finish="table.queryHandler()" />
   </div>
 </template>
 

@@ -7,4 +7,10 @@ export default {
       method: "get",
     });
   },
+  getGroupList<T>() {
+    return request<any, T>({
+      url: "/admin/global/getGroupList",
+      method: "get",
+    });
+  },
 };
