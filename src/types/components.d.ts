@@ -97,6 +97,7 @@ declare module "vue" {
     WangEditor: (typeof import("./../components/WangEditor/index.vue"))["default"];
     Content: (typeof import("./../components/WangEditor/content.vue"))["default"];
     uploadPart: (typeof import("@/components/Upload/uploadPart.vue"))["default"];
+    QueryPart: (typeof import("@/components/QueryPart/index.vue"))["default"];
   }
   export interface ComponentCustomProperties {
     vLoading: (typeof import("element-plus/es"))["ElLoadingDirective"];

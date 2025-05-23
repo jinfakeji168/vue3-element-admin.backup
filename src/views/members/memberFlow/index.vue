@@ -1,8 +1,7 @@
 <template>
   <div class="app-container">
-    <!-- <div class="search-bar">
+    <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        
         <el-form-item>
           <el-button class="filter-item" type="primary" @click="table.queryHandler()">
             <template #icon>
@@ -18,7 +17,7 @@
           </el-button>
         </el-form-item>
       </el-form>
-    </div> -->
+    </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
@@ -66,7 +65,7 @@
 
 <script setup lang="ts">
 import editPart from "./components/edit.vue";
-import api, { type Form, Query } from "@/api/members/groupingSetting";
+import api, { type Form, Query } from "@/api/members/memberflow";
 import TableInstance from "@/utils/tableInstance";
 
 /** 查询表单引用 */

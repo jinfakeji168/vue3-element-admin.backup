@@ -104,5 +104,32 @@ declare global {
     lang?: string;
     content?: string;
   }
+
+  /**
+   * 查询部件配置项
+   */
+  interface QueryConfig {
+    /** 类型:input/select等 */
+    type: "input" | "select" | "date" | "daterange" | "datetime" | "datetimerange";
+    rules?: FormRules;
+    /** 绑定的键名 */
+    modelKey: string;
+    /** 显示的标签 */
+    label: string;
+    /** 选项数据 */
+    options?: OptionType[];
+    /** 组件属性 */
+    props?: {
+      /** 是否可过滤 */
+      filterable?: boolean;
+      /** 样式对象 */
+      style?: {
+        /** 宽度 */
+        width?: string;
+        [key: string]: any;
+      };
+      [key: string]: any;
+    };
+  }
 }
 export {};
