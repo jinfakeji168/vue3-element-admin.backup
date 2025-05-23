@@ -1,7 +1,7 @@
 import type { StatusEnum } from "@/enums/MenuTypeEnum";
 
 import init from "../basicAPI";
-const BasePath = "/admin/system/information";
+const BasePath = "/admin/member/groupConfig";
 
 export default {
   ...init<Query, Form>(BasePath),
@@ -9,14 +9,14 @@ export default {
 
 export interface Query extends PageQuery {}
 
+/** 类型 */
 export interface Form {
+  /** ID */
   id?: number;
-  sort?: number;
-  status?: StatusEnum;
-  video_url?: string;
-  title_original?: string;
-  content_original?: string;
-  title_translation?: TranslationItem[];
-  content_translation?: TranslationItem[];
+  /** 标题 */
+  title?: string;
+  /** 添加时间 */
+  created_at?: string;
+  /** 更新时间 */
   updated_at?: string;
 }

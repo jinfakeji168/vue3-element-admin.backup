@@ -2,7 +2,7 @@ import init from "@/api/basicAPI";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { dayjs } from "element-plus";
 
-export default class TableInstance<FormT extends { status?: StatusEnum }> {
+export default class TableInstance<FormT> {
   private api: any;
   loading: Ref<boolean> = ref(false);
   pageInfo = reactive({
@@ -23,10 +23,17 @@ export default class TableInstance<FormT extends { status?: StatusEnum }> {
   visible = ref<boolean[]>([]);
   constructor(api: any, queryParams?: Record<string, any>, limit: number = 20, queryFormRef?: Ref, editFormRef?: Ref) {
     this.api = api;
-    this.pageInfo.limit = limit;
+    // this.pageInfo.limit = limit;
     if (queryParams) this.queryParams = queryParams;
     this.queryFormRef = queryFormRef;
     this.editFormRef = editFormRef;
+    watch(
+      () => this.pageInfo.limit,
+      () => {
+        if (this.pageInfo.page != 1) this.pageInfo.page = 1;
+        else this.queryHandler();
+      }
+    );
     watch(
       () => this.pageInfo.page,
       (val) => {

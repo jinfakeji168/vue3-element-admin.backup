@@ -25,8 +25,8 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitHandler">确 定</el-button>
         <el-button @click="closeHandler">取 消</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
       </div>
     </template>
   </el-dialog>
@@ -68,17 +68,22 @@ const rules = {
 
 const formRef = ref<FormInstance>();
 const emit = defineEmits(["finish"]);
+const loading = ref(false);
 function submitHandler() {
   unref(formRef)?.validate(async (valid) => {
     if (!valid) return;
-    console.log(formData.value);
-    if (props.data) {
-      await api.edit(formData.value);
-    } else {
-      await api.add(formData.value);
+    loading.value = true;
+    try {
+      if (props.data) {
+        await api.edit(formData.value);
+      } else {
+        await api.add(formData.value);
+      }
+      visible.value = false;
+      emit("finish");
+    } finally {
+      loading.value = false;
     }
-    visible.value = false;
-    emit("finish");
   });
 }
 function closeHandler() {

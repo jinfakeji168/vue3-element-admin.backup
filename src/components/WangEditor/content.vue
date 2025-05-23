@@ -1,5 +1,5 @@
 <template>
-  <div style="overflow-y: scroll">
+  <div ref="box" style="overflow-y: scroll" v-loading="loading">
     <div class="main_container">
       <el-card class="container" v-if="mounted">
         <template #header>
@@ -62,7 +62,9 @@ watch(formData, (val) => {
 });
 /**用来保证wangeditor在值准备好之后生成，否则会有bug */
 const mounted = ref(false);
+const loading = ref(false);
 async function getLangOptions() {
+  loading.value = true;
   const langList = await store.getLangListAsync();
   //translation
   for (let item of langList) {
@@ -82,11 +84,13 @@ async function getLangOptions() {
     }
   }
   mounted.value = true;
+  loading.value = false;
   emits("initBefore");
 }
 const notNull = computed(() => !props.required || (unref(formData)[props.keys[0]] && unref(formData)[props.keys[0]] != "<p><br></p>"));
-
+const box = ref();
 function validate() {
+  if (!notNull.value) box.value.scroll(0, 0);
   return Promise.resolve(notNull.value);
 }
 function clearValidate() {}

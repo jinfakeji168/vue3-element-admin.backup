@@ -37,19 +37,50 @@
     </el-form>
     <el-tabs v-model="currentIndex">
       <el-tab-pane label="标题" :name="0">
-        <Content class="content" ref="contentRef" v-model="formData" :keys="['title_original', 'title_translation']" type="public"></Content>
+        <Content
+          class="content"
+          style="height: 40vh"
+          :ref="
+            (el: any) => {
+              contentRef[0] = el;
+            }
+          "
+          v-model="formData"
+          :keys="['title_original', 'title_translation']"
+          type="public"
+        ></Content>
       </el-tab-pane>
       <el-tab-pane label="步骤" :name="1">
-        <Content class="content" v-model="formData" :keys="['step_original', 'step_translation']" />
+        <Content
+          class="content"
+          :ref="
+            (el: any) => {
+              contentRef[1] = el;
+            }
+          "
+          style="height: 40vh"
+          v-model="formData"
+          :keys="['step_original', 'step_translation']"
+        />
       </el-tab-pane>
       <el-tab-pane label="内容" :name="2">
-        <Content class="content" v-model="formData" :keys="['content_original', 'content_translation']" />
+        <Content
+          class="content"
+          :ref="
+            (el: any) => {
+              contentRef[2] = el;
+            }
+          "
+          style="height: 40vh"
+          v-model="formData"
+          :keys="['content_original', 'content_translation']"
+        />
       </el-tab-pane>
     </el-tabs>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitHandler">确 定</el-button>
         <el-button @click="closeHandler">取 消</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
       </div>
     </template>
   </el-dialog>
@@ -90,17 +121,22 @@ const rules = {
 };
 
 const formRef = ref<FormInstance>();
-const contentRef = ref<InstanceType<typeof Content>>();
+const contentRef = ref<InstanceType<typeof Content>[]>([]);
 
 const emits = defineEmits(["finish"]);
+const loading = ref(false);
 async function submitHandler() {
-  const valid = await unref(formRef)?.validate();
-  const valid1 = await unref(contentRef)?.validate();
-  if (!valid || !valid1) return;
-  if (props.data) {
-    await api.edit(formData.value);
-  } else {
-    await api.add(formData.value);
+  const valid = await Promise.all([unref(formRef)?.validate(), ...unref(contentRef).map((el) => el.validate())]);
+  if (valid.some((v) => !v)) return;
+  loading.value = true;
+  try {
+    if (props.data) {
+      await api.edit(formData.value);
+    } else {
+      await api.add(formData.value);
+    }
+  } finally {
+    loading.value = false;
   }
   visible.value = false;
   emits("finish");
@@ -108,7 +144,7 @@ async function submitHandler() {
 function closeHandler() {
   unref(formRef)?.clearValidate();
   unref(formRef)?.resetFields();
-  unref(contentRef)?.clearValidate();
+  unref(contentRef)?.forEach((el) => el.clearValidate());
   visible.value = false;
 }
 

@@ -7,29 +7,48 @@
       <el-form-item label="显示排序" prop="sort">
         <el-input-number v-model="formData.sort" :min="1" />
       </el-form-item>
-      <el-form-item label="发布时间" prop="push_time">
-        <el-date-picker v-model="formData.push_time" type="datetime" placeholder="选择发布时间" />
+      <el-form-item label="视频地址" prop="video_url">
+        <el-input v-model="formData.video_url" placeholder="视频地址" />
       </el-form-item>
     </el-form>
     <el-tabs v-model="currentIndex">
       <el-tab-pane label="标题" :name="0">
-        <Content class="content" ref="contentRef" v-model="formData" :keys="['title_original', 'title_translation']" type="public"></Content>
+        <Content
+          class="content"
+          :ref="
+            (el: any) => {
+              contentRef[0] = el;
+            }
+          "
+          v-model="formData"
+          :keys="['title_original', 'title_translation']"
+          type="public"
+        ></Content>
       </el-tab-pane>
       <el-tab-pane label="内容" :name="1">
-        <Content class="content" v-model="formData" :keys="['content_original', 'content_translation']" />
+        <Content
+          class="content"
+          :ref="
+            (el: any) => {
+              contentRef[1] = el;
+            }
+          "
+          v-model="formData"
+          :keys="['content_original', 'content_translation']"
+        />
       </el-tab-pane>
     </el-tabs>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
         <el-button @click="closeHandler">取 消</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import api, { type Form } from "@/api/system/helpCenter";
+import api, { type Form } from "@/api/system/consultationSetting";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { dayjs, FormInstance } from "element-plus";
 import Content from "@/components/WangEditor/content.vue";
@@ -48,7 +67,7 @@ watch(
       formData.value = { ...props.data };
     } else {
       title.value = "新增";
-      formData.value = { sort: 1, status: StatusEnum.False };
+      formData.value = {};
     }
   },
   {
@@ -58,23 +77,20 @@ watch(
 const loading = ref(false);
 const formData = ref<Form>({});
 
-const rules = {
-  push_time: { required: true, message: "请选择发布时间", trigger: "blur" },
-};
+const rules = {};
 const formRef = ref<FormInstance>();
-const contentRef = ref<InstanceType<typeof Content>>();
+const contentRef = ref<InstanceType<typeof Content>[]>([]);
 
 const emits = defineEmits(["finish"]);
 async function submitHandler() {
-  const valid = await unref(formRef)?.validate();
-  const valid1 = await unref(contentRef)?.validate();
-  if (!valid || !valid1) return;
+  const valid = await Promise.all([unref(formRef)?.validate(), ...unref(contentRef).map((el) => el.validate())]);
+  if (valid.some((v) => !v)) return;
   loading.value = true;
   try {
     if (props.data) {
       await api.edit(unref(formData));
     } else {
-      await api.add({ ...unref(formData), push_time: dayjs(unref(formData)?.push_time).format("YYYY-MM-DD HH:mm:ss") });
+      await api.add(unref(formData));
     }
   } finally {
     loading.value = false;
@@ -85,7 +101,7 @@ async function submitHandler() {
 function closeHandler() {
   unref(formRef)?.clearValidate();
   unref(formRef)?.resetFields();
-  unref(contentRef)?.clearValidate();
+  unref(contentRef).forEach((el) => el.clearValidate());
   visible.value = false;
 }
 

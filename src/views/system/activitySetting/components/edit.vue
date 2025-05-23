@@ -24,19 +24,52 @@
     </el-form>
     <el-tabs v-model="currentIndex">
       <el-tab-pane label="标题" :name="0">
-        <Content class="content" ref="contentRef" v-model="formData" :keys="['title_original', 'title_translation']" type="public" style="height: 50vh"></Content>
+        <Content
+          class="content"
+          :ref="
+            (el: any) => {
+              contentRef[0] = el;
+            }
+          "
+          v-model="formData"
+          :keys="['title_original', 'title_translation']"
+          type="public"
+          style="height: 50vh"
+        ></Content>
       </el-tab-pane>
       <el-tab-pane label="副标题" :name="1">
-        <Content class="content" ref="contentRef" v-model="formData" :keys="['subtitle_original', 'subtitle_translation']" type="public" style="height: 50vh"></Content>
+        <Content
+          class="content"
+          :ref="
+            (el: any) => {
+              contentRef[1] = el;
+            }
+          "
+          v-model="formData"
+          :keys="['subtitle_original', 'subtitle_translation']"
+          type="public"
+          style="height: 50vh"
+        ></Content>
       </el-tab-pane>
       <el-tab-pane label="内容" :name="2" :disabled="formData?.type != 2">
-        <Content class="content" ref="contentRef" v-model="formData" :required="formData?.type == 2" :keys="['content_original', 'content_translation']" style="height: 50vh" />
+        <Content
+          class="content"
+          :ref="
+            (el: any) => {
+              contentRef[2] = el;
+            }
+          "
+          v-model="formData"
+          :required="formData?.type == 2"
+          :keys="['content_original', 'content_translation']"
+          style="height: 50vh"
+        />
       </el-tab-pane>
     </el-tabs>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
         <el-button @click="closeHandler">取 消</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
       </div>
     </template>
   </el-dialog>
@@ -78,13 +111,12 @@ const rules = {
   push_time: { required: true, message: "请选择发布时间", trigger: "blur" },
 };
 const formRef = ref<FormInstance>();
-const contentRef = ref<InstanceType<typeof Content>>();
+const contentRef = ref<InstanceType<typeof Content>[]>([]);
 
 const emits = defineEmits(["finish"]);
 async function submitHandler() {
-  const valid = await unref(formRef)?.validate();
-  const valid1 = await unref(contentRef)?.validate();
-  if (!valid || !valid1) return;
+  const valid = await Promise.all([unref(formRef)?.validate(), ...unref(contentRef).map((e) => e.validate())]);
+  if (valid.some((v) => !v)) return;
   loading.value = true;
   try {
     if (props.data) {
@@ -101,7 +133,9 @@ async function submitHandler() {
 function closeHandler() {
   unref(formRef)?.clearValidate();
   unref(formRef)?.resetFields();
-  unref(contentRef)?.clearValidate();
+  unref(contentRef).forEach((e) => {
+    e.clearValidate();
+  });
   visible.value = false;
 }
 

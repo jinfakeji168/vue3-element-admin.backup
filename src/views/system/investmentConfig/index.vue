@@ -114,7 +114,7 @@
         </el-table-column>
       </el-table>
       <template #footer>
-        <el-pagination background :total="table.pageTotal.value" :page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
+        <pagination background :total="table.pageTotal.value" v-model:page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
       </template>
     </el-card>
 

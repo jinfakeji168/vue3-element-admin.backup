@@ -29,7 +29,7 @@
       </el-form>
     </div>
 
-    <el-card shadow="never" class="table-wrapper" v-loading="loading">
+    <el-card shadow="never" class="table-wrapper" v-loading="loading[0]">
       <template #header>
         <el-button v-hasPerm="['dept:add']" type="success" @click="handleOpenDialog(0, undefined)">
           <template #icon>
@@ -113,8 +113,8 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="handleSubmit">确 定</el-button>
           <el-button @click="handleCloseDialog">取 消</el-button>
+          <el-button type="primary" @click="handleSubmit" :loading="loading[1]">确 定</el-button>
         </div>
       </template>
     </el-dialog>
@@ -134,7 +134,7 @@ import { deepChangeOption } from "@/utils";
 const queryFormRef = ref(ElForm);
 const deptFormRef = ref(ElForm);
 
-const loading = ref(false);
+const loading = ref<boolean[]>([false, false]);
 const ids = ref<number[]>([]);
 const dialog = reactive({
   title: "",
@@ -164,10 +164,10 @@ const rules = reactive({
 
 /** 查询部门 */
 function handleQuery() {
-  loading.value = true;
+  loading.value[0] = true;
   DeptAPI.getList(queryParams).then((data) => {
     deptList.value = data;
-    loading.value = false;
+    loading.value[0] = false;
   });
 }
 
@@ -219,28 +219,22 @@ async function handleOpenDialog(parent_id?: number, item?: DeptVO) {
 }
 
 /** 提交部门表单 */
-function handleSubmit() {
-  deptFormRef.value.validate((valid: any) => {
-    if (valid) {
-      loading.value = true;
-      const deptId = formData.id;
-      if (deptId) {
-        DeptAPI.update(deptId, formData)
-          .then(() => {
-            handleCloseDialog();
-            handleQuery();
-          })
-          .finally(() => (loading.value = false));
-      } else {
-        DeptAPI.add(formData)
-          .then(() => {
-            handleCloseDialog();
-            handleQuery();
-          })
-          .finally(() => (loading.value = false));
-      }
+async function handleSubmit() {
+  await deptFormRef.value.validate();
+
+  loading.value[1] = true;
+  const deptId = formData.id;
+  try {
+    if (deptId) {
+      await DeptAPI.update(deptId, formData);
+    } else {
+      await DeptAPI.add(formData);
     }
-  });
+  } finally {
+    loading.value[1] = false;
+  }
+  handleCloseDialog();
+  handleQuery();
 }
 
 /** 删除部门 */
@@ -255,12 +249,9 @@ function handleDelete(deptId?: number) {
   ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
     type: "warning",
   }).then(() => {
-    loading.value = true;
-    DeptAPI.deleteByIds(deptIds)
-      .then(() => {
-        handleResetQuery();
-      })
-      .finally(() => (loading.value = false));
+    DeptAPI.deleteByIds(deptIds).then(() => {
+      handleResetQuery();
+    });
   });
 }
 
