@@ -1,41 +1,7 @@
 <template>
   <div class="app-container">
     <div class="search-bar">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="奖励类型" prop="type">
-          <el-select v-model="queryParams.type" clearable class="!w-[140px]">
-            <el-option :value="1" label="佣金账户" />
-            <el-option :value="2" label="奖励VIP" />
-            <el-option :value="3" label="基础账户" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="奖励次数(类型)" prop="reward_type">
-          <el-select v-model="queryParams.reward_type" clearable class="!w-[140px]">
-            <el-option :value="1" label="总共一次" />
-            <el-option :value="2" label="每日一次" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="queryParams.status" clearable class="!w-[100px]">
-            <el-option :value="StatusEnum.False" label="正常" />
-            <el-option :value="StatusEnum.True" label="禁用" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button class="filter-item" type="primary" @click="table.queryHandler()">
-            <template #icon>
-              <Search />
-            </template>
-            搜索
-          </el-button>
-          <el-button @click="table.handleResetQuery()">
-            <template #icon>
-              <Refresh />
-            </template>
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
+      <QueryPart ref="queryFormRef" v-model="queryParams" :config="config" @search="table.queryHandler()" @reset="table.handleResetQuery()" />
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
@@ -121,8 +87,63 @@ import api, { type Form, Query } from "@/api/system/shareTask";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import TableInstance from "@/utils/tableInstance";
 
-const queryFormRef = ref(ElForm);
+/** 奖励类型选项 */
+const reward_types = [
+  { value: 1, label: "佣金账户" },
+  { value: 2, label: "奖励VIP" },
+  { value: 3, label: "基础账户" },
+];
 
+/** 奖励次数类型选项 */
+const reward_count_types = [
+  { value: 1, label: "总共一次" },
+  { value: 2, label: "每日一次" },
+];
+
+/** 状态选项 */
+const status_types = [
+  { value: StatusEnum.False, label: "正常" },
+  { value: StatusEnum.True, label: "禁用" },
+];
+
+/** 查询配置 */
+const config: QueryConfig = {
+  labelWidth: "120px",
+  formItem: [
+    {
+      type: "select",
+      modelKey: "type",
+      label: "奖励类型",
+      options: reward_types,
+      props: {
+        clearable: true,
+        style: { width: "140px" },
+      },
+    },
+    {
+      type: "select",
+      modelKey: "reward_type",
+      label: "奖励次数(类型)",
+      options: reward_count_types,
+      props: {
+        clearable: true,
+        style: { width: "140px" },
+      },
+    },
+    {
+      type: "select",
+      modelKey: "status",
+      label: "状态",
+      options: status_types,
+      props: {
+        clearable: true,
+        style: { width: "100px" },
+      },
+    },
+  ],
+};
+
+const queryFormRef = ref();
 const queryParams = reactive<Query>({});
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 

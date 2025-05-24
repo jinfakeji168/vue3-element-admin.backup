@@ -1,41 +1,7 @@
 <template>
   <div class="app-container">
     <div class="search-bar">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="产品类型" prop="type">
-          <el-select v-model="queryParams.type" clearable class="!w-[120px]">
-            <el-option v-for="item in productTypeOptions" :key="item.value" :value="item.value" :label="item.label" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="名称" prop="title">
-          <el-input v-model="queryParams.title" />
-        </el-form-item>
-        <el-form-item label="收益类型" prop="yield_type">
-          <el-select v-model="queryParams.yield_type" clearable class="!w-[150px]">
-            <el-option v-for="item in yieldTypeOptions" :key="item.value" :value="item.value" :label="item.label" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="销售状态" prop="sales_status">
-          <el-select v-model="queryParams.sales_status" clearable class="!w-[120px]">
-            <el-option :value="1" label="开启" />
-            <el-option :value="2" label="关闭" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button class="filter-item" type="primary" @click="table.queryHandler()">
-            <template #icon>
-              <Search />
-            </template>
-            搜索
-          </el-button>
-          <el-button @click="table.handleResetQuery()">
-            <template #icon>
-              <Refresh />
-            </template>
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
+      <QueryPart ref="queryFormRef" v-model="queryParams" :config="config" @search="table.queryHandler()" @reset="table.handleResetQuery()" />
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
@@ -131,6 +97,57 @@ import { StatusEnum } from "@/enums/MenuTypeEnum";
 import TableInstance from "@/utils/tableInstance";
 import { ref, reactive, onMounted, computed } from "vue";
 import { ElForm } from "element-plus";
+
+const sales_status_types = [
+  { value: 1, label: "开启" },
+  { value: 2, label: "关闭" },
+];
+
+/** 查询配置 */
+const config: QueryConfig = {
+  labelWidth: "120px",
+  formItem: [
+    {
+      type: "select",
+      modelKey: "type",
+      label: "产品类型",
+      options: productTypeOptions,
+      props: {
+        clearable: true,
+        style: { width: "140px" },
+      },
+    },
+    {
+      type: "input",
+      modelKey: "title",
+      label: "名称",
+      props: {
+        clearable: true,
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "select",
+      modelKey: "yield_type",
+      label: "收益类型",
+      options: yieldTypeOptions,
+      props: {
+        clearable: true,
+        style: { width: "150px" },
+      },
+    },
+    {
+      type: "select",
+      modelKey: "sales_status",
+      label: "销售状态",
+      options: sales_status_types,
+      props: {
+        clearable: true,
+        style: { width: "140px" },
+      },
+    },
+  ],
+};
 
 const queryFormRef = ref<typeof ElForm | null>(null);
 

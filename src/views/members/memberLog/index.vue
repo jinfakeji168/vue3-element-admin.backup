@@ -35,6 +35,7 @@
 
 <script setup lang="ts">
 import api, { type Form, Query } from "@/api/members/memberLog";
+import commonApi from "@/api/common";
 import TableInstance from "@/utils/tableInstance";
 /** 日志类型选项 */
 const log_types = [
@@ -49,66 +50,91 @@ const device_types = [
   { value: 3, label: "安卓" },
   { value: 4, label: "苹果" },
 ];
-
+const memberList = ref<any>([]);
+const loading = ref(false);
+async function searchMember(query: string) {
+  loading.value = true;
+  if (query !== "") {
+    const res = await commonApi.getMemberSelect(query);
+    memberList.value = res.map((val) => ({
+      value: val.id,
+      label: val.account,
+    }));
+  } else {
+    memberList.value = [];
+  }
+  loading.value = false;
+}
 /** 查询配置 */
-const config: QueryConfig[] = [
-  {
-    type: "input",
-    modelKey: "uid",
-    label: "用户ID",
-    props: {
-      placeholder: "请输入用户ID",
-      style: { width: "100%" },
+const config: QueryConfig = {
+  labelWidth: "100px",
+  formItem: [
+    {
+      type: "select",
+      modelKey: "uid",
+      label: "用户",
+      options: memberList,
+      props: {
+        placeholder: "请输入用户进行查询",
+        style: { width: "200px" },
+        filterable: true,
+        remote: true,
+        clearable: true,
+        loading: loading,
+        remoteMethod: async (query: string) => {
+          searchMember(query);
+        },
+      },
     },
-  },
-  {
-    type: "select",
-    modelKey: "log_type",
-    label: "日志类型",
-    options: log_types,
-    props: {
-      placeholder: "请输入用户ID",
-      style: { width: "100%" },
+    {
+      type: "select",
+      modelKey: "log_type",
+      label: "日志类型",
+      options: log_types,
+      props: {
+        placeholder: "请输入用户ID",
+        style: { width: "200px" },
+      },
     },
-  },
-  {
-    type: "input",
-    modelKey: "log_ip",
-    label: "IP地址",
-    props: {
-      placeholder: "请输入用户ID",
-      style: { width: "100%" },
+    {
+      type: "input",
+      modelKey: "log_ip",
+      label: "IP地址",
+      props: {
+        placeholder: "请输入用户ID",
+        style: { width: "200px" },
+      },
     },
-  },
-  {
-    type: "input",
-    modelKey: "log_region",
-    label: "地区",
-    props: {
-      placeholder: "请输入用户ID",
-      style: { width: "100%" },
+    {
+      type: "input",
+      modelKey: "log_region",
+      label: "地区",
+      props: {
+        placeholder: "请输入用户ID",
+        style: { width: "200px" },
+      },
     },
-  },
-  {
-    type: "select",
-    modelKey: "device_type",
-    label: "设备类型",
-    options: device_types,
-    props: {
-      placeholder: "请输入用户ID",
-      style: { width: "100%" },
+    {
+      type: "select",
+      modelKey: "device_type",
+      label: "设备类型",
+      options: device_types,
+      props: {
+        placeholder: "请输入用户ID",
+        style: { width: "200px" },
+      },
     },
-  },
-  {
-    type: "datetimerange",
-    modelKey: "datetime",
-    label: "时间范围",
-    props: {
-      placeholder: "请输入用户ID",
-      style: { width: "100%" },
+    {
+      type: "datetimerange",
+      modelKey: "datetime",
+      label: "时间范围",
+      props: {
+        placeholder: "请输入用户ID",
+        style: { width: "400px" },
+      },
     },
-  },
-];
+  ],
+};
 
 /** 查询表单引用 */
 const queryFormRef = ref(ElForm);

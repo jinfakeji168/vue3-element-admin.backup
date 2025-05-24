@@ -1,45 +1,7 @@
 <template>
   <div class="app-container">
     <div class="search-bar">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="类型" prop="type">
-          <el-select v-model="queryParams.type" clearable class="!w-[100px]">
-            <el-option :value="1" label="拼手气红包" />
-            <el-option :value="2" label="普通红包" />
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="状态" prop="state">
-          <el-select v-model="queryParams.state" clearable class="!w-[100px]">
-            <el-option :value="1" label="未开始" />
-            <el-option :value="2" label="进行中" />
-            <el-option :value="3" label="已结束" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="开始时间范围" prop="start_time">
-          <el-date-picker v-model="queryParams.start_time" type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
-        </el-form-item>
-        <el-form-item label="结束时间范围" prop="end_time">
-          <el-date-picker v-model="queryParams.end_time" type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
-        </el-form-item>
-        <el-form-item label="添加时间范围" prop="created_at">
-          <el-date-picker v-model="queryParams.created_at" type="daterange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
-        </el-form-item>
-        <el-form-item>
-          <el-button class="filter-item" type="primary" @click="table.queryHandler()">
-            <template #icon>
-              <Search />
-            </template>
-            搜索
-          </el-button>
-          <el-button @click="table.handleResetQuery()">
-            <template #icon>
-              <Refresh />
-            </template>
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
+      <QueryPart ref="queryFormRef" v-model="queryParams" :config="config" @search="table.queryHandler()" @reset="table.handleResetQuery()" />
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
@@ -127,11 +89,81 @@ import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { dayjs } from "element-plus";
 import TableInstance from "@/utils/tableInstance";
 
-const queryFormRef = ref(ElForm);
-const queryParams = reactive<Query>({});
+/** 红包类型选项 */
+const packet_types = [
+  { value: 1, label: "拼手气红包" },
+  { value: 2, label: "普通红包" },
+];
 
+/** 状态选项 */
+const state_types = [
+  { value: 1, label: "未开始" },
+  { value: 2, label: "进行中" },
+  { value: 3, label: "已结束" },
+];
+
+/** 查询配置 */
+const config: QueryConfig = {
+  labelWidth: "120px",
+  formItem: [
+    {
+      type: "select",
+      modelKey: "type",
+      label: "类型",
+      options: packet_types,
+      props: {
+        clearable: true,
+        style: { width: "140px" },
+      },
+    },
+    {
+      type: "select",
+      modelKey: "state",
+      label: "状态",
+      options: state_types,
+      props: {
+        clearable: true,
+        style: { width: "140px" },
+      },
+    },
+    {
+      type: "datetimerange",
+      modelKey: "start_time",
+      label: "开始时间范围",
+      props: {
+        style: { width: "380px" },
+        startPlaceholder: "开始时间",
+        endPlaceholder: "结束时间",
+      },
+    },
+    {
+      type: "datetimerange",
+      modelKey: "end_time",
+      label: "结束时间范围",
+      props: {
+        style: { width: "380px" },
+        startPlaceholder: "开始时间",
+        endPlaceholder: "结束时间",
+      },
+    },
+    {
+      type: "datetimerange",
+      modelKey: "created_at",
+      label: "添加时间范围",
+      props: {
+        style: { width: "380px" },
+        startPlaceholder: "开始时间",
+        endPlaceholder: "结束时间",
+      },
+    },
+  ],
+};
+
+const queryFormRef = ref();
+const queryParams = reactive<Query>({});
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 
+/**时间格式化处理器*/
 function parseTime(timeStamp: number) {
   return dayjs.unix(timeStamp).format("YYYY-MM-DD HH:mm:ss");
 }

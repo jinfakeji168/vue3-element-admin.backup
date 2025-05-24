@@ -1,32 +1,7 @@
 <template>
   <div class="app-container">
     <div class="search-bar">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="queryParams.name" />
-        </el-form-item>
-
-        <el-form-item label="状态" prop="status">
-          <el-select v-model="queryParams.status" clearable class="!w-[100px]">
-            <el-option :value="StatusEnum.False" label="正常" />
-            <el-option :value="StatusEnum.True" label="禁用" />
-          </el-select>
-        </el-form-item>
-        <el-form-item>
-          <el-button class="filter-item" type="primary" @click="table.queryHandler()">
-            <template #icon>
-              <Search />
-            </template>
-            搜索
-          </el-button>
-          <el-button @click="table.handleResetQuery()">
-            <template #icon>
-              <Refresh />
-            </template>
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
+      <QueryPart ref="queryFormRef" v-model="queryParams" :config="config" @search="table.queryHandler()" @reset="table.handleResetQuery()" />
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
@@ -76,7 +51,39 @@ import api, { type Form, Query } from "@/api/system/lang";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import TableInstance from "@/utils/tableInstance";
 
-const queryFormRef = ref(ElForm);
+/** 状态选项 */
+const status_types = [
+  { value: StatusEnum.False, label: "正常" },
+  { value: StatusEnum.True, label: "禁用" },
+];
+
+/** 查询配置 */
+const config: QueryConfig = {
+  labelWidth: "120px",
+  formItem: [
+    {
+      type: "input",
+      modelKey: "name",
+      label: "名称",
+      props: {
+        clearable: true,
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "select",
+      modelKey: "status",
+      label: "状态",
+      options: status_types,
+      props: {
+        clearable: true,
+        style: { width: "140px" },
+      },
+    },
+  ],
+};
+
+const queryFormRef = ref();
 const queryParams = reactive<Query>({});
 
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);

@@ -1,4 +1,3 @@
-import init from "@/api/basicAPI";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { dayjs } from "element-plus";
 
@@ -51,12 +50,12 @@ export default class TableInstance<FormT> {
       if (this.queryParams[key]?.constructor === Array) {
         obj[key] = this.queryParams[key].map((val: any) => {
           if (val.constructor === Date) return dayjs(val).unix();
+          return val;
         });
       } else if (this.queryParams[key]?.constructor === Date) {
         obj[key] = dayjs(this.queryParams[key]).unix();
       }
     }
-
     const temp = await this.api.getList({ ...this.pageInfo, ...this.queryParams, ...obj });
     this.pageTotal.value = temp.total;
     this.loading.value = false;

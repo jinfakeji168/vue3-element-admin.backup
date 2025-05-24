@@ -1,6 +1,8 @@
 <template>
   <div class="app-container">
-    <search-form v-model="queryParams" ref="queryFormRef" @search="table.queryHandler()" @reset="table.handleResetQuery()" />
+    <div class="search-bar">
+      <QueryPart ref="queryFormRef" v-model="queryParams" :config="config" @search="table.queryHandler()" @reset="table.handleResetQuery()" />
+    </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
@@ -12,14 +14,14 @@
           </el-tab-pane>
         </el-tabs>
         <div class="flex">
-          <el-button v-hasPerm="['currency:add']" type="primary" @click="table.editHandler()">
+          <el-button v-hasPerm="['memberList:add']" type="primary" @click="table.editHandler()">
             <template #icon>
               <Plus />
             </template>
             新增
           </el-button>
           <el-button
-            v-hasPerm="['currency:add']"
+            v-hasPerm="['memberList:batch']"
             type="success"
             @click="
               table.openHandler(1, table.selectList.value);
@@ -31,14 +33,14 @@
             </template>
             批量操作
           </el-button>
-          <el-button v-hasPerm="['currency:add']" type="info" @click="table.editHandler()">
+          <el-button v-hasPerm="['memberList:export']" type="info" @click="table.editHandler()">
             <template #icon>
               <Plus />
             </template>
             导出会员
           </el-button>
           <el-button
-            v-hasPerm="['currency:add']"
+            v-hasPerm="['memberList:batch']"
             type="danger"
             @click="
               table.openHandler(1, table.selectList.value);
@@ -52,7 +54,7 @@
             批量封禁
           </el-button>
           <el-button
-            v-hasPerm="['currency:add']"
+            v-hasPerm="['memberList:batch']"
             type="warning"
             @click="
               table.openHandler(1, table.selectList.value);
@@ -74,7 +76,7 @@
             <div>
               <span class="text-gray-500">ID:</span>
               <span class="text-gray-700">{{ row.id }}</span>
-              <el-button type="primary" size="small">查看下级</el-button>
+              <el-button class="ml-4" type="primary" size="small">查看下级</el-button>
             </div>
             <div>
               <span class="text-gray-500">账号:</span>
@@ -335,12 +337,233 @@ import { FormInstance } from "element-plus";
 import addMember from "./components/addMember.vue";
 import batchOperation from "./components/batchOperation.vue";
 import changeBalance from "./components/changeBalance.vue";
-import searchForm from "./components/searchForm.vue";
+import commonApi from "@/api/common";
 
+/** 查询表单引用 */
 const queryFormRef = ref<FormInstance>();
-onMounted(() => {});
 
-const queryParams = reactive<MemberQuery>({});
+/** 会员列表加载状态 */
+const loading = ref(false);
+/** 会员选项列表 */
+const memberList = ref<any>([]);
+
+/** 搜索会员处理函数 */
+async function searchMemberHandler(query: string) {
+  loading.value = true;
+  if (query !== "") {
+    const res = await commonApi.getMemberSelect(query);
+    memberList.value = res.map((val) => ({
+      value: val.id,
+      label: val.account,
+    }));
+  } else {
+    memberList.value = [];
+  }
+  loading.value = false;
+}
+
+/** 查询配置 */
+const config: QueryConfig = {
+  labelWidth: "100px",
+  formItem: [
+    {
+      type: "input",
+      modelKey: "id",
+      label: "ID",
+      props: {
+        placeholder: "请输入id",
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "input",
+      modelKey: "account",
+      label: "账户",
+      props: {
+        placeholder: "请输入账户",
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "input",
+      modelKey: "invita_code",
+      label: "邀请码",
+      props: {
+        placeholder: "请输入邀请码",
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "datetimerange",
+      modelKey: "created_at",
+      label: "注册时间",
+      props: {
+        style: { width: "400px" },
+        startPlaceholder: "开始时间",
+        endPlaceholder: "结束时间",
+      },
+    },
+    {
+      type: "input",
+      modelKey: "register_ip",
+      label: "注册IP",
+      props: {
+        placeholder: "请输入注册IP",
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "datetimerange",
+      modelKey: "last_login_time",
+      label: "最后登录时间",
+      props: {
+        style: { width: "400px" },
+        startPlaceholder: "开始时间",
+        endPlaceholder: "结束时间",
+      },
+    },
+    {
+      type: "input",
+      modelKey: "last_login_ip",
+      label: "最后登录IP",
+      props: {
+        placeholder: "请输入最后登录IP",
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "input",
+      modelKey: "group_id",
+      label: "用户组ID",
+      props: {
+        placeholder: "请输入用户组ID",
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "select",
+      modelKey: "status",
+      label: "状态",
+      options: [
+        { value: StatusEnum.False, label: "正常" },
+        { value: StatusEnum.True, label: "禁用" },
+      ],
+      props: {
+        placeholder: "请选择状态",
+        style: { width: "200px" },
+        clearable: true,
+      },
+    },
+    {
+      type: "input",
+      modelKey: "vip_level",
+      label: "等级",
+      props: {
+        placeholder: "请输入等级",
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "datetimerange",
+      modelKey: "last_recharge_time",
+      label: "最后充值时间",
+      props: {
+        style: {},
+        startPlaceholder: "开始时间",
+        endPlaceholder: "结束时间",
+      },
+    },
+    {
+      type: "inputnumber",
+      modelKey: ["min_total_recharge_amount", "max_total_recharge_amount"],
+      label: "总充值金额",
+      props: {
+        placeholder: ["最小充值金额", "最大充值金额"],
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "inputnumber",
+      modelKey: ["min_total_withdrawal_amount", "max_total_withdrawal_amount"],
+      label: "总提现金额",
+      props: {
+        placeholder: ["最小提现金额", "最大提现金额"],
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "inputnumber",
+      modelKey: ["min_brokerage_account", "max_brokerage_account"],
+      label: "经纪人账户",
+      props: {
+        placeholder: ["最小金额", "最大金额"],
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "inputnumber",
+      modelKey: "last_withdrawal_amount",
+      label: "最后提现金额",
+      props: {
+        placeholder: "请输入最后提现金额",
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "input",
+      modelKey: "withdrawal_wallet",
+      label: "提现钱包",
+      props: {
+        placeholder: "请输入提现钱包",
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "input",
+      modelKey: "recharge_wallet",
+      label: "充值钱包",
+      props: {
+        placeholder: "请输入充值钱包",
+        style: { width: "200px" },
+      },
+    },
+    {
+      type: "input",
+      modelKey: "lang_id",
+      label: "语言ID",
+      props: {
+        placeholder: "请输入语言ID",
+        style: { width: "200px" },
+      },
+    },
+  ],
+};
+
+/** 查询参数 */
+const queryParams = reactive<MemberQuery>({
+  id: undefined,
+  account: undefined,
+  invita_code: undefined,
+  created_at: [],
+  register_ip: undefined,
+  last_login_time: [],
+  last_login_ip: undefined,
+  group_id: undefined,
+  status: undefined,
+  vip_level: undefined,
+  last_recharge_time: [],
+  min_total_recharge_amount: undefined,
+  max_total_recharge_amount: undefined,
+  min_total_withdrawal_amount: undefined,
+  max_total_withdrawal_amount: undefined,
+  min_brokerage_account: undefined,
+  max_brokerage_account: undefined,
+  last_withdrawal_amount: undefined,
+  withdrawal_wallet: undefined,
+  recharge_wallet: undefined,
+  lang_id: undefined,
+});
+
 const table = new TableInstance<Member>(api, queryParams, 20, queryFormRef);
 
 const tabIndex = ref(0);
