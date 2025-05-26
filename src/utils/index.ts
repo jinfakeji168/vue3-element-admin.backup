@@ -65,3 +65,19 @@ export function parserHandler(value: string) {
     return value.replace(reg1, "0");
   } else return value;
 }
+
+import commonApi from "@/api/common";
+
+export async function searchMember(query: string) {
+  if (query !== "") {
+    const res = await commonApi.getMemberSelect(query);
+    return Promise.resolve(
+      res.map((val: any) => ({
+        value: val.id,
+        label: val.account,
+      }))
+    );
+  } else {
+    return Promise.resolve([]);
+  }
+}

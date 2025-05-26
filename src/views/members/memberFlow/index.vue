@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import api, { type Form, Query } from "@/api/members/memberFlow";
-import commonApi from "@/api/common";
+import { searchMember } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
 
 /** 进出类型选项 */
@@ -64,21 +64,6 @@ const detail_kinds = [
 const memberList = ref<any>([]);
 const loading = ref(false);
 
-/** 搜索会员处理函数 */
-async function searchMemberHandler(query: string) {
-  loading.value = true;
-  if (query !== "") {
-    const res = await commonApi.getMemberSelect(query);
-    memberList.value = res.map((val) => ({
-      value: val.id,
-      label: val.account,
-    }));
-  } else {
-    memberList.value = [];
-  }
-  loading.value = false;
-}
-
 /** 查询配置 */
 const config: QueryConfig = {
   labelWidth: "100px",
@@ -95,7 +80,11 @@ const config: QueryConfig = {
         remote: true,
         clearable: true,
         loading: loading,
-        remoteMethod: searchMemberHandler,
+        remoteMethod: async (res: string) => {
+          loading.value = true;
+          memberList.value = await searchMember(res);
+          loading.value = false;
+        },
       },
     },
     {

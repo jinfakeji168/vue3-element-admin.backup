@@ -73,7 +73,7 @@
         </el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
-            <el-tag v-if="scope.row.status === StatusEnum.False" type="success">显示</el-tag>
+            <el-tag v-if="scope.row.hidden === StatusEnum.False" type="success">显示</el-tag>
             <el-tag v-else type="info">隐藏</el-tag>
           </template>
         </el-table-column>

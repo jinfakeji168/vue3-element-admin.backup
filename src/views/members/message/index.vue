@@ -84,8 +84,8 @@ const message_types = [
 
 /** 阅读状态选项 */
 const read_status = [
-  { value: StatusEnum.True, label: "已读" },
-  { value: StatusEnum.False, label: "未读" },
+  { value: 1, label: "已读" },
+  { value: 2, label: "未读" },
 ];
 
 /** 查询配置 */
@@ -115,6 +115,7 @@ const config: QueryConfig = {
       options: message_types,
       props: {
         clearable: true,
+        style: { width: "200px" },
       },
     },
     {
@@ -124,6 +125,7 @@ const config: QueryConfig = {
       options: read_status,
       props: {
         clearable: true,
+        style: { width: "200px" },
       },
     },
     {

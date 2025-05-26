@@ -32,7 +32,9 @@
           </template>
           <template v-else-if="formData.batch_type === 4">
             <el-form-item label="指定会员所有下级" prop="spec_account">
-              <el-input v-model="formData.spec_account" placeholder="请输入会员账户" />
+              <el-select v-model="formData.spec_account" :remote-method="remoteHandler" :loading="loading[1]" filterable remote placeholder="请输入会员账号">
+                <el-option v-for="item in memberList" :key="item.value" :label="item.label" :value="item.label" />
+              </el-select>
               <span>{{ subordinateNumStr }}</span>
             </el-form-item>
           </template>
@@ -207,7 +209,7 @@
         </el-form>
         <template #footer>
           <el-button @click="visible = false">取消</el-button>
-          <el-button type="primary" @click="submitForm" :loading="loading">确认修改</el-button>
+          <el-button type="primary" @click="submitForm" :loading="loading[0]">确认修改</el-button>
         </template>
       </el-card>
     </el-tabs>
@@ -217,9 +219,10 @@
 <script setup lang="ts">
 import api, { type BatchOperationForm } from "@/api/members/memberList";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
-import { useStore } from "@/store/modules/common";
 import { FormInstance } from "element-plus";
 import { dayjs } from "element-plus";
+import { searchMember } from "@/utils";
+import { useStore } from "@/store/modules/common";
 const store = useStore();
 const visible = defineModel<boolean>();
 const props = withDefaults(defineProps<{ account?: { id: number; account: string }[]; tabIndex: number }>(), {});
@@ -323,10 +326,10 @@ watch(visible, (val) => {
 });
 
 const emits = defineEmits(["finish"]);
-const loading = ref(false);
+const loading = ref([false, false]);
 async function submitForm() {
   if (!formRef.value) return;
-  loading.value = true;
+  loading.value[0] = true;
   try {
     await formRef.value.validate();
 
@@ -361,7 +364,7 @@ async function submitForm() {
     visible.value = false;
     emits("finish");
   } finally {
-    loading.value = false;
+    loading.value[0] = false;
   }
 }
 
@@ -384,6 +387,13 @@ watch(
     if (val) debouncedGetSubordinate(val);
   }
 );
+
+const memberList = ref<any>([]);
+async function remoteHandler(str: string) {
+  loading.value[1] = true;
+  memberList.value = await searchMember(str);
+  loading.value[1] = false;
+}
 </script>
 
 <style lang="scss" scoped>

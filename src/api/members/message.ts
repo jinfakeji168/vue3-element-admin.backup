@@ -77,23 +77,23 @@ export interface FormData {
   /** vip等级列表 */
   vip_level?: number[];
   /** 会员账号列表 */
-  account?: string[];
+  account?: string[] | string;
   /** 指定账号 */
   spe_account?: string;
   /** 会员分组id列表 */
   group_ids?: number[];
   /** 是否弹窗 1.是 2.否 */
-  is_window: StatusEnum;
+  is_window?: StatusEnum;
   /** 标题原文 */
-  title_original: string;
+  title_original?: string;
   /** 标题译文 */
-  title_translation: TranslationItem[];
+  title_translation?: TranslationItem[];
   /** 语言标识 */
-  lang: string;
+  lang?: string;
   /** 内容 */
-  content: string;
+  content?: string;
   /** 内容原文 */
-  content_original: string;
+  content_original?: string;
   /** 内容译文列表 */
-  content_translation: TranslationItem[];
+  content_translation?: TranslationItem[];
 }

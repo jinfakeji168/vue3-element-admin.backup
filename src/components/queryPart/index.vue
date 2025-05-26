@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref, h, onMounted, nextTick, watch } from "vue";
-import { ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElButton, ElIcon, ElDatePicker, FormInstance } from "element-plus";
+import { computed, ref, h, onMounted, nextTick } from "vue";
+import { ElForm, ElFormItem, ElInput, ElSelect, ElOption, ElButton, ElIcon, ElDatePicker, FormInstance, ElRadioButton } from "element-plus";
 import { ArrowDown, ArrowUp, Search, RefreshLeft } from "@element-plus/icons-vue";
 import { ElInputNumber, ElRadio, ElRadioGroup, ElCheckbox, ElCheckboxGroup } from "element-plus";
 
@@ -81,7 +81,7 @@ function renderFormItem(item: QueryConfig["formItem"][0]) {
       case "inputnumber":
         return h(ElInputNumber, inputProps);
       case "radio":
-        return h(ElRadioGroup, inputProps, () => unref(item.options)?.map((opt) => h(ElRadio, { label: opt.value, key: opt.value }, () => opt.label)));
+        return h(ElRadioGroup, inputProps, () => unref(item.options)?.map((opt) => h(ElRadioButton, { label: opt.value, key: opt.value }, () => opt.label)));
       case "checkbox":
         return h(ElCheckboxGroup, inputProps, () => unref(item.options)?.map((opt) => h(ElCheckbox, { label: opt.value, key: opt.value }, () => opt.label)));
       case "textarea":

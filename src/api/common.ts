@@ -25,4 +25,11 @@ export default {
       },
     });
   },
+  /**获取奖项 */
+  getPrizeList() {
+    return request<any, { key: number; val: string }[]>({
+      url: "/admin/global/getBonusList",
+      method: "get",
+    });
+  }
 };

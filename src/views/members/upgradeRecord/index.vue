@@ -5,24 +5,23 @@
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
-      <template #header></template>
-
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="uid" label="用户ID" min-width="80" />
-        <el-table-column prop="account" label="用户账号" min-width="120" />
-        <el-table-column prop="log_type" label="日志类型" min-width="100">
+        <el-table-column prop="member.account" label="会员账号" min-width="120" />
+        <el-table-column prop="old_level" label="原始等级" min-width="100" />
+        <el-table-column prop="new_level" label="升级后等级" min-width="100" />
+        <el-table-column prop="amount_spent" label="花费金额" min-width="120" />
+        <el-table-column prop="member_expiration_time" label="会员到期时间" min-width="180" />
+        <el-table-column prop="contract_expiration_time" label="合约到期时间" min-width="180" />
+        <el-table-column prop="contract_status" label="合约状态" min-width="100">
           <template #default="{ row }">
-            {{ log_types.find((t) => t.value === row.log_type)?.label }}
+            <el-tag :type="row.contract_status === 1 ? 'success' : 'info'">
+              {{ contract_status_types.find((t) => t.value === row.contract_status)?.label }}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="log_ip" label="IP地址" min-width="120" />
-        <el-table-column prop="log_region" label="地区" min-width="120" />
-        <el-table-column prop="device_type" label="设备类型" min-width="100">
-          <template #default="{ row }">
-            {{ device_types.find((t) => t.value === row.device_type)?.label }}
-          </template>
-        </el-table-column>
+        <el-table-column prop="created_at" label="添加时间" min-width="180" />
         <el-table-column prop="updated_at" label="更新时间" min-width="180" />
       </el-table>
 
@@ -34,22 +33,16 @@
 </template>
 
 <script setup lang="ts">
-import api, { type Form, Query } from "@/api/members/memberLog";
+import api, { type Form, Query } from "@/api/members/upgradeRecord";
 import { searchMember } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
-/** 日志类型选项 */
-const log_types = [
-  { value: 1, label: "登录" },
-  { value: 2, label: "注册" },
+
+/** 合约状态选项 */
+const contract_status_types = [
+  { value: 1, label: "已返还" },
+  { value: 2, label: "未返还" },
 ];
 
-/** 设备类型选项 */
-const device_types = [
-  { value: 1, label: "PC" },
-  { value: 2, label: "WEB" },
-  { value: 3, label: "安卓" },
-  { value: 4, label: "苹果" },
-];
 const memberList = ref<any>([]);
 const loading = ref(false);
 
@@ -69,49 +62,22 @@ const config: QueryConfig = {
         remote: true,
         clearable: true,
         loading: loading,
-        remoteMethod: async (query: string) => {
+        remoteMethod: async (res: string) => {
           loading.value = true;
-          memberList.value = await searchMember(query);
+          memberList.value = await searchMember(res);
           loading.value = false;
         },
       },
     },
     {
       type: "select",
-      modelKey: "log_type",
-      label: "日志类型",
-      options: log_types,
+      modelKey: "contract_status",
+      label: "合约状态",
+      options: contract_status_types,
       props: {
-        placeholder: "请输入用户ID",
+        placeholder: "请选择合约状态",
         style: { width: "200px" },
-      },
-    },
-    {
-      type: "input",
-      modelKey: "log_ip",
-      label: "IP地址",
-      props: {
-        placeholder: "请输入用户ID",
-        style: { width: "200px" },
-      },
-    },
-    {
-      type: "input",
-      modelKey: "log_region",
-      label: "地区",
-      props: {
-        placeholder: "请输入用户ID",
-        style: { width: "200px" },
-      },
-    },
-    {
-      type: "select",
-      modelKey: "device_type",
-      label: "设备类型",
-      options: device_types,
-      props: {
-        placeholder: "请输入用户ID",
-        style: { width: "200px" },
+        clearable: true,
       },
     },
     {
@@ -119,7 +85,6 @@ const config: QueryConfig = {
       modelKey: "datetime",
       label: "时间范围",
       props: {
-        placeholder: "请输入用户ID",
         style: { width: "400px" },
       },
     },
@@ -132,10 +97,7 @@ const queryFormRef = ref(ElForm);
 /** 查询参数 */
 const queryParams = reactive<Query>({
   uid: undefined,
-  log_type: undefined,
-  log_ip: undefined,
-  log_region: undefined,
-  device_type: undefined,
+  contract_status: undefined as any,
   datetime: [],
 });
 

@@ -5,51 +5,62 @@
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
-      <template #header></template>
-
+      <template #header>
+         <el-button type="primary" @click="table.editHandler()">新增</el-button>
+         <el-button type="danger" :disabled="!table.selectList.value.length" @click="table.deleteHandler()">批量删除</el-button>
+      </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="uid" label="用户ID" min-width="80" />
-        <el-table-column prop="account" label="用户账号" min-width="120" />
-        <el-table-column prop="log_type" label="日志类型" min-width="100">
+        <el-table-column prop="member.account" label="会员账号" min-width="120" />
+        <el-table-column label="类型" min-width="100">
           <template #default="{ row }">
-            {{ log_types.find((t) => t.value === row.log_type)?.label }}
+            <el-tag :type="row.type === 1 ? 'success' : row.type === 2 ? 'warning' : 'info'">
+              {{ type_options.find((t) => t.value === row.type)?.label }}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="log_ip" label="IP地址" min-width="120" />
-        <el-table-column prop="log_region" label="地区" min-width="120" />
-        <el-table-column prop="device_type" label="设备类型" min-width="100">
+        <el-table-column prop="bonus" label="奖项" min-width="100" />
+        <el-table-column label="状态" min-width="100">
           <template #default="{ row }">
-            {{ device_types.find((t) => t.value === row.device_type)?.label }}
+            <el-tag :type="row.state === 1 ? 'warning' : 'success'">
+              {{ state_options.find((t) => t.value === row.state)?.label }}
+            </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="updated_at" label="更新时间" min-width="180" />
+        <el-table-column prop="created_at" label="添加时间" min-width="180" />
+        <el-table-column label="操作" min-width="100">
+          <template #default="{ row }">
+            <el-button type="danger" size="small" @click="table.deleteHandler(row.id)">删除</el-button>
+          </template>
+        </el-table-column>
       </el-table>
-
       <template #footer>
         <pagination background :total="table.pageTotal.value" v-model:page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
       </template>
     </el-card>
+    <edit v-model="table.visible.value[0]" @finish="table.handleResetQuery()"/>
   </div>
 </template>
 
 <script setup lang="ts">
-import api, { type Form, Query } from "@/api/members/memberLog";
+import api, { type Form, Query } from "@/api/members/designatedWinner";
 import { searchMember } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
-/** 日志类型选项 */
-const log_types = [
-  { value: 1, label: "登录" },
-  { value: 2, label: "注册" },
+import edit from './components/edit.vue';
+/** 抽奖状态选项 */
+const state_options = [
+  { value: 1, label: "未抽奖" },
+  { value: 2, label: "已抽奖" },
 ];
 
-/** 设备类型选项 */
-const device_types = [
-  { value: 1, label: "PC" },
-  { value: 2, label: "WEB" },
-  { value: 3, label: "安卓" },
-  { value: 4, label: "苹果" },
+/** 类型选项 */
+const type_options = [
+  { value: 1, label: "充值赠送" },
+  { value: 2, label: "注册赠送" },
+  { value: 3, label: "邀请赠送" },
 ];
+
 const memberList = ref<any>([]);
 const loading = ref(false);
 
@@ -69,49 +80,33 @@ const config: QueryConfig = {
         remote: true,
         clearable: true,
         loading: loading,
-        remoteMethod: async (query: string) => {
+        remoteMethod: async (res: string) => {
           loading.value = true;
-          memberList.value = await searchMember(query);
+          memberList.value = await searchMember(res);
           loading.value = false;
         },
       },
     },
     {
       type: "select",
-      modelKey: "log_type",
-      label: "日志类型",
-      options: log_types,
+      modelKey: "state",
+      label: "抽奖状态",
+      options: state_options,
       props: {
-        placeholder: "请输入用户ID",
+        placeholder: "请选择抽奖状态",
         style: { width: "200px" },
-      },
-    },
-    {
-      type: "input",
-      modelKey: "log_ip",
-      label: "IP地址",
-      props: {
-        placeholder: "请输入用户ID",
-        style: { width: "200px" },
-      },
-    },
-    {
-      type: "input",
-      modelKey: "log_region",
-      label: "地区",
-      props: {
-        placeholder: "请输入用户ID",
-        style: { width: "200px" },
+        clearable: true,
       },
     },
     {
       type: "select",
-      modelKey: "device_type",
-      label: "设备类型",
-      options: device_types,
+      modelKey: "type",
+      label: "类型",
+      options: type_options,
       props: {
-        placeholder: "请输入用户ID",
+        placeholder: "请选择类型",
         style: { width: "200px" },
+        clearable: true,
       },
     },
     {
@@ -119,7 +114,6 @@ const config: QueryConfig = {
       modelKey: "datetime",
       label: "时间范围",
       props: {
-        placeholder: "请输入用户ID",
         style: { width: "400px" },
       },
     },
@@ -132,10 +126,8 @@ const queryFormRef = ref(ElForm);
 /** 查询参数 */
 const queryParams = reactive<Query>({
   uid: undefined,
-  log_type: undefined,
-  log_ip: undefined,
-  log_region: undefined,
-  device_type: undefined,
+  state: undefined,
+  type: undefined,
   datetime: [],
 });
 
@@ -146,11 +138,3 @@ onMounted(() => {
   table.queryHandler();
 });
 </script>
-
-<style scoped lang="scss">
-.icon {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-}
-</style>

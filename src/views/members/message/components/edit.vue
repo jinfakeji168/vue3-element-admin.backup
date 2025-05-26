@@ -1,38 +1,38 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="800px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
-      <el-form-item label="分享任务图片" prop="icon">
-        <upload-part v-model="formData.icon"></upload-part>
-      </el-form-item>
-      <el-form-item label="奖励类型" prop="type">
-        <el-radio-group v-model="formData.type">
-          <el-radio :label="1">佣金账户</el-radio>
-          <el-radio :label="2">奖励VIP</el-radio>
-          <el-radio :label="3">基础账户</el-radio>
+      <!-- 新增表单项 -->
+      <el-form-item label="发送方式" prop="send_type">
+        <el-radio-group v-model="formData.send_type">
+          <el-radio :label="1">按等级</el-radio>
+          <el-radio :label="2">指定会员下级</el-radio>
+          <el-radio :label="3">按分组</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="奖励次数(类型)" prop="reward_type">
-        <el-radio-group v-model="formData.reward_type">
-          <el-radio :label="1">总共一次</el-radio>
-          <el-radio :label="2">每日一次</el-radio>
-        </el-radio-group>
+
+      <el-form-item v-if="formData.send_type === 1" label="VIP等级" prop="vip_level">
+        <el-select v-model="formData.vip_level" multiple placeholder="请选择VIP等级">
+          <el-option v-for="i of store.vipList" :key="i.id" :label="i.title" :value="i.level" />
+        </el-select>
       </el-form-item>
-      <el-form-item label="佣金金额" prop="share_amount">
-        <el-input v-model="formData.share_amount" :min="0" />
+      <el-form-item v-if="formData.send_type === 1" label="指定会员账号" prop="account">
+        <el-input type="textarea" v-model="formData.account" placeholder="请输入会员账号,用英文逗号分隔" />
+      </el-form-item>
+      <el-form-item v-if="formData.send_type === 2" label="指定会员所有下级" prop="spe_account">
+        <el-select v-model="formData.spe_account" :remote-method="remoteHandler" :loading="loading[1]" filterable remote placeholder="请输入会员账号">
+          <el-option v-for="item in memberList" :key="item.value" :label="item.label" :value="item.label" />
+        </el-select>
+        {{ subordinateNumStr }}
       </el-form-item>
 
-      <el-form-item label="奖励VIP等级" prop="reward_vip_level">
-        <el-input v-model="formData.reward_vip_level" type="text" />
-      </el-form-item>
-      <el-form-item label="奖励VIP天数" prop="reward_vip_days">
-        <el-input v-model="formData.reward_vip_days" :min="0" />
+      <el-form-item v-if="formData.send_type === 3" label="会员分组" prop="group_ids">
+        <el-select v-model="formData.group_ids" multiple placeholder="请选择会员分组">
+          <el-option v-for="group in store.groupList" :key="group.id" :label="group.title" :value="group.id" />
+        </el-select>
       </el-form-item>
 
-      <el-form-item label="启用状态" prop="status">
-        <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
-      </el-form-item>
-      <el-form-item label="显示排序" prop="sort">
-        <el-input-number v-model="formData.sort" :min="0" />
+      <el-form-item label="是否弹窗" prop="is_window">
+        <el-switch v-model="formData.is_window" :active-value="StatusEnum.True" :inactive-value="StatusEnum.False" />
       </el-form-item>
     </el-form>
     <el-tabs v-model="currentIndex">
@@ -56,7 +56,7 @@
           class="content"
           :ref="
             (el: any) => {
-              contentRef[2] = el;
+              contentRef[1] = el;
             }
           "
           style="height: 40vh"
@@ -68,21 +68,24 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading[0]" :disabled="formData.send_type == 2 && !enabled">确 定</el-button>
       </div>
     </template>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
-import api, { type Form } from "@/api/system/shareTask";
+import api, { type FormData } from "@/api/members/message";
+import Lapi from "@/api/members/memberList";
+import { searchMember } from "@/utils";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { FormInstance } from "element-plus";
-import uploadPart from "@/components/Upload/uploadPart.vue";
 import Content from "@/components/WangEditor/content.vue";
+import { useStore } from "@/store/modules/common";
+const store = useStore();
 
 const props = defineProps<{
-  data?: Form;
+  data?: FormData;
 }>();
 const visible = defineModel<boolean>();
 const title = ref("");
@@ -90,21 +93,28 @@ watch(
   visible,
   () => {
     if (!visible.value) return;
-    if (props.data) {
-      title.value = "编辑";
-      formData.value = { ...props.data };
-    } else {
-      title.value = "新增";
-      formData.value = { sort: 1, reward_type: 1, type: 1, status: StatusEnum.False };
-    }
+
+    title.value = "新增";
+    formData.value = { send_type: 1 };
   },
   {
     flush: "post",
   }
 );
-const formData = ref<Form>({});
+const formData = ref<FormData>({});
 
+/** 会员分组列表类型 */
+interface GroupItem {
+  id: number;
+  name: string;
+}
+
+// 添加表单验证规则
 const rules = {
+  send_type: [{ required: true, message: "请选择发送方式", trigger: "change" }],
+  vip_level: [{ required: true, message: "请选择VIP等级", trigger: "change" }],
+  spe_account: [{ required: true, message: "请输入会员账号", trigger: "blur" }],
+  group_ids: [{ required: true, message: "请选择会员分组", trigger: "change" }],
   share_amount: [{ required: true, message: "填写佣金金额", trigger: "blur" }],
 };
 
@@ -112,19 +122,17 @@ const formRef = ref<FormInstance>();
 const contentRef = ref<InstanceType<typeof Content>[]>([]);
 
 const emits = defineEmits(["finish"]);
-const loading = ref(false);
+const loading = ref([false, false]);
 async function submitHandler() {
   const valid = await Promise.all([unref(formRef)?.validate(), ...unref(contentRef).map((el) => el.validate())]);
+  debugger;
   if (valid.some((v) => !v)) return;
-  loading.value = true;
+  loading.value[0] = true;
   try {
-    if (props.data) {
-      await api.edit(formData.value);
-    } else {
-      await api.add(formData.value);
-    }
+    formData.value.account = (formData.value.account as string)?.split(",");
+    await api.add(formData.value);
   } finally {
-    loading.value = false;
+    loading.value[0] = false;
   }
   visible.value = false;
   emits("finish");
@@ -137,6 +145,33 @@ function closeHandler() {
 }
 
 const currentIndex = ref(0);
+
+const memberList = ref<any>([]);
+async function remoteHandler(str: string) {
+  loading.value[1] = true;
+  memberList.value = await searchMember(str);
+  loading.value[1] = false;
+}
+
+const debouncedGetSubordinate = useDebounceFn(async (val: string) => {
+  if (val) {
+    try {
+      const res = await Lapi.getSubordinate(val);
+      subordinateNumStr.value = `共${res.number}个下级`;
+      enabled.value = res.number > 0;
+    } catch (err: any) {
+      subordinateNumStr.value = err;
+    }
+  }
+}, 1000);
+const enabled = ref(true);
+const subordinateNumStr = ref("");
+watch(
+  () => formData.value.spe_account,
+  (val) => {
+    if (val) debouncedGetSubordinate(val);
+  }
+);
 </script>
 
 <style lang="scss" scoped>
