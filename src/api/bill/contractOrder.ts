@@ -1,5 +1,3 @@
-
-
 import init from "../basicAPI";
 import request from "@/utils/request";
 const BasePath = "/admin/bills/contractOrder";
@@ -10,7 +8,16 @@ export default {
   control: (data: { ids: number[]; state: 1 | 2 }) => {
     return request({
       url: `${BasePath}/control`,
-      method: "put"
+      method: "put",
+      data
+    })
+  },
+  /**结算 */
+  settlement: (ids: number[]) => {
+    return request({
+      url: `${BasePath}/settlement`,
+      method: "put",
+      data: { ids }
     })
   }
 };
