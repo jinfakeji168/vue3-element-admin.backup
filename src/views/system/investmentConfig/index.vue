@@ -6,13 +6,13 @@
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
+        <el-button v-hasPerm="['investmentConfig:add']" type="success" @click="table.editHandler()">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button v-hasPerm="['currency:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
+        <el-button v-hasPerm="['investmentConfig:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
@@ -58,21 +58,21 @@
 
         <el-table-column label="操作" fixed="right" align="left" width="200">
           <template #default="{ row }">
-            <el-button v-hasPerm="['currency:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
+            <el-button v-hasPerm="['investmentConfig:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
               编辑
             </el-button>
-            <el-button v-hasPerm="['currency:editExplain']" type="primary" link size="small" @click.stop="table.editHandler(row, 1)">
+            <el-button v-hasPerm="['investmentConfig:editExplain']" type="primary" link size="small" @click.stop="table.editHandler(row, 1)">
               <template #icon><EditPen /></template>
               充值说明
             </el-button>
-            <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
+            <el-button v-hasPerm="['investmentConfig:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
               删除
             </el-button>
-            <el-button v-hasPerm="['currency:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
+            <el-button v-hasPerm="['investmentConfig:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               <template #icon><Switch /></template>
               {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>

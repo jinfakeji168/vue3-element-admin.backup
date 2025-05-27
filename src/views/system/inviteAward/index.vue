@@ -4,9 +4,9 @@
       <template #header>邀请奖励</template>
       <el-form :model="formData" label-width="200px">
         <el-form-item label="邀请下级首存人数阶梯奖励" prop="invite_first_recharge_user">
-          <el-radio-group v-model="formData.invite_first_recharge_user">
-            <el-radio :value="StatusEnum.False">开启</el-radio>
-            <el-radio :value="StatusEnum.True">关闭</el-radio>
+          <el-radio-group v-model="formData.invite_first_recharge_user" fill="#67C23A" text-color="#fff">
+            <el-radio-button :value="StatusEnum.False">开启</el-radio-button>
+            <el-radio-button :value="StatusEnum.True">关闭</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="邀请一级会员首存超过多少" prop="invite_first_recharge_money">
@@ -21,9 +21,9 @@
         </el-form-item>
         <hr />
         <el-form-item label="邀请下级首存金额阶梯奖励" prop="invite_first_recharge_invite_money">
-          <el-radio-group v-model="formData.invite_first_recharge_invite_money">
-            <el-radio :value="StatusEnum.False">开启</el-radio>
-            <el-radio :value="StatusEnum.True">关闭</el-radio>
+          <el-radio-group v-model="formData.invite_first_recharge_invite_money" fill="#67C23A" text-color="#fff">
+            <el-radio-button :value="StatusEnum.False">开启</el-radio-button>
+            <el-radio-button :value="StatusEnum.True">关闭</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="首充金额阶梯设置">

@@ -3,9 +3,9 @@
     <template #header>
       <h4 style="margin: 0">用户协议</h4>
     </template>
-    <content v-model="formData" :keys="['original', 'translation']" @init-before="initBefore" />
+    <content v-model="formData" :keys="['original', 'translation']" @init-before="initBefore" :disabled="!hasEditAuth" />
     <template #footer>
-      <el-button class="button" type="primary" @click="submitHandler" v-hasPerm="['privacyPolicy:edit']" :loading="loading[1]">保存</el-button>
+      <el-button class="button" type="primary" @click="submitHandler" v-hasPerm="['privacyPolicy:editExplain']" :loading="loading[1]">保存</el-button>
       <el-button class="button" type="primary" @click="resertHandler" :disabled="!hasChange">重置</el-button>
     </template>
   </el-card>
@@ -13,6 +13,8 @@
 
 <script setup lang="ts">
 import api, { type policyForm } from "@/api/system/policy";
+import { hasAuth } from "@/plugins/permission";
+const hasEditAuth = hasAuth("privacyPolicy:editExplain");
 const formData = ref<policyForm>({});
 const loading = ref<boolean[]>([]);
 

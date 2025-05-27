@@ -26,7 +26,7 @@
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button v-hasPerm="['lotteryConfig:save']" type="primary" @click="submitHandler" :loading="loading[1]">保存</el-button>
+        <el-button v-hasPerm="['instantContractSetting:save']" type="primary" @click="submitHandler" :loading="loading[1]">保存</el-button>
       </template>
     </el-card>
     <explain :data="formData" v-model="visible[0]" @finish="getData" />

@@ -4,48 +4,48 @@
       <template #header>抽奖配置</template>
       <el-form :model="formData" label-width="200px">
         <el-form-item label="抽奖开关" prop="lottery_is_open">
-          <el-radio-group v-model="formData.lottery_is_open">
-            <el-radio :value="StatusEnum.False">开启</el-radio>
-            <el-radio :value="StatusEnum.True">关闭</el-radio>
+          <el-radio-group v-model="formData.lottery_is_open" fill="#67C23A" text-color="#fff">
+            <el-radio-button :value="StatusEnum.False">开启</el-radio-button>
+            <el-radio-button :value="StatusEnum.True">关闭</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="首页是否弹窗" prop="lottery_is_pop">
-          <el-radio-group v-model="formData.lottery_is_pop">
-            <el-radio :value="StatusEnum.False">开启</el-radio>
-            <el-radio :value="StatusEnum.True">关闭</el-radio>
+          <el-radio-group v-model="formData.lottery_is_pop" fill="#67C23A" text-color="#fff">
+            <el-radio-button :value="StatusEnum.False">开启</el-radio-button>
+            <el-radio-button :value="StatusEnum.True">关闭</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="每次到首页都弹窗" prop="lottery_pop_num">
-          <el-radio-group v-model="formData.lottery_pop_num">
-            <el-radio :value="StatusEnum.False">开启</el-radio>
-            <el-radio :value="StatusEnum.True">关闭</el-radio>
+          <el-radio-group v-model="formData.lottery_pop_num" fill="#67C23A" text-color="#fff">
+            <el-radio-button :value="StatusEnum.False">开启</el-radio-button>
+            <el-radio-button :value="StatusEnum.True">关闭</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="抽奖赠送账户" prop="lottery_give_account">
-          <el-radio-group v-model="formData.lottery_give_account">
-            <el-radio :value="1">量化账户</el-radio>
-            <el-radio :value="2">佣金账户</el-radio>
-            <el-radio :value="3">合约账户</el-radio>
+          <el-radio-group v-model="formData.lottery_give_account" fill="#409EFF" text-color="#fff">
+            <el-radio-button :value="1">量化账户</el-radio-button>
+            <el-radio-button :value="2">佣金账户</el-radio-button>
+            <el-radio-button :value="3">合约账户</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="抽奖形式" prop="lottery_type">
-          <el-radio-group v-model="formData.lottery_type">
-            <el-radio :value="1">量化账户</el-radio>
-            <el-radio :value="2">佣金账户</el-radio>
-            <el-radio :value="3">合约账户</el-radio>
+          <el-radio-group v-model="formData.lottery_type" fill="#409EFF" text-color="#fff">
+            <el-radio-button :value="1">量化账户</el-radio-button>
+            <el-radio-button :value="2">佣金账户</el-radio-button>
+            <el-radio-button :value="3">合约账户</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="奖品设置" prop="lottery_system_lottery_type">
-          <el-radio-group v-model="formData.lottery_system_lottery_type">
-            <el-radio :value="1">全局</el-radio>
-            <el-radio :value="2">局部</el-radio>
+          <el-radio-group v-model="formData.lottery_system_lottery_type" fill="#E6A23C" text-color="#fff">
+            <el-radio-button :value="1">全局</el-radio-button>
+            <el-radio-button :value="2">局部</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="奖品默认显示类型" prop="lottery_type_default">
-          <el-radio-group v-model="formData.lottery_type_default">
-            <el-radio :value="1">注册奖品</el-radio>
-            <el-radio :value="2">邀请奖品</el-radio>
-            <el-radio :value="3">充值奖品</el-radio>
+          <el-radio-group v-model="formData.lottery_type_default" fill="#E6A23C" text-color="#fff">
+            <el-radio-button :value="1">注册奖品</el-radio-button>
+            <el-radio-button :value="2">邀请奖品</el-radio-button>
+            <el-radio-button :value="3">充值奖品</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="抽奖说明">
@@ -67,10 +67,10 @@
         </el-form-item>
         <hr />
         <el-form-item label="用户充值赠送抽奖次数类型" props="lottery_send_type">
-          <el-radio-group v-model="formData.lottery_send_type">
-            <el-radio :value="1">按每日充值总额赠送</el-radio>
-            <el-radio :value="2">按每笔充值金额赠送</el-radio>
-            <el-radio :value="3">按终身充值总额赠送</el-radio>
+          <el-radio-group v-model="formData.lottery_send_type" fill="#E6A23C" text-color="#fff">
+            <el-radio-button :value="1">按每日充值总额赠送</el-radio-button>
+            <el-radio-button :value="2">按每笔充值金额赠送</el-radio-button>
+            <el-radio-button :value="3">按终身充值总额赠送</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="充值奖品设置">
@@ -88,7 +88,7 @@
     <prizeList :data="formData" v-model="visible[1]" :disabled="!hasAuth('lotteryConfig:registPrize')" @finish="getData" _key="lottery_register_prize_set" title="注册奖品设置" />
     <prizeList :data="formData" v-model="visible[2]" :disabled="!hasAuth('lotteryConfig:invitePrize')" @finish="getData" _key="lottery_invite_prize_set" title="邀请奖品设置" />
     <prizeList :data="formData" v-model="visible[3]" :disabled="!hasAuth('lotteryConfig:rechargePrize')" @finish="getData" _key="lottery_recharge_prize_set" title="充值奖品设置" />
-    <recharge v-model="visible[4]" :title="Listlables[formData.lottery_send_type - 1]" />
+    <recharge v-model="visible[4]" :title="Listlables[formData.lottery_send_type - 1]" :index="formData.lottery_send_type"/>
   </div>
 </template>
 

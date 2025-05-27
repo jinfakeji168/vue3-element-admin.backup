@@ -1,34 +1,14 @@
 <template>
   <div class="app-container">
-    <!-- <div class="search-bar">
-      <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        
-        <el-form-item>
-          <el-button class="filter-item" type="primary" @click="table.queryHandler()">
-            <template #icon>
-              <Search />
-            </template>
-            搜索
-          </el-button>
-          <el-button @click="table.handleResetQuery()">
-            <template #icon>
-              <Refresh />
-            </template>
-            重置
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </div> -->
-
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button type="success" @click="table.editHandler()">
+        <el-button type="success" @click="table.editHandler()" v-hasPerm="['groupingSetting:add']">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
+        <el-button type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()"  v-hasPerm="['groupingSetting:delete']">
           <template #icon>
             <Delete />
           </template>
@@ -43,11 +23,11 @@
         <el-table-column prop="updated_at" label="更新时间" min-width="180" />
         <el-table-column label="操作" fixed="right" align="left" width="150">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
+            <el-button type="primary" link size="small" @click.stop="table.editHandler(row, 0)"  v-hasPerm="['groupingSetting:edit']">
               <template #icon><EditPen /></template>
               编辑
             </el-button>
-            <el-button type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
+            <el-button type="danger" link size="small" @click.stop="table.deleteHandler(row.id)"  v-hasPerm="['groupingSetting:delete']">
               <template #icon><Delete /></template>
               删除
             </el-button>

@@ -4,15 +4,15 @@
       <template #header>签到配置</template>
       <el-form :model="formData" label-width="200px">
         <el-form-item label="签到开关" prop="lottery_is_open">
-          <el-radio-group v-model="formData.sign_is_enable">
-            <el-radio :value="StatusEnum.False">开启</el-radio>
-            <el-radio :value="StatusEnum.True">关闭</el-radio>
+          <el-radio-group v-model="formData.sign_is_enable" fill="#67C23A" text-color="#fff">
+            <el-radio-button :value="StatusEnum.False">开启</el-radio-button>
+            <el-radio-button :value="StatusEnum.True">关闭</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="签到赠送金额到账账户" prop="lottery_is_pop">
-          <el-radio-group v-model="formData.sign_give_account">
-            <el-radio :value="1">基础账户</el-radio>
-            <el-radio :value="2">佣金账户</el-radio>
+          <el-radio-group v-model="formData.sign_give_account" fill="#409EFF" text-color="#fff">
+            <el-radio-button :value="1">基础账户</el-radio-button>
+            <el-radio-button :value="2">佣金账户</el-radio-button>
           </el-radio-group>
         </el-form-item>
 

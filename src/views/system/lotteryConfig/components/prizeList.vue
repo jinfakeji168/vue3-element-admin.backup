@@ -21,8 +21,8 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitHandler" :disabled="disabled">保存</el-button>
         <el-button @click="closeHandler">取 消</el-button>
+        <el-button type="primary" @click="submitHandler" :disabled="disabled" :loading="loading">保存</el-button>
       </div>
     </template>
   </el-dialog>
@@ -53,8 +53,15 @@ const formData = ref<Form>({});
 
 const formRef = ref<FormInstance>();
 const emit = defineEmits(["finish"]);
+const loading= ref(false);
 async function submitHandler() {
-  await api.setLotteryConfig(unref(formData));
+  loading.value = true;
+  try{
+    await api.setLotteryConfig(unref(formData));
+  }
+  finally{
+    loading.value = false;
+  }
   visible.value = false;
   emit("finish");
 }

@@ -6,8 +6,16 @@
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-         <el-button type="primary" @click="table.editHandler()">新增</el-button>
-         <el-button type="danger" :disabled="!table.selectList.value.length" @click="table.deleteHandler()">批量删除</el-button>
+         <el-button type="success" @click="table.editHandler()" v-hasPerm="['designatedWinner:add']">
+           <template #icon>
+            <Plus />
+          </template>
+          新增</el-button>
+         <el-button type="danger" :disabled="!table.selectList.value.length" @click="table.deleteHandler()" v-hasPerm="['designatedWinner:delete']">
+          <template #icon>
+            <Delete />
+          </template>
+          批量删除</el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
@@ -31,7 +39,11 @@
         <el-table-column prop="created_at" label="添加时间" min-width="180" />
         <el-table-column label="操作" min-width="100">
           <template #default="{ row }">
-            <el-button type="danger" size="small" @click="table.deleteHandler(row.id)">删除</el-button>
+            <el-button  type="danger" link size="small" @click="table.deleteHandler(row.id)" v-hasPerm="['designatedWinner:delete']">
+              <template #icon>
+                <Delete />
+              </template>
+              删除</el-button>
           </template>
         </el-table-column>
       </el-table>

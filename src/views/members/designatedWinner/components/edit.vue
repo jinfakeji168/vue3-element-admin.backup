@@ -72,7 +72,7 @@
 
 <script setup lang="ts">
 import { ref, unref, reactive, watch, computed } from 'vue'
-import lotteryApi from "@/api/system/lotteryConfig"
+import commonApi from "@/api/common"
 import type { FormInstance, FormRules } from 'element-plus'
 import api, { type addForm } from '@/api/members/designatedWinner'
 import { useStore } from "@/store/modules/common"
@@ -84,7 +84,7 @@ const title = ref("")
 const lotteryConfig = ref<any>(null)
 
 async function getLotteryConfig() {
-  const res = await lotteryApi.getLotteryConfig()
+  const res = await commonApi.getPrizeList()
   lotteryConfig.value = res
 }
 

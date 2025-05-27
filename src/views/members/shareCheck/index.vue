@@ -6,8 +6,8 @@
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button type="success" @click="checkHandler(1)" :loading="checkLoading" :disabled="!table.selectList.value.length">审核通过</el-button>
-        <el-button type="danger" @click="checkHandler(2)" :loading="checkLoading" :disabled="!table.selectList.value.length">审核不通过</el-button>
+        <el-button type="success" @click="checkHandler(1)" :loading="checkLoading" :disabled="!table.selectList.value.length" v-hasPerm="['shareCheck:check']">审核通过</el-button>
+        <el-button type="danger" @click="checkHandler(2)" :loading="checkLoading" :disabled="!table.selectList.value.length" v-hasPerm="['shareCheck:check']">审核不通过</el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" :selectable="(row) => row.status == 0" />
@@ -38,8 +38,8 @@
         <el-table-column prop="updated_at" label="最后编辑时间" min-width="180" />
         <el-table-column fixed="right" label="操作" width="120">
           <template #default="{ row }">
-            <el-button v-if="row.status === 0" type="primary" link @click="checkHandler(1, row.id)" :loading="checkLoading">审核通过</el-button>
-            <el-button v-if="row.status === 0" type="primary" link @click="checkHandler(2, row.id)" :loading="checkLoading">审核不通过</el-button>
+            <el-button v-if="row.status === 0" type="primary" link @click="checkHandler(1, row.id)" :loading="checkLoading" v-hasPerm="['shareCheck:check']">审核通过</el-button>
+            <el-button v-if="row.status === 0" type="primary" link @click="checkHandler(2, row.id)" :loading="checkLoading" v-hasPerm="['shareCheck:check']">审核不通过</el-button>
           </template>
         </el-table-column>
       </el-table>

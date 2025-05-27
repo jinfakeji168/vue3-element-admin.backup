@@ -15,7 +15,7 @@
           删除
         </el-button>
       </template>
-      <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
+      <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)" style="height:40vh">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="奖品ID" min-width="120" />
         <el-table-column prop="reach_amount" label="充值金额满足" min-width="120" />
@@ -71,10 +71,20 @@ import api, { type rechargeForm } from "@/api/system/lotteryConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import TableInstance from "@/utils/tableInstance";
 import { FormInstance } from "element-plus";
-const props = withDefaults(defineProps<{ title: string }>(), {});
+const props = withDefaults(defineProps<{ title: string ,index:number}>(), {});
 const visible = defineModel<boolean>();
 const formRef = ref<FormInstance>();
-const table = new TableInstance<rechargeForm>(api, {}, 20);
+const queryParams=reactive({type:props.index})
+const table = new TableInstance<rechargeForm>(api, queryParams, 20);
+
+watch(()=>props.index,val=>{
+  if(val)queryParams.type=val
+})
+watch(visible,val=>{
+  if(val){
+    table.queryHandler();
+  }
+})
 
 const dialogTitle = ref("");
 const formData = reactive<rechargeForm>({});
@@ -88,7 +98,7 @@ watch(
           dialogTitle.value = "编辑";
         } else {
           dialogTitle.value = "新增";
-          Object.assign(formData, { id: undefined, status: 1 });
+          Object.assign(formData, { id: undefined,type:props.index });
         }
       });
     } else {
@@ -118,7 +128,6 @@ async function submithandler() {
 }
 
 onMounted(() => {
-  table.queryHandler();
 });
 </script>
 

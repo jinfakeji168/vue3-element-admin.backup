@@ -6,13 +6,13 @@
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button v-hasPerm="['shareTask:add']" type="success" @click="table.editHandler()">
+        <el-button v-hasPerm="['message:add']" type="success" @click="table.editHandler()">
           <template #icon>
             <Plus />
           </template>
           新增
         </el-button>
-        <el-button v-hasPerm="['shareTask:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
+        <el-button v-hasPerm="['message:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
@@ -51,7 +51,7 @@
 
         <el-table-column label="操作" fixed="right" align="left" width="180">
           <template #default="{ row }">
-            <el-button v-hasPerm="['shareTask:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
+            <el-button v-hasPerm="['message:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
@@ -72,9 +72,8 @@
 <script setup lang="ts">
 import editPart from "./components/edit.vue";
 import api, { type TableItem, Query } from "@/api/members/message";
-import { StatusEnum } from "@/enums/MenuTypeEnum";
 import TableInstance from "@/utils/tableInstance";
-
+import { searchMember } from "@/utils";
 /** 消息类型选项 */
 const message_types = [
   { value: 1, label: "自定义" },
@@ -87,17 +86,30 @@ const read_status = [
   { value: 1, label: "已读" },
   { value: 2, label: "未读" },
 ];
+const memberList = ref<any>([]);
+const loading = ref(false);
 
 /** 查询配置 */
 const config: QueryConfig = {
   labelWidth: "120px",
   formItem: [
     {
-      type: "input",
+      type: "select",
       modelKey: "uid",
-      label: "用户ID",
-      props: {
+      label: "用户",
+      options: memberList,
+       props: {
+        placeholder: "请输入用户进行查询",
+        style: { width: "200px" },
+        filterable: true,
+        remote: true,
         clearable: true,
+        loading: loading,
+        remoteMethod: async (query: string) => {
+          loading.value = true;
+          memberList.value = await searchMember(query);
+          loading.value = false;
+        },
       },
     },
     {

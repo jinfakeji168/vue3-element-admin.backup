@@ -58,18 +58,9 @@ export interface lottery_item {
   probability?: number;
 }
 
-export interface RootName {
-  code: number;
-  message: string;
-  data?: Date;
-}
-
 export interface rechargeForm {
   id?: number;
-  type?: 1 | 2;
-  status?: StatusEnum;
+  type?: 1 | 2 | 3;
   gift_num?: number;
-  min_amount?: number;
-  max_amount?: number;
   reach_amount?: number;
 }
