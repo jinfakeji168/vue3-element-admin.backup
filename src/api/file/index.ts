@@ -19,10 +19,13 @@ const FileAPI = {
     });
   },
   /**获取列表 */
-  getList() {
+  getList(groupId: 'images' | 'files' | 'videos' | 'audio') {
     return request({
       url: `${this.uploadUrl}/list`,
       method: "get",
+      params: {
+        groupId
+      }
     });
   },
 

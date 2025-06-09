@@ -27,23 +27,21 @@
 </template>
 
 <script setup lang="ts">
-import api,{ type Form } from "@/api/members/rankListSetting";
+import api, { type Form } from "@/api/members/rankListSetting";
 import type { FormInstance } from "element-plus";
-import uploadPart from "@/components/Upload/uploadPart.vue";
-
 
 /** 类型选项 */
 const type_options = [
   { value: 1, label: "周榜" },
   { value: 2, label: "月榜" },
-  { value: 3, label: "年榜" }
+  { value: 3, label: "年榜" },
 ];
 
 const props = defineProps<{
   data?: Form;
 }>();
 
-const emit = defineEmits([ "finish"]);
+const emit = defineEmits(["finish"]);
 
 const visible = defineModel<boolean>();
 
@@ -59,14 +57,14 @@ const form = reactive<Form>({
   avatar: "",
   income: "",
   type: 1,
-  ranking: 1
+  ranking: 1,
 });
 
 /** 表单校验规则 */
 const rules = {
   user_name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
   type: [{ required: true, message: "请选择类型", trigger: "change" }],
-  ranking: [{ required: true, message: "请输入排名", trigger: "blur" }]
+  ranking: [{ required: true, message: "请输入排名", trigger: "blur" }],
 };
 
 /** 关闭处理 */
@@ -79,8 +77,8 @@ function closeHandler() {
 /** 提交处理 */
 async function submitHandler() {
   // ...提交逻辑实现
-  await unref(formRef)?.validate()
-  try{
+  await unref(formRef)?.validate();
+  try {
     submitLoading.value = true;
     if (props.data?.id) {
       await api.edit(form);
@@ -89,7 +87,7 @@ async function submitHandler() {
     }
     emit("finish");
     closeHandler();
-  }finally{
+  } finally {
     submitLoading.value = false;
   }
 }
@@ -97,9 +95,9 @@ async function submitHandler() {
 /** 监听编辑数据更新 */
 watch(visible, (val) => {
   if (val) {
-   nextTick(()=>{
-     Object.assign(form, props.data);
-   })
+    nextTick(() => {
+      Object.assign(form, props.data);
+    });
   }
 });
 </script>

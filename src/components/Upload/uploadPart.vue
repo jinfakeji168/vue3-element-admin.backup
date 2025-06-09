@@ -1,11 +1,12 @@
 <template>
   <div class="flex-y-center">
     <el-upload ref="upload" class="upload-demo" :on-change="onchange" :auto-upload="false" :limit="1" :show-file-list="false" :on-preview="handlePictureCardPreview">
-      <el-image v-if="previewURL" :src="previewURL" class="previewImg" fit="contain" :preview-src-list="[previewURL]" preview-teleported :z-index="9999" />
+      <el-image v-if="previewURL && type == 'images'" :src="previewURL" class="previewImg" fit="contain" :preview-src-list="[previewURL]" preview-teleported :z-index="9999" />
+      <el-input v-else-if="previewURL && type == 'files'" v-model="previewURL" style="width: 500px" />
       <template #trigger>
-        <el-button type="primary" style="margin-left: 10px">上传图片</el-button>
+        <el-button type="primary" style="margin-left: 10px" :loading="loading">上传</el-button>
       </template>
-      <el-button class="ml-3" type="success" @click="visible = true" style="order: 3">从列表选择</el-button>
+      <el-button class="ml-3" type="success" @click="visible = true" style="order: 3" v-if="type == 'images'">从列表选择</el-button>
     </el-upload>
   </div>
   <uploadList v-model="visible" @choose="chooseHandler"></uploadList>
@@ -18,14 +19,27 @@
 import { UploadFile, UploadInstance, UploadProps } from "element-plus";
 import uploadList from "./uploadList.vue";
 import api from "@/api/file/index";
+
+const props = withDefaults(
+  defineProps<{
+    type?: "images" | "files" | "videos" | "audio";
+  }>(),
+  {
+    type: "images",
+  }
+);
+
 const visible = ref(false);
 
 const previewURL = defineModel<string>();
-
+const loading = ref(false);
 async function submitUpload(file: UploadFile) {
-  const res = await api.upload(file);
+  loading.value = true;
+  const res = await api.upload(file, props.type);
+
   if (res) {
     previewURL.value = import.meta.env.VITE_APP_File_API_URL + res.path;
+    loading.value = false;
   }
 }
 function onchange(data: any) {

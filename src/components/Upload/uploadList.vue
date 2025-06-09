@@ -31,7 +31,6 @@
 
 <script setup lang="ts">
 import api from "@/api/file/index";
-import { get } from "http";
 
 const baseUrl = import.meta.env.VITE_APP_File_API_URL;
 const visible = defineModel<boolean>();
@@ -44,7 +43,7 @@ watch(visible, (val) => {
 const dataList = ref([]);
 
 async function getList() {
-  const value = await api.getList();
+  const value = await api.getList("images");
   dataList.value = value.data;
 }
 
@@ -54,7 +53,7 @@ function chooseHandler(row: any) {
   visible.value = false;
 }
 
-function selectionChangeHandler(data) {
+function selectionChangeHandler() {
   // console.log(data);
 }
 
