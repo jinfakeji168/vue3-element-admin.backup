@@ -64,7 +64,7 @@ const config: QueryConfig = {
         loading: loading,
         remoteMethod: async (res: string) => {
           loading.value = true;
-          memberList.value = await searchMember(res);
+          memberList.value = await searchMember({ account: res });
           loading.value = false;
         },
       },

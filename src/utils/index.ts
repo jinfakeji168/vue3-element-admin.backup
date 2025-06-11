@@ -67,10 +67,10 @@ export function parserHandler(value: string) {
 }
 
 import commonApi from "@/api/common";
-
-export async function searchMember(query: string) {
-  if (query !== "") {
-    const res = await commonApi.getMemberSelect(query);
+/**通过账号关键字或者id搜索会员 */
+export async function searchMember(data: { account?: string, id?: string }) {
+  if (data?.account || data?.id) {
+    const res = await commonApi.getMemberSelect(data);
     return Promise.resolve(
       res.map((val: any) => ({
         value: val.id,

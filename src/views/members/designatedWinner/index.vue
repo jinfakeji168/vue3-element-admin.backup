@@ -6,16 +6,18 @@
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-         <el-button type="success" @click="table.editHandler()" v-hasPerm="['designatedWinner:add']">
-           <template #icon>
+        <el-button type="success" @click="table.editHandler()" v-hasPerm="['designatedWinner:add']">
+          <template #icon>
             <Plus />
           </template>
-          新增</el-button>
-         <el-button type="danger" :disabled="!table.selectList.value.length" @click="table.deleteHandler()" v-hasPerm="['designatedWinner:delete']">
+          新增
+        </el-button>
+        <el-button type="danger" :disabled="!table.selectList.value.length" @click="table.deleteHandler()" v-hasPerm="['designatedWinner:delete']">
           <template #icon>
             <Delete />
           </template>
-          批量删除</el-button>
+          批量删除
+        </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
@@ -39,11 +41,12 @@
         <el-table-column prop="created_at" label="添加时间" min-width="180" />
         <el-table-column label="操作" min-width="100">
           <template #default="{ row }">
-            <el-button  type="danger" link size="small" @click="table.deleteHandler(row.id)" v-hasPerm="['designatedWinner:delete']">
+            <el-button type="danger" link size="small" @click="table.deleteHandler(row.id)" v-hasPerm="['designatedWinner:delete']">
               <template #icon>
                 <Delete />
               </template>
-              删除</el-button>
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -51,7 +54,7 @@
         <pagination background :total="table.pageTotal.value" v-model:page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
       </template>
     </el-card>
-    <edit v-model="table.visible.value[0]" @finish="table.handleResetQuery()"/>
+    <edit v-model="table.visible.value[0]" @finish="table.handleResetQuery()" />
   </div>
 </template>
 
@@ -59,7 +62,7 @@
 import api, { type Form, Query } from "@/api/members/designatedWinner";
 import { searchMember } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
-import edit from './components/edit.vue';
+import edit from "./components/edit.vue";
 /** 抽奖状态选项 */
 const state_options = [
   { value: 1, label: "未抽奖" },
@@ -94,7 +97,7 @@ const config: QueryConfig = {
         loading: loading,
         remoteMethod: async (res: string) => {
           loading.value = true;
-          memberList.value = await searchMember(res);
+          memberList.value = await searchMember({ account: res });
           loading.value = false;
         },
       },

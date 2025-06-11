@@ -1,5 +1,9 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="70vw">
+    <div class="search-bar">
+      <QueryPart ref="queryFormRef" v-model="queryParams" :config="config" @search="table.queryHandler()" @reset="table.handleResetQuery()" />
+    </div>
+
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
         <el-button v-hasPerm="['lotteryConfig:add']" type="success" @click="table.editHandler()">
@@ -24,7 +28,7 @@
             <el-tag type="info">{{ typeMap[row.type] }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right" align="left" width="200">
+        <el-table-column label="操作" fixed="right" align="left" width="auto">
           <template #default="{ row }">
             <el-button v-hasPerm="['lotteryConfig:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
@@ -36,10 +40,6 @@
               </template>
               删除
             </el-button>
-            <el-button v-hasPerm="['lotteryConfig:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
-              <template #icon><Switch /></template>
-              {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
-            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -50,20 +50,31 @@
   </el-dialog>
   <el-dialog v-model="table.visible.value[0]" :title="dialogTitle" width="50vw">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
-      <el-form-item label="提现比例" prop="withdrawal_ratio">
-        <el-input-number v-model="formData.withdrawal_ratio" placeholder="提现达到充值多少比例触发%" :min="0" />
+      <el-form-item label="提现比例(%)" prop="withdrawal_ratio">
+        <el-input v-model="formData.withdrawal_ratio" placeholder="提现达到充值多少比例触发%" @blur="formData.withdrawal_ratio = parserHandler(formData.withdrawal_ratio)" />
       </el-form-item>
       <el-form-item label="触发类型" prop="type">
         <el-select v-model="formData.type" placeholder="请选择触发类型">
           <el-option v-for="item in Object.keys(typeMap)" :key="item" :label="typeMap[item]" :value="Number(item)" />
         </el-select>
       </el-form-item>
+      <template v-if="formData.type === 4 || formData.type === 6">
+        <el-form-item label="邀请用户数量" prop="withdrawal_ratio">
+          <el-input-number v-model="formData.invite_user_number" placeholder="" :min="0" />
+        </el-form-item>
+        <el-form-item label="邀请用户充值达到" prop="withdrawal_ratio">
+          <el-input-number v-model="formData.invite_users_recharge_amount" placeholder="" :min="0" />
+        </el-form-item>
+      </template>
+      <el-form-item label="能提现次数" prop="withdrawal_ratio" v-if="formData.type === 6">
+        <el-input-number v-model="formData.withdrawal_number" placeholder="" :min="0" />
+      </el-form-item>
       <el-form-item label="触发用户" prop="trigger_user_type">
         <el-radio v-model="formData.trigger_user_type" :value="1">所有用户</el-radio>
         <el-radio v-model="formData.trigger_user_type" :value="2">部分用户</el-radio>
       </el-form-item>
-      <el-form-item label="用户">
-        <el-select v-model="formUser" filterable remote multiple placeholder="请选择用户" :remote-method="searchUser">
+      <el-form-item label="用户" v-if="formData.trigger_user_type == 2">
+        <el-select v-model="formData.user_id_array" filterable remote multiple placeholder="请输入账号搜索用户" :loading="searchLoading" :remote-method="searchUser">
           <el-option v-for="item in memberList" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
@@ -77,8 +88,7 @@
 
 <script setup lang="ts">
 import api, { type WithdrawAutoTriggerForm } from "@/api/system/systemConfig";
-import { StatusEnum } from "@/enums/MenuTypeEnum";
-import { searchMember } from "@/utils";
+import { searchMember, parserHandler } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
 import { FormInstance } from "element-plus";
 const props = withDefaults(defineProps<{}>(), {});
@@ -97,6 +107,22 @@ const typeMap: Record<string, any> = {
 };
 
 const title = ref("提款自动触发设置");
+/** 查询配置 */
+const config: QueryConfig = {
+  labelWidth: "120px",
+  formItem: [
+    {
+      type: "select",
+      modelKey: "type",
+      label: "触发类型",
+      options: Object.keys(typeMap).map((key) => ({ label: typeMap[key], value: Number(key) })),
+      props: {
+        clearable: true,
+        style: { width: "140px" },
+      },
+    },
+  ],
+};
 watch(visible, (val) => {
   if (val) {
     table.queryHandler();
@@ -105,14 +131,18 @@ watch(visible, (val) => {
 const memberList = ref<any>([]);
 const searchLoading = ref(false);
 const formUser = ref("");
+/**搜索用户 */
 async function searchUser(query: string) {
   searchLoading.value = true;
-  memberList.value = await searchMember(query);
+  memberList.value = await searchMember({ account: query });
   searchLoading.value = false;
 }
 
 const dialogTitle = ref("");
-const formData = reactive<WithdrawAutoTriggerForm>({});
+const formData = reactive<WithdrawAutoTriggerForm>({
+  trigger_user_type: 1,
+  type: 1,
+});
 
 watch(
   () => unref(table.visible)[0],
@@ -122,6 +152,7 @@ watch(
         if (unref(table.currentData)) {
           Object.assign(formData, unref(table.currentData));
           dialogTitle.value = "编辑";
+          if (formData.trigger_user_type == 2) echoUsers();
         } else {
           dialogTitle.value = "新增";
           Object.assign(formData, { id: undefined });
@@ -133,6 +164,13 @@ watch(
     }
   }
 );
+//回显多选用户
+function echoUsers() {
+  formData.user_id_array?.forEach(async (val: any) => {
+    memberList.value = await searchMember({ id: val });
+  });
+}
+
 const rules = {
   reach_amount: [{ required: true, message: "请输入充值金额满足于", trigger: "blur" }],
   gift_num: [{ required: true, message: "请输入充值赠送抽奖次数", trigger: "blur" }],

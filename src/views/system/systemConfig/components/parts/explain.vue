@@ -13,11 +13,13 @@
 <script setup lang="ts">
 import { FormInstance } from "element-plus";
 import content from "@/components/WangEditor/content.vue";
+import systemConfig, { type Form } from "@/api/system/systemConfig";
+
 import { hasAuth } from "@/plugins/permission";
 const hasEditAuth = hasAuth("lotteryConfig:explain:edit");
 
 const props = defineProps<{
-  data: { original: string; translation: TranslationItem[] };
+  data: Form;
 }>();
 const visible = defineModel<boolean>();
 const title = ref("");
@@ -26,14 +28,14 @@ watch(
   () => {
     if (!visible.value) return;
     title.value = "说明";
-    formData.value = props.data;
-    console.log("🚀 ~ props.data:", props.data);
+    formData.value = props.data.values;
+    console.log("🚀 ~ props.data:", formData.value);
   },
   {
     flush: "post",
   }
 );
-const formData = ref<typeof props.data>();
+const formData = ref<typeof props.data.values>({});
 
 const formRef = ref<FormInstance>();
 const emit = defineEmits(["finish"]);
@@ -43,8 +45,9 @@ async function submitHandler() {
   try {
     loading.value = true;
 
-    const res = unref(formData)!.translation?.filter((item: TranslationItem) => item.content);
-    emit("finish", res);
+    const data = { ...props.data, original: unref(formData).original, translation: unref(formData)!.translation?.filter((item: TranslationItem) => item.content) };
+
+    const res = await systemConfig.setConfig([data]);
   } finally {
     loading.value = false;
   }

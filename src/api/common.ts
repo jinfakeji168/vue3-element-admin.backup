@@ -16,12 +16,13 @@ export default {
   },
 
   /**获取会员 select用*/
-  getMemberSelect(account: string) {
-    return request<any, { id: number; account: string }[]>({
+  getMemberSelect(data: { account?: string; id?: string }) {
+    return request<any, { account: string }[]>({
       url: "/admin/global/getAllMember",
       method: "get",
       params: {
-        account,
+        account: data.account,
+        id: data.id
       },
     });
   },
@@ -29,6 +30,20 @@ export default {
   getPrizeList() {
     return request<any, { key: number; val: string }[]>({
       url: "/admin/global/getBonusList",
+      method: "get",
+    });
+  },
+  /**获取交易对 */
+  getTradeList() {
+    return request<any, { key: number; val: string }[]>({
+      url: "/admin/global/getTranPair",
+      method: "get",
+    });
+  },
+  /**获取时区 */
+  getTimeZoneList() {
+    return request<any, { key: number; val: string }[]>({
+      url: "/admin/global/getTimeZone",
       method: "get",
     });
   }

@@ -1,8 +1,12 @@
 <template>
-  <el-form label-width="240px">
-    <el-collapse>
+  <el-form label-width="300px">
+    <el-collapse v-model="activeNames">
       <el-collapse-item title="网站信息" name="1">
-        <el-form-item label="主题样式"></el-form-item>
+        <el-form-item label="主题样式">
+          <el-select v-model="getI('website_skin_style').values">
+            <el-option v-for="item of themeOptions" :key="item.value" :label="item.label" :value="item.value" />
+          </el-select>
+        </el-form-item>
         <el-form-item label="网站logo">
           <uploadPart v-model="getI('website_logo').values" />
         </el-form-item>
@@ -25,24 +29,25 @@
           </el-select>
         </el-form-item>
         <el-form-item label="用户端团队-统计时区">
-          <el-radio v-model="getI('client_user_team_count_time').values" label="1" :value="1">按系统时区</el-radio>
-          <el-radio v-model="getI('client_user_team_count_time').values" label="2" :value="2">按用户时区</el-radio>
+          <el-radio-group v-model="getI('client_user_team_count_time').values">
+            <el-radio :label="1">按系统时区</el-radio>
+            <el-radio :label="2">按用户时区</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="用户端是否开启谷歌验证器">
-          <el-radio v-model="getI('client_google_secret_status').values" label="1" :value="1">开启</el-radio>
-          <el-radio v-model="getI('client_google_secret_status').values" label="2" :value="2">关闭</el-radio>
+          <el-switch v-model="getI('client_google_secret_status').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="用户协议和隐私协议是否显示">
-          <el-radio v-model="getI('client_is_show_user_protocol').values" label="1" :value="1">显示</el-radio>
-          <el-radio v-model="getI('client_is_show_user_protocol').values" label="2" :value="2">隐藏</el-radio>
+          <el-switch v-model="getI('client_is_show_user_protocol').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="投资功能是否显示">
-          <el-radio v-model="getI('client_invest_status').values" label="1" :value="1">显示</el-radio>
-          <el-radio v-model="getI('client_invest_status').values" label="2" :value="2">隐藏</el-radio>
+          <el-switch v-model="getI('client_invest_status').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="前端默认语言类型">
-          <el-radio v-model="getI('client_system_default_lang_type').values" label="1" :value="1">根据用户设备自动识别</el-radio>
-          <el-radio v-model="getI('client_system_default_lang_type').values" label="2" :value="2">根据系统默认设置</el-radio>
+          <el-radio-group v-model="getI('client_system_default_lang_type').values">
+            <el-radio :label="1">根据用户设备自动识别</el-radio>
+            <el-radio :label="2">根据系统默认设置</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="前端默认语言">
           <el-select v-model="getI('client_system_default_lang').values">
@@ -51,7 +56,7 @@
         </el-form-item>
         <el-form-item label="前端手机号默认区号">
           <el-select v-model="getI('client_system_default_phone_code').values">
-            <el-option v-for="item of store.langList" :key="item.mark" :label="item.name" :value="item.id" />
+            <el-option v-for="item of photoCodeAreaOptions" :key="item.val" :label="item.val" :value="item.key" />
           </el-select>
         </el-form-item>
         <el-form-item label="salesmartly聊天插件src链接">
@@ -60,32 +65,25 @@
       </el-collapse-item>
       <el-collapse-item title="转账配置" name="3">
         <el-form-item label="佣金账户是否可转到量化账户">
-          <el-radio v-model="getI('transfer_is_brokerage_to_basic').values" label="1" :value="1">开启</el-radio>
-          <el-radio v-model="getI('transfer_is_brokerage_to_basic').values" label="2" :value="2">关闭</el-radio>
+          <el-switch v-model="getI('transfer_is_brokerage_to_basic').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="量化账户是否可转到佣金账户">
-          <el-radio v-model="getI('transfer_is_basic_to_brokerage').values" label="1" :value="1">开启</el-radio>
-          <el-radio v-model="getI('transfer_is_basic_to_brokerage').values" label="2" :value="2">关闭</el-radio>
+          <el-switch v-model="getI('transfer_is_basic_to_brokerage').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="智能账户是否可转到量化账户">
-          <el-radio v-model="getI('transfer_is_financial_to_basic').values" label="1" :value="1">开启</el-radio>
-          <el-radio v-model="getI('transfer_is_financial_to_basic').values" label="2" :value="2">关闭</el-radio>
+          <el-switch v-model="getI('transfer_is_financial_to_basic').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="佣金账户是否可转到智能账户">
-          <el-radio v-model="getI('transfer_is_brokerage_to_financial').values" label="1" :value="1">开启</el-radio>
-          <el-radio v-model="getI('transfer_is_brokerage_to_financial').values" label="2" :value="2">关闭</el-radio>
+          <el-switch v-model="getI('transfer_is_brokerage_to_financial').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="佣金账户是否可转到合约账户">
-          <el-radio v-model="getI('transfer_is_brokerage_to_contract').values" label="1" :value="1">开启</el-radio>
-          <el-radio v-model="getI('transfer_is_brokerage_to_contract').values" label="2" :value="2">关闭</el-radio>
+          <el-switch v-model="getI('transfer_is_brokerage_to_contract').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="合约账户是否可转到佣金账户">
-          <el-radio v-model="getI('transfer_is_contract_to_brokerage').values" label="1" :value="1">开启</el-radio>
-          <el-radio v-model="getI('transfer_is_contract_to_brokerage').values" label="2" :value="2">关闭</el-radio>
+          <el-switch v-model="getI('transfer_is_contract_to_brokerage').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="合约账户是否可转到量化账户">
-          <el-radio v-model="getI('transfer_is_contract_to_basic').values" label="1" :value="1">开启</el-radio>
-          <el-radio v-model="getI('transfer_is_contract_to_basic').values" label="2" :value="2">关闭</el-radio>
+          <el-switch v-model="getI('transfer_is_contract_to_basic').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
 
         <el-form-item label="佣金账户转出手续费百分比">
@@ -109,29 +107,31 @@
       </el-collapse-item>
       <el-collapse-item title="语音配置" name="4">
         <el-form-item label="语音提醒开关">
-          <el-radio v-model="getI('voice_reminder_switch').values" label="1" :value="1">开启</el-radio>
-          <el-radio v-model="getI('voice_reminder_switch').values" label="2" :value="2">关闭</el-radio>
+          <el-switch v-model="getI('voice_reminder_switch').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="提币订单是否重复提醒">
-          <el-radio v-model="getI('voice_is_repeat_extract_voice').values" label="1" :value="1">开启</el-radio>
-          <el-radio v-model="getI('voice_is_repeat_extract_voice').values" label="2" :value="2">关闭</el-radio>
+          <el-switch v-model="getI('voice_is_repeat_extract_voice').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="充值语音文件"></el-form-item>
-        <el-form-item label="提现语音文件"></el-form-item>
+        <el-form-item label="充值语音文件">
+          <uploadPart v-model="getI('voice_recharge_voice_file').values" type="files" />
+        </el-form-item>
+        <el-form-item label="提现语音文件">
+          <uploadPart v-model="getI('voice_withdraw_voice_file').values" type="files" />
+        </el-form-item>
       </el-collapse-item>
     </el-collapse>
   </el-form>
 </template>
 
 <script setup lang="ts">
-import { type Form } from "@/api/system/systemConfig";
+import api, { type Form } from "@/api/system/systemConfig";
 import { useStore } from "@/store/modules/common";
 const store = useStore();
 const props = defineProps<{ configData: Form[] }>();
 function getI(key: string): Form {
   return props.configData?.find((item) => item.name === key) || {};
 }
-
+const activeNames = ["1", "2", "3", "4"];
 const groupLevelOptions = [
   { label: "全部", value: 0 },
   { label: "二级", value: 2 },
@@ -140,6 +140,16 @@ const groupLevelOptions = [
   { label: "五级", value: 5 },
   { label: "六级", value: 6 },
 ];
+const themeOptions = [
+  { label: "默认", value: 1 },
+  { label: "白色", value: 2 },
+];
+const photoCodeAreaOptions = ref<{ key: string; val: string }[]>([]);
+async function getPhotoCodeArea() {
+  const res = await api.getPhoneCodeOptions();
+  photoCodeAreaOptions.value = res;
+}
+getPhotoCodeArea();
 </script>
 
 <style></style>

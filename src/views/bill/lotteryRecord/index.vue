@@ -16,7 +16,7 @@
         <el-table-column prop="status" label="状态" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'warning'">
-              {{ row.status === 1 ? '已结算' : '未结算' }}
+              {{ row.status === 1 ? "已结算" : "未结算" }}
             </el-tag>
           </template>
         </el-table-column>
@@ -57,7 +57,7 @@ const config: QueryConfig = {
         loading: loading,
         remoteMethod: async (res: string) => {
           loading.value = true;
-          memberList.value = await searchMember(res);
+          memberList.value = await searchMember({ account: res });
           loading.value = false;
         },
       },

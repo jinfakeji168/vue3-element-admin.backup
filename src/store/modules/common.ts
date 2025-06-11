@@ -36,13 +36,37 @@ export const useStore = defineStore("common", () => {
     return unref(_groupList) || [];
   });
 
+  /**交易对列表 */
+  const _tradeList = ref<{ key: number; val: string }[]>();
+  async function getTradeListAsync() {
+    if (!_tradeList.value) _tradeList.value = await api.getTradeList();
+    return Promise.resolve(_tradeList.value);
+  }
+  const tradeList = computed<{ key: number; val: string }[]>(() => {
+    if (!_tradeList.value) getTradeListAsync();
+    return unref(_tradeList) || [];
+  })
+  /**时区列表 */
+  const _timeZoneList = ref<{ key: number; val: string }[]>();
+  async function getTimeZoneListAsync() {
+    if (!_timeZoneList.value) _timeZoneList.value = await api.getTimeZoneList();
+    return Promise.resolve(_timeZoneList.value);
+  }
+  const timeZoneList = computed<{ key: number; val: string }[]>(() => {
+    if (!_timeZoneList.value) getTimeZoneListAsync();
+    return unref(_timeZoneList) || [];
+  })
   return {
     getLangListAsync,
     getVipListAsync,
     getGroupListAsync,
+    getTradeListAsync,
+    getTimeZoneListAsync,
     vipList,
     langList,
     groupList,
+    tradeList,
+    timeZoneList
   };
 });
 

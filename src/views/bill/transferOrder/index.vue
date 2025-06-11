@@ -8,10 +8,8 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="uid" label="ID" min-width="100" />
-        <el-table-column prop="uid" label="ID/用户" min-width="200" >
-          <template #default="{ row }">
-            {{ row.has_member.id }} / {{ row.has_member.account }}
-            </template>
+        <el-table-column prop="uid" label="ID/用户" min-width="200">
+          <template #default="{ row }">{{ row.has_member.id }} / {{ row.has_member.account }}</template>
         </el-table-column>
         <el-table-column prop="order_sn" label="订单号" min-width="120" />
         <el-table-column prop="amount" label="转账金额" min-width="120">
@@ -27,7 +25,7 @@
         <el-table-column prop="status" label="状态" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'warning'">
-              {{ row.status === 1 ? '已结算' : '未结算' }}
+              {{ row.status === 1 ? "已结算" : "未结算" }}
             </el-tag>
           </template>
         </el-table-column>
@@ -68,7 +66,7 @@ const config: QueryConfig = {
         loading: loading,
         remoteMethod: async (res: string) => {
           loading.value = true;
-          memberList.value = await searchMember(res);
+          memberList.value = await searchMember({ account: res });
           loading.value = false;
         },
       },

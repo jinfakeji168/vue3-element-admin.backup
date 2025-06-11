@@ -9,33 +9,26 @@
         <el-table-column type="selection" width="55" />
         <el-table-column prop="order_sn" label="订单号" min-width="180" />
         <el-table-column prop="uid" label="用户ID" min-width="200">
-          <template #default="{ row }">
-           {{row.has_member?.id}} / {{ row.has_member?.account }}
-          </template>
+          <template #default="{ row }">{{ row.has_member?.id }} / {{ row.has_member?.account }}</template>
         </el-table-column>
-        <el-table-column prop="has_invest_setting" label="产品名称" min-width="200" >
-
-          <template #default="{ row }">
-           {{row.has_invest_setting?.id}} / {{ row.has_invest_setting?.title }}
-          </template>
+        <el-table-column prop="has_invest_setting" label="产品名称" min-width="200">
+          <template #default="{ row }">{{ row.has_invest_setting?.id }} / {{ row.has_invest_setting?.title }}</template>
         </el-table-column>
 
         <el-table-column prop="amount" label="投资金额(U)" min-width="120" />
         <el-table-column prop="invest_days" label="投资天数" min-width="100" />
         <el-table-column prop="days_rate" label="日利率" min-width="100">
-          <template #default="{ row }">
-            {{ row.has_invest_setting?.days_rate }}%
-          </template>
+          <template #default="{ row }">{{ row.has_invest_setting?.days_rate }}%</template>
         </el-table-column>
         <el-table-column prop="yield_type" label="收益类型" min-width="100">
           <template #default="{ row }">
-            <el-tag>{{ row.yield_type === 1 ? '固定' : '浮动' }}</el-tag>
+            <el-tag>{{ row.yield_type === 1 ? "固定" : "浮动" }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'warning'">
-              {{ row.status === 1 ? '已兑换' : '未兑换' }}
+              {{ row.status === 1 ? "已兑换" : "未兑换" }}
             </el-tag>
           </template>
         </el-table-column>
@@ -87,7 +80,7 @@ const config: QueryConfig = {
         loading: loading,
         remoteMethod: async (res: string) => {
           loading.value = true;
-          memberList.value = await searchMember(res);
+          memberList.value = await searchMember({ account: res });
           loading.value = false;
         },
       },
@@ -102,7 +95,7 @@ const config: QueryConfig = {
       },
     },
     {
-      type: "input", 
+      type: "input",
       modelKey: "order_sn",
       label: "订单号",
       props: {
@@ -116,7 +109,7 @@ const config: QueryConfig = {
       label: "收益类型",
       options: [
         { label: "固定", value: 1 },
-        { label: "浮动", value: 2 }
+        { label: "浮动", value: 2 },
       ],
       props: {
         clearable: true,
@@ -129,7 +122,7 @@ const config: QueryConfig = {
       label: "状态",
       options: [
         { label: "已完成", value: 1 },
-        { label: "处理中", value: 0 }
+        { label: "处理中", value: 0 },
       ],
       props: {
         clearable: true,
@@ -145,7 +138,7 @@ const config: QueryConfig = {
       },
     },
     {
-      type: "datetimerange", 
+      type: "datetimerange",
       modelKey: "set_datetime",
       label: "结算时间",
       props: {

@@ -62,13 +62,13 @@ const loading = ref(false);
 const getStatusType = (status: number) => {
   switch (status) {
     case 0:
-      return 'primary';
+      return "primary";
     case 1:
-      return 'success';
+      return "success";
     case 2:
-      return 'danger';
+      return "danger";
     default:
-      return 'info';
+      return "info";
   }
 };
 
@@ -76,13 +76,13 @@ const getStatusType = (status: number) => {
 const getStatusText = (status: number) => {
   switch (status) {
     case 0:
-      return '进行中';
+      return "进行中";
     case 1:
-      return '已完成';
+      return "已完成";
     case 2:
-      return '已取消';
+      return "已取消";
     default:
-      return '未知';
+      return "未知";
   }
 };
 
@@ -104,7 +104,7 @@ const config: QueryConfig = {
         loading: loading,
         remoteMethod: async (res: string) => {
           loading.value = true;
-          memberList.value = await searchMember(res);
+          memberList.value = await searchMember({ account: res });
           loading.value = false;
         },
       },
@@ -135,9 +135,9 @@ const config: QueryConfig = {
       modelKey: "status",
       label: "状态",
       options: [
-        { label: '进行中', value: 0 },
-        { label: '已完成', value: 1 },
-        { label: '已取消', value: 2 },
+        { label: "进行中", value: 0 },
+        { label: "已完成", value: 1 },
+        { label: "已取消", value: 2 },
       ],
       props: {
         placeholder: "请选择状态",

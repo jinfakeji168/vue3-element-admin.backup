@@ -22,8 +22,8 @@
         <el-table-column prop="profit_and_loss_ratio" label="盈亏比例" min-width="100" />
         <el-table-column prop="type" label="合约涨跌" min-width="100">
           <template #default="{ row }">
-            <el-tag :type="CONTRACT_TYPES.find(t => t.value === row.type)?.type">
-              {{ CONTRACT_TYPES.find(t => t.value === row.type)?.label }}
+            <el-tag :type="CONTRACT_TYPES.find((t) => t.value === row.type)?.type">
+              {{ CONTRACT_TYPES.find((t) => t.value === row.type)?.label }}
             </el-tag>
           </template>
         </el-table-column>
@@ -44,22 +44,22 @@
         <el-table-column prop="seconds" label="秒数" min-width="80" />
         <el-table-column prop="profit_and_loss_status" label="盈亏状态" min-width="100">
           <template #default="{ row }">
-            <el-tag :type="PROFIT_TYPES.find(t => t.value === row.profit_and_loss_status)?.type">
-              {{ PROFIT_TYPES.find(t => t.value === row.profit_and_loss_status)?.label }}
+            <el-tag :type="PROFIT_TYPES.find((t) => t.value === row.profit_and_loss_status)?.type">
+              {{ PROFIT_TYPES.find((t) => t.value === row.profit_and_loss_status)?.label }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态" min-width="100">
           <template #default="{ row }">
-            <el-tag :type="STATUS_TYPES.find(t => t.value === row.status)?.type">
-              {{ STATUS_TYPES.find(t => t.value === row.status)?.label }}
+            <el-tag :type="STATUS_TYPES.find((t) => t.value === row.status)?.type">
+              {{ STATUS_TYPES.find((t) => t.value === row.status)?.label }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="is_control" label="控制盈亏" min-width="100">
           <template #default="{ row }">
-            <el-tag :type="CONTROL_TYPES.find(t => t.value === row.is_control)?.type">
-              {{ CONTROL_TYPES.find(t => t.value === row.is_control)?.label }}
+            <el-tag :type="CONTROL_TYPES.find((t) => t.value === row.is_control)?.type">
+              {{ CONTROL_TYPES.find((t) => t.value === row.is_control)?.label }}
             </el-tag>
           </template>
         </el-table-column>
@@ -68,27 +68,9 @@
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
             <el-button-group>
-              <el-button 
-                type="primary" 
-                link 
-                @click="settlement_Handler([row.id])"
-                :disabled="row.status === 1">
-                结算
-              </el-button>
-              <el-button 
-                :type="row.is_control === 1 ? 'success' : 'primary'" 
-                link 
-                @click="control_win_Handler([row.id])"
-                :disabled="row.status === 1">
-                指定赢
-              </el-button>
-              <el-button 
-                :type="row.is_control === 2 ? 'danger' : 'primary'" 
-                link 
-                @click="control_lose_Handler([row.id])"
-                :disabled="row.status === 1">
-                指定输
-              </el-button>
+              <el-button type="primary" link @click="settlement_Handler([row.id])" :disabled="row.status === 1">结算</el-button>
+              <el-button :type="row.is_control === 1 ? 'success' : 'primary'" link @click="control_win_Handler([row.id])" :disabled="row.status === 1">指定赢</el-button>
+              <el-button :type="row.is_control === 2 ? 'danger' : 'primary'" link @click="control_lose_Handler([row.id])" :disabled="row.status === 1">指定输</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -113,26 +95,26 @@ const loading = ref(false);
 /** 合约类型配置 */
 const CONTRACT_TYPES = [
   { label: "买涨", value: 1, type: "success" },
-  { label: "买跌", value: 2, type: "danger" }
-] ;
+  { label: "买跌", value: 2, type: "danger" },
+];
 
 /** 状态配置 */
 const STATUS_TYPES = [
   { label: "已结算", value: 1, type: "success" },
-  { label: "待结算", value: 2, type: "warning" }
+  { label: "待结算", value: 2, type: "warning" },
 ];
 
 /** 控制状态配置 */
 const CONTROL_TYPES = [
   { label: "未指定", value: 0, type: "info" },
   { label: "指定赢", value: 1, type: "success" },
-  { label: "指定输", value: 2, type: "danger" }
+  { label: "指定输", value: 2, type: "danger" },
 ];
 
 /** 盈亏状态配置 */
 const PROFIT_TYPES = [
   { label: "盈", value: 1, type: "success" },
-  { label: "亏", value: 2, type: "danger" }
+  { label: "亏", value: 2, type: "danger" },
 ];
 
 /** 查询配置 */
@@ -153,7 +135,7 @@ const config: QueryConfig = {
         loading: unref(loading),
         remoteMethod: async (res: string) => {
           loading.value = true;
-          memberList.value = await searchMember(res);
+          memberList.value = await searchMember({ account: res });
           loading.value = false;
         },
       },
@@ -163,21 +145,21 @@ const config: QueryConfig = {
       modelKey: "type",
       label: "合约类型",
       options: CONTRACT_TYPES,
-      props: { clearable: true }
+      props: { clearable: true },
     },
     {
       type: "select",
       modelKey: "status",
       label: "状态",
       options: STATUS_TYPES,
-      props: { clearable: true }
+      props: { clearable: true },
     },
     {
       type: "select",
       modelKey: "is_control",
       label: "控制状态",
       options: CONTROL_TYPES,
-      props: { clearable: true }
+      props: { clearable: true },
     },
     {
       type: "datetimerange",
@@ -219,7 +201,7 @@ const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
  */
 function control_win_Handler(ids?: number[]) {
   api.control({ ids: ids || unref(table.ids), state: 1 }).then(() => {
-    ElMessage.success('操作成功');
+    ElMessage.success("操作成功");
     table.queryHandler();
   });
 }
@@ -229,7 +211,7 @@ function control_win_Handler(ids?: number[]) {
  */
 function control_lose_Handler(ids?: number[]) {
   api.control({ ids: ids || unref(table.ids), state: 2 }).then(() => {
-    ElMessage.success('操作成功');
+    ElMessage.success("操作成功");
     table.queryHandler();
   });
 }
@@ -239,7 +221,7 @@ function control_lose_Handler(ids?: number[]) {
  */
 function settlement_Handler(ids?: number[]) {
   api.settlement(ids || unref(table.ids)).then(() => {
-    ElMessage.success('结算成功');
+    ElMessage.success("结算成功");
     table.queryHandler();
   });
 }

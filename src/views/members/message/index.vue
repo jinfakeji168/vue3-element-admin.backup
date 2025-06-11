@@ -98,7 +98,7 @@ const config: QueryConfig = {
       modelKey: "uid",
       label: "用户",
       options: memberList,
-       props: {
+      props: {
         placeholder: "请输入用户进行查询",
         style: { width: "200px" },
         filterable: true,
@@ -107,7 +107,7 @@ const config: QueryConfig = {
         loading: loading,
         remoteMethod: async (query: string) => {
           loading.value = true;
-          memberList.value = await searchMember(query);
+          memberList.value = await searchMember({ account: query });
           loading.value = false;
         },
       },

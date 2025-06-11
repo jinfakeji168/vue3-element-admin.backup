@@ -391,7 +391,7 @@ watch(
 const memberList = ref<any>([]);
 async function remoteHandler(str: string) {
   loading.value[1] = true;
-  memberList.value = await searchMember(str);
+  memberList.value = await searchMember({ account: str });
   loading.value[1] = false;
 }
 </script>
