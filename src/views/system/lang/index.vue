@@ -5,11 +5,26 @@
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
-      <el-table :data="table.list.value" row-key="id">
+      <template #header>
+        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
+          <template #icon>
+            <Plus />
+          </template>
+          新增
+        </el-button>
+        <el-button v-hasPerm="['currency:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
+          <template #icon>
+            <Delete />
+          </template>
+          删除
+        </el-button>
+      </template>
+      <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
+        <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="id" label="ID" min-width="100" />
+        <!-- <el-table-column prop="display_name" label="前端显示名称" min-width="200" /> -->
         <el-table-column prop="name" label="名称" min-width="200" />
         <el-table-column prop="mark" label="标识" min-width="200" />
-        <el-table-column prop="display_name" label="前端显示名称" min-width="200" />
         <el-table-column prop="status" label="状态" width="100">
           <template #default="scope">
             <el-tag v-if="scope.row.status == 1" type="success">正常</el-tag>
@@ -20,16 +35,20 @@
         <el-table-column prop="sort" label="排序" width="100" />
 
         <el-table-column label="操作" fixed="right" align="left" width="100">
-          <template #default="scope">
-            <el-button
-              v-hasPerm="['lang:status']"
-              :type="scope.row.status == StatusEnum.False ? 'danger' : 'success'"
-              link
-              size="small"
-              @click.stop="table.changeStatus(scope.row.id)"
-            >
+          <template #default="{ row }">
+            <el-button v-hasPerm="['lang:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
+              <template #icon><EditPen /></template>
+              编辑
+            </el-button>
+            <el-button v-hasPerm="['lang:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               <template #icon><Switch /></template>
-              {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
+              {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
+            </el-button>
+            <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
+              <template #icon>
+                <Delete />
+              </template>
+              删除
             </el-button>
           </template>
         </el-table-column>
@@ -38,10 +57,13 @@
         <pagination background :total="table.pageTotal.value" v-model:page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
       </template>
     </el-card>
+    <editPart v-model="table.visible.value[0]" :data="table.currentData.value" @finish="table.queryHandler()" />
   </div>
 </template>
 
 <script setup lang="ts">
+import editPart from "./components/edit.vue";
+
 defineOptions({
   name: "Dept",
   inheritAttrs: false,

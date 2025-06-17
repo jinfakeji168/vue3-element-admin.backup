@@ -32,7 +32,7 @@
       </el-form-item>
 
       <el-form-item label="是否弹窗" prop="is_window">
-        <el-switch v-model="formData.is_window" :active-value="StatusEnum.True" :inactive-value="StatusEnum.False" />
+        <el-switch v-model="formData.is_window" :active-value="1" :inactive-value="2" />
       </el-form-item>
     </el-form>
     <el-tabs v-model="currentIndex">
@@ -95,7 +95,7 @@ watch(
     if (!visible.value) return;
 
     title.value = "新增";
-    formData.value = { send_type: 1 };
+    formData.value = { send_type: 1, is_window: 2 };
   },
   {
     flush: "post",
@@ -112,7 +112,7 @@ interface GroupItem {
 // 添加表单验证规则
 const rules = {
   send_type: [{ required: true, message: "请选择发送方式", trigger: "change" }],
-  vip_level: [{ required: true, message: "请选择VIP等级", trigger: "change" }],
+  // vip_level: [{ required: true, message: "请选择VIP等级", trigger: "change" }],
   spe_account: [{ required: true, message: "请输入会员账号", trigger: "blur" }],
   group_ids: [{ required: true, message: "请选择会员分组", trigger: "change" }],
   share_amount: [{ required: true, message: "填写佣金金额", trigger: "blur" }],

@@ -10,6 +10,8 @@ export type TabNames =
     | "investmentConfig"
     | "shareConfig"
     | "securityConfig";
+
+//用来区分每个配置tab所包含的值，方便改动监听和保存
 export const keyMap: Record<TabNames, string[]> = {
     basicFeature: [
         'website_skin_style',
@@ -99,6 +101,8 @@ export const keyMap: Record<TabNames, string[]> = {
         "ip_register_limit",
         "ip_register_limit_type",
         "is_verify_email_code",
+        "register_code_valid_time",
+        "register_email_code_num",
         "register_give_money",
         "register_send_contract_money",
         "register_virtual_money",

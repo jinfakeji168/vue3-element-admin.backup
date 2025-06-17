@@ -51,7 +51,7 @@
         </el-form-item>
         <el-form-item label="前端默认语言">
           <el-select v-model="getI('client_system_default_lang').values">
-            <el-option v-for="item of store.langList" :key="item.mark" :label="item.name" :value="item.id" />
+            <el-option v-for="item of store.langList" :key="item.mark" :label="item.name" :value="item.mark" />
           </el-select>
         </el-form-item>
         <el-form-item label="前端手机号默认区号">

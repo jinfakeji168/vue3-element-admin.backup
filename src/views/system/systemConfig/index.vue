@@ -62,6 +62,9 @@ function getCurrentTabChangeData() {
   let hasChange = unref(configData)?.filter((val) => keyMap[unref(currentTab)].includes(val.name as string));
 
   hasChange = hasChange?.filter((item, index) => {
+    if (item.name == "register_account_status") {
+      return item.values.join(",") != originConfigData.find((v) => v.name == item.name)?.values.join(",");
+    }
     return item.values != originConfigData.find((v) => v.name == item.name)?.values;
   });
   return hasChange;

@@ -40,7 +40,7 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="read_time" label="已读时间" min-width="160" />
+        <el-table-column prop="updated_at" label="已读时间" min-width="160" />
         <el-table-column prop="is_window" label="是否弹窗" width="100">
           <template #default="{ row }">
             <el-tag :type="row.is_window === 1 ? 'success' : 'info'">

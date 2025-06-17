@@ -1,27 +1,21 @@
 import type { StatusEnum } from "@/enums/MenuTypeEnum";
 import request from "@/utils/request";
-
+import init from "../basicAPI";
 const BasePath = "/admin/system/language";
 
 export default {
-  /** 获取列表*/
-  getList(queryParams?: Query) {
-    return request<any, PageResult<Form[]>>({
-      url: `${BasePath}/index`,
-      method: "get",
-      params: queryParams,
-    });
-  },
-  changeStatus(id: string, status: StatusEnum) {
-    return request<any, any>({
-      url: `${BasePath}/edit`,
-      method: "put",
-      data: {
-        id,
-        status,
-      },
-    });
-  },
+  ...init(BasePath),
+
+  // changeStatus(id: string, status: StatusEnum) {
+  //   return request<any, any>({
+  //     url: `${BasePath}/edit`,
+  //     method: "put",
+  //     data: {
+  //       id,
+  //       status,
+  //     },
+  //   });
+  // },
   /**获取开启的语言列表  1启用 2禁用 不传全部*/
   getOptions(type?: 1 | 2) {
     return request<any, Form[]>({
@@ -42,7 +36,7 @@ export interface Query {
 
 /** 语言类型 */
 export interface Form {
-  id: number;
+  id?: number;
   name?: string;
   mark?: string;
   status?: StatusEnum;
