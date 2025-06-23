@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
-    <div class="search-bar">
+    123
+    <!-- <div class="search-bar">
       <QueryPart ref="queryFormRef" v-model="queryParams" :config="config" @search="table.queryHandler()" @reset="table.handleResetQuery()"></QueryPart>
     </div>
 
@@ -36,7 +37,7 @@
       <template #footer>
         <pagination background :total="table.pageTotal.value" v-model:page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
       </template>
-    </el-card>
+    </el-card> -->
   </div>
 </template>
 

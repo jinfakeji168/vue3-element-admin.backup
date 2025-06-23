@@ -24,7 +24,11 @@
             {{ row.type == 1 ? "页面" : row.type == 2 ? "自定义内容" : "未知" }}
           </template>
         </el-table-column>
-        <el-table-column prop="jump_page" label="跳转页面" />
+        <el-table-column prop="jump_page" label="跳转页面">
+          <template #default="{ row }">
+            {{ activityList.find((i) => i.key == row.jump_page)?.val || "--" }}
+          </template>
+        </el-table-column>
         <el-table-column prop="bg_icon" label="背景图片" min-width="120">
           <template #default="{ row }">
             <el-image :src="row.bg_icon" class="icon" fit="contain" :preview-src-list="[row.bg_icon]" preview-teleported :z-index="9999" />
@@ -69,7 +73,7 @@
 
 <script setup lang="ts">
 import editPart from "./components/edit.vue";
-import api, { type Form, Query } from "@/api/system/activitySetting";
+import api, { type Form, Query, Activity } from "@/api/system/activitySetting";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 
 import TableInstance from "@/utils/tableInstance";
@@ -79,6 +83,13 @@ const queryFormRef = ref(ElForm);
 const queryParams = reactive<Query>({});
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 
+const activityList = ref<Activity[]>([]);
+async function getActivityList() {
+  const res = await api.getJumpPageList();
+  activityList.value = res;
+}
+getActivityList();
+provide("activityList", activityList);
 onMounted(() => {
   table.queryHandler();
 });

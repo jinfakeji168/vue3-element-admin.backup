@@ -140,13 +140,7 @@ function closeHandler() {
 }
 
 const currentIndex = ref(0);
-
-const activityList = ref<Activity[]>([]);
-async function getActivityList() {
-  const res = await api.getJumpPageList();
-  activityList.value = res;
-}
-getActivityList();
+const activityList = inject("activityList", []);
 </script>
 
 <style lang="scss" scoped>

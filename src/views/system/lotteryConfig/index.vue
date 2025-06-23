@@ -30,9 +30,8 @@
         </el-form-item>
         <el-form-item label="抽奖形式" prop="lottery_type">
           <el-radio-group v-model="formData.lottery_type" fill="#409EFF" text-color="#fff">
-            <el-radio-button :value="1">量化账户</el-radio-button>
-            <el-radio-button :value="2">佣金账户</el-radio-button>
-            <el-radio-button :value="3">合约账户</el-radio-button>
+            <el-radio-button :value="1">转盘</el-radio-button>
+            <el-radio-button :value="2">宝盒</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="奖品设置" prop="lottery_system_lottery_type">
@@ -88,7 +87,7 @@
     <prizeList :data="formData" v-model="visible[1]" :disabled="!hasAuth('lotteryConfig:registPrize')" @finish="getData" _key="lottery_register_prize_set" title="注册奖品设置" />
     <prizeList :data="formData" v-model="visible[2]" :disabled="!hasAuth('lotteryConfig:invitePrize')" @finish="getData" _key="lottery_invite_prize_set" title="邀请奖品设置" />
     <prizeList :data="formData" v-model="visible[3]" :disabled="!hasAuth('lotteryConfig:rechargePrize')" @finish="getData" _key="lottery_recharge_prize_set" title="充值奖品设置" />
-    <recharge v-model="visible[4]" :title="Listlables[formData.lottery_send_type - 1]" :index="formData.lottery_send_type"/>
+    <recharge v-model="visible[4]" :title="Listlables[formData.lottery_send_type - 1]" :index="formData.lottery_send_type" />
   </div>
 </template>
 
