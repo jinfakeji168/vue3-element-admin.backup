@@ -46,5 +46,13 @@ export default {
       url: "/admin/global/getTimeZone",
       method: "get",
     });
+  },
+  /**获取投资产品列表 */
+  getInvestProductList(data: { name?: string; type?: number }) {
+    return request<any, { key: number; val: string }[]>({
+      url: "/admin/global/getInvestProduct",
+      method: "get",
+      params: data
+    });
   }
 };

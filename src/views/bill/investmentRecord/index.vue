@@ -18,11 +18,11 @@
         <el-table-column prop="amount" label="投资金额(U)" min-width="120" />
         <el-table-column prop="invest_days" label="投资天数" min-width="100" />
         <el-table-column prop="days_rate" label="日利率" min-width="100">
-          <template #default="{ row }">{{ row.has_invest_setting?.days_rate }}%</template>
+          <template #default="{ row }">{{ row.has_invest_setting?.daily_yield }}%</template>
         </el-table-column>
-        <el-table-column prop="yield_type" label="收益类型" min-width="100">
+        <el-table-column prop="yield_type" label="收益类型" min-width="180">
           <template #default="{ row }">
-            <el-tag>{{ row.yield_type === 1 ? "固定" : "浮动" }}</el-tag>
+            <el-tag>{{ getYieldTypeLabel(row.yield_type) }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态" min-width="100">
@@ -54,13 +54,16 @@
 
 <script setup lang="ts">
 import api, { type Form, Query } from "@/api/bill/investmentRecord";
-import { searchMember } from "@/utils";
+import { searchMember, searchProduct } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
 import Detail from "./components/Detail.vue";
+import { getYieldTypeLabel, yieldTypeOptions } from "@/api/system/investmentConfig";
 
 const memberList = ref<any>([]);
+const productList = ref<any>([]);
 const loading = ref(false);
 const detailRef = ref();
+const props = defineProps<{ memberId: number }>();
 
 /** 查询配置 */
 const config: QueryConfig = {
@@ -78,6 +81,7 @@ const config: QueryConfig = {
         remote: true,
         clearable: true,
         loading: loading,
+        disabled: props.memberId,
         remoteMethod: async (res: string) => {
           loading.value = true;
           memberList.value = await searchMember({ account: res });
@@ -86,12 +90,22 @@ const config: QueryConfig = {
       },
     },
     {
-      type: "input",
+      type: "select",
       modelKey: "product_id",
-      label: "产品ID",
+      label: "产品",
+      options: productList,
       props: {
-        clearable: true,
+        placeholder: "请输入产品进行查询",
         style: { width: "200px" },
+        filterable: true,
+        remote: true,
+        clearable: true,
+        loading: loading,
+        remoteMethod: async (res: string) => {
+          loading.value = true;
+          productList.value = await searchProduct({ name: res });
+          loading.value = false;
+        },
       },
     },
     {
@@ -107,10 +121,7 @@ const config: QueryConfig = {
       type: "select",
       modelKey: "yield_type",
       label: "收益类型",
-      options: [
-        { label: "固定", value: 1 },
-        { label: "浮动", value: 2 },
-      ],
+      options: yieldTypeOptions,
       props: {
         clearable: true,
         style: { width: "200px" },
@@ -121,8 +132,8 @@ const config: QueryConfig = {
       modelKey: "status",
       label: "状态",
       options: [
-        { label: "已完成", value: 1 },
-        { label: "处理中", value: 0 },
+        { label: "已兑换", value: 1 },
+        { label: "未兑换", value: 0 },
       ],
       props: {
         clearable: true,
@@ -170,7 +181,17 @@ const queryParams = reactive<Query>({
   set_datetime: [],
   cre_datetime: [],
 });
-
+watch(
+  () => props.memberId,
+  (val) => {
+    if (val) {
+      queryParams.uid = val;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 /** 表格实例 */
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 

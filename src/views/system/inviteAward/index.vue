@@ -9,10 +9,26 @@
             <el-radio-button :value="StatusEnum.True">关闭</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="邀请一级会员首存超过多少" prop="invite_first_recharge_money">
+        <el-form-item prop="invite_first_recharge_money">
+          <template #label>
+            <div class="flex-center">
+              <span>邀请一级会员首存超过多少</span>
+              <el-tooltip content="邀请一级会员首存超过多少可赠送金额，设置0不赠送" placement="top">
+                <el-icon class="el-icon--right"><el-icon-question-filled /></el-icon>
+              </el-tooltip>
+            </div>
+          </template>
           <el-input-number v-model="formData.invite_first_recharge_money" :min="0" />
         </el-form-item>
-        <el-form-item label="邀请一级会员首存赠送金额" prop="invite_first_give_money">
+        <el-form-item prop="invite_first_give_money">
+          <template #label>
+            <div class="flex-center">
+              <span>邀请一级会员首存赠送金额</span>
+              <el-tooltip content="邀请一级会员首存满足条件后赠送多少金额" placement="top">
+                <el-icon class="el-icon--right"><el-icon-question-filled /></el-icon>
+              </el-tooltip>
+            </div>
+          </template>
           <el-input-number v-model="formData.invite_first_give_money" :min="0" />
         </el-form-item>
 

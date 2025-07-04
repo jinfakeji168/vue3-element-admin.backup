@@ -18,7 +18,7 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
 
-        <el-table-column prop="people_invited" label="邀请几个人" min-width="120" />
+        <el-table-column prop="people_invited" label="邀请人数到达" min-width="120" />
         <el-table-column prop="gift_amount" label="赠送金额" min-width="120" />
         <!-- <el-table-column prop="status" label="状态" width="100">
           <template #default="{ row }">
@@ -51,11 +51,11 @@
   </el-dialog>
   <el-dialog v-model="table.visible.value[0]" :title="dialogTitle" width="50vw">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
-      <el-form-item label="邀请几个人" prop="people_invited">
-        <el-input-number v-model="formData.people_invited" placeholder="请输入签到天数" :min="0" />
+      <el-form-item label="邀请人数到达" prop="people_invited">
+        <el-input-number v-model="formData.people_invited" placeholder="请输入邀请人数" :min="0" />
       </el-form-item>
       <el-form-item label="赠送金额" prop="gift_amount">
-        <el-input-number v-model="formData.gift_amount" placeholder="请输入充值奖励金额" :min="0" />
+        <el-input-number v-model="formData.gift_amount" placeholder="请输入奖励金额" :min="0" />
       </el-form-item>
     </el-form>
     <template #footer>

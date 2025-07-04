@@ -81,3 +81,17 @@ export async function searchMember(data: { account?: string, id?: string }) {
     return Promise.resolve([]);
   }
 }
+/**通过关键字搜索投资产品 */
+export async function searchProduct(data: { name?: string }) {
+  if (data?.name) {
+    const res = await commonApi.getInvestProductList(data);
+    return Promise.resolve(
+      res.map((val: any) => ({
+        value: val.key,
+        label: val.val,
+      }))
+    );
+  } else {
+    return Promise.resolve([]);
+  }
+}

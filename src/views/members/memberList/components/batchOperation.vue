@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="visible" title="批量操作" width="80%">
-    <el-tabs v-model="activeTab" tab-position="left" type="border-card">
+    <el-tabs v-model="activeTab" tab-position="left" type="border-card" :beforeLeave="beforeLeaveHandler">
       <el-tab-pane v-for="(tab, index) of tabs" :key="index" :label="tab.label" :name="index"></el-tab-pane>
       <el-card shadow="never">
         <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
@@ -76,8 +76,8 @@
           </template>
           <template v-else-if="activeTab === 4">
             <el-form-item label="佣金全部转量化">
-              <el-radio-group>
-                <el-radio :label="1">是</el-radio>
+              <el-radio-group v-model="trueConst">
+                <el-radio :label="true">是</el-radio>
               </el-radio-group>
             </el-form-item>
           </template>
@@ -107,8 +107,8 @@
             </el-form-item>
             <el-form-item label="操作类型" prop="operation">
               <el-radio-group v-model="formData.operation">
-                <el-radio :label="1">封禁</el-radio>
-                <el-radio :label="2">解封</el-radio>
+                <el-radio :label="1">解封</el-radio>
+                <el-radio :label="2">封禁</el-radio>
               </el-radio-group>
             </el-form-item>
           </template>
@@ -217,7 +217,7 @@
 </template>
 
 <script setup lang="ts">
-import api, { type BatchOperationForm } from "@/api/members/memberList";
+import api, { Member, type BatchOperationForm } from "@/api/members/memberList";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { FormInstance } from "element-plus";
 import { dayjs } from "element-plus";
@@ -225,15 +225,54 @@ import { searchMember } from "@/utils";
 import { useStore } from "@/store/modules/common";
 const store = useStore();
 const visible = defineModel<boolean>();
-const props = withDefaults(defineProps<{ account?: { id: number; account: string }[]; tabIndex: number }>(), {});
+const props = withDefaults(defineProps<{ account?: Member[]; tabIndex: number }>(), {});
 
 const activeTab = ref<number>(0);
-watch(
-  () => props.tabIndex,
-  (val) => {
-    activeTab.value = val;
+
+watch(activeTab, (val) => {
+  //切换的时候重置批量方式
+  if (tabs[val].batchWay.length - 1 < formData.value.batch_type) {
+    formData.value.batch_type = 1;
   }
-);
+});
+//获取当前tab下的formdata更改过的数据key
+function getChangedFormKey() {
+  const obj = [];
+  const formKey = tabs[activeTab.value].formKey;
+
+  for (let item of Object.entries(formData.value)) {
+    const key = item[0] as keyof BatchOperationForm;
+    if (formKey?.includes(key)) {
+      if (toRaw(item[1]).toString() != originFormData[key]?.toString()) {
+        obj.push(key);
+      }
+    }
+  }
+  return obj;
+}
+
+//切换批量操作时判断是否保存
+async function beforeLeaveHandler() {
+  const res = getChangedFormKey();
+  if (res.length) {
+    return new Promise((resolve, inject) => {
+      const res = ElMessageBox.confirm("当前页面有未保存的配置，是否离开？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          //重置值
+          formData.value = { ...originFormData };
+          return resolve(true);
+        })
+        .catch(() => {
+          return inject();
+        });
+    });
+  }
+}
+
 const batchTypeOptions = [
   { label: "指定会员", value: 1 },
   { label: "按等级", value: 2 },
@@ -243,24 +282,36 @@ const batchTypeOptions = [
 ];
 
 const tabs = [
-  { label: "等级修改", batchWay: batchTypeOptions.slice(0, 2), fu: api.batchLevel },
-  { label: "升级量化", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchQuant },
-  { label: "量化开关", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchQuantSwitch },
-  { label: "收益折扣", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchDiscount },
-  { label: "佣金转量化", batchWay: batchTypeOptions.slice(0, 0), fu: api.batchCommission },
-  { label: "邀请量化", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchInvitation },
-  { label: "封禁", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchBan },
-  { label: "余额修改", batchWay: batchTypeOptions.slice(0, 0), fu: api.batchBalance },
-  { label: "赠送抽奖", batchWay: batchTypeOptions.slice(0, 0), fu: api.batchLottery },
-  { label: "强制投资", batchWay: batchTypeOptions.slice(0, 2), fu: api.batchInvest },
-  { label: "秒合约概率", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchProbability },
-  { label: "升级提现", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchWithdrawal },
-  { label: "邀请提现", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchInvitationWithdrawal },
-  { label: "分组", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchGroup },
+  { label: "等级修改", batchWay: batchTypeOptions.slice(0, 2), fu: api.batchLevel, formKey: ["new_vip_level"] },
+  { label: "升级量化", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchQuant, formKey: ["is_upgrade_quant"] },
+  { label: "量化开关", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchQuantSwitch, formKey: ["is_quant"] },
+  { label: "收益折扣", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchDiscount, formKey: ["quant_final_earnings_discount"] },
+  { label: "佣金转量化", batchWay: batchTypeOptions.slice(0, 1), fu: api.batchCommission },
+  {
+    label: "邀请量化",
+    batchWay: batchTypeOptions.slice(0, 5),
+    fu: api.batchInvitation,
+    formKey: ["is_invite_user_quant", "quant_invite_user_number", "quant_invite_user_recharge_amount", "quant_invite_user_effective_time"],
+  },
+  { label: "封禁", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchBan, formKey: ["ban_type", "operation"] },
+  { label: "余额修改", batchWay: batchTypeOptions.slice(0, 1), fu: api.batchBalance, formKey: ["op_type", "change_type", "change_amount", "change_remark"] },
+  { label: "赠送抽奖", batchWay: batchTypeOptions.slice(0, 1), fu: api.batchLottery, formKey: ["lottery_type", "gift_number"] },
+  { label: "强制投资", batchWay: batchTypeOptions.slice(0, 2), fu: api.batchInvest, formKey: ["invest_type", "invest_product", "effective_time"] },
+  { label: "秒合约概率", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchProbability, formKey: ["second_contract_win_lose_ratio"] },
+  { label: "升级提现", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchWithdrawal, formKey: ["is_upgrade_withdrawal"] },
+  {
+    label: "邀请提现",
+    batchWay: batchTypeOptions.slice(0, 5),
+    fu: api.batchInvitationWithdrawal,
+    formKey: ["is_invite_user_withdrawal", "withdrawal_number", "withdrawal_invite_user_number", "withdrawal_invite_user_recharge_amount", "withdrawal_invite_user_effective_time"],
+  },
+  { label: "分组", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchGroup, formKey: ["new_group_id"] },
 ];
 
 const formRef = ref<FormInstance>();
-const formData = ref<BatchOperationForm>({
+
+const trueConst = ref(true);
+const originFormData: BatchOperationForm = {
   batch_type: 1,
   is_upgrade_quant: 1,
   is_quant: 1,
@@ -276,7 +327,8 @@ const formData = ref<BatchOperationForm>({
   is_invite_user_withdrawal: 1,
   withdrawal_number: 0,
   gift_number: 0,
-});
+};
+const formData = ref<BatchOperationForm>({ ...originFormData });
 
 const accountInput = ref<string>();
 const rules = {
@@ -319,6 +371,7 @@ watch(visible, (val) => {
       is_upgrade_withdrawal: 1,
       is_invite_user_withdrawal: 1,
     });
+    activeTab.value = props.tabIndex;
   } else {
     unref(formRef)?.clearValidate();
     unref(formRef)?.resetFields();

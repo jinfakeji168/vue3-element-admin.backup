@@ -16,17 +16,17 @@
           </template>
         </el-table-column>
         <el-table-column prop="bill_title" label="账单标题" min-width="120" />
-        <el-table-column prop="detail_type" label="明细种类" min-width="100">
+        <el-table-column prop="account_type" label="账户类型" min-width="100">
           <template #default="{ row }">
-            <el-tag :type="row.detail_type === 1 ? 'info' : 'warning'">
-              {{ detail_types.find((t) => t.value === row.detail_type)?.label }}
+            <el-tag>
+              {{ account_typeList.find((t) => t.value === row.account_type)?.label }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="detail_kind" label="明细类型" min-width="100">
+        <el-table-column prop="business_type" label="业务类型" min-width="100">
           <template #default="{ row }">
-            <el-tag :type="row.detail_kind === 1 ? 'success' : 'info'">
-              {{ detail_kinds.find((t) => t.value === row.detail_kind)?.label }}
+            <el-tag>
+              {{ business_typeList.find((t) => t.value === row.business_type)?.label }}
             </el-tag>
           </template>
         </el-table-column>
@@ -56,17 +56,29 @@ const access_types = [
 ];
 
 /** 明细种类选项 */
-const detail_types = [
-  { value: 1, label: "基础账号" },
-  { value: 2, label: "佣金账户" },
+const account_typeList = [
+  { value: 1, label: "量化账户" },
+  { value: 2, label: "体验金账户" },
+  { value: 3, label: "佣金账户" },
+  { value: 4, label: "智能账户" },
+  { value: 5, label: "秒合约账户" },
+  { value: 6, label: "充值账户" },
 ];
 
 /** 明细类型选项 */
-const detail_kinds = [
-  { value: 1, label: "系统增加" },
-  { value: 2, label: "系统减少" },
+const business_typeList = [
+  { value: 1, label: "充值" },
+  { value: 2, label: "提现" },
+  { value: 3, label: "投资" },
+  { value: 4, label: "收益" },
+  { value: 5, label: "转账" },
+  { value: 6, label: "佣金" },
+  { value: 7, label: "系统调整" },
+  { value: 8, label: "其他" },
+  { value: 10, label: "抽奖" },
+  { value: 11, label: "秒合约" },
 ];
-
+const props = defineProps<{ uid: number }>();
 const memberList = ref<any>([]);
 const loading = ref(false);
 
@@ -86,6 +98,7 @@ const config: QueryConfig = {
         remote: true,
         clearable: true,
         loading: loading,
+        disabled: props.uid,
         remoteMethod: async (res: string) => {
           loading.value = true;
           memberList.value = await searchMember({ account: res });
@@ -115,22 +128,22 @@ const config: QueryConfig = {
     },
     {
       type: "select",
-      modelKey: "detail_type",
-      label: "明细种类",
-      options: detail_types,
+      modelKey: "account_type",
+      label: "账户类型",
+      options: account_typeList,
       props: {
-        placeholder: "请选择明细种类",
+        placeholder: "请选择账户类型",
         style: { width: "200px" },
         clearable: true,
       },
     },
     {
       type: "select",
-      modelKey: "detail_kind",
-      label: "明细类型",
-      options: detail_kinds,
+      modelKey: "business_type",
+      label: "业务类型",
+      options: business_typeList,
       props: {
-        placeholder: "请选择明细类型",
+        placeholder: "请选择业务类型",
         style: { width: "200px" },
         clearable: true,
       },
@@ -158,6 +171,16 @@ const queryParams = reactive<Query>({
   detail_kind: undefined,
   datetime: [],
 });
+
+watch(
+  () => props.uid,
+  (val) => {
+    if (val) queryParams.uid = val;
+  },
+  {
+    immediate: true,
+  }
+);
 
 /** 表格实例 */
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);

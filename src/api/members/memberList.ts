@@ -219,6 +219,30 @@ export default {
       data,
     });
   },
+  /**获取会员详情 */
+  getMemberDetail(id: number) {
+    return request<any, MemberDetailData>({
+      url: `${BasePath}/detail`,
+      method: "get",
+      params: { id },
+    });
+  },
+  /**保存会员详情 */
+  saveMemberDetail(data: MemberDetailData) {
+    return request({
+      url: `${BasePath}/edit`,
+      method: "put",
+      data: { id: data.id, data },
+    });
+  },
+  /**会员下级列表 */
+  getSubordinateList(params: PageQuery) {
+    return request<PageQuery, MemberSubordinateListData[]>({
+      url: `${BasePath}/subordinate`,
+      method: "get",
+      params,
+    })
+  }
 };
 /* 查询表单 */
 export interface MemberQuery {
@@ -427,7 +451,7 @@ export interface MemberAdd {
 /**批量操作Form */
 export interface BatchOperationForm {
   /** 封禁类型 1.指定会员 2.按等级 */
-  batch_type: 1 | 2;
+  batch_type: number;
   /** 会员账户 batch_type=1时必填 */
   account?: Array<string>;
   /** 旧的等级 batch_type=2时必填 */
@@ -529,4 +553,219 @@ export interface VipItem {
   title: string;
   vip_level: number;
   number: number;
+}
+
+
+
+/**会员详情数据 */
+export interface MemberDetailData {
+  /** 主键id */
+  id: number;
+  /**密码 */
+  password: string;
+  /** 安全密码 */
+  secure_password: string;
+
+  /** 用户账号 */
+  account: string;
+  /** VIP等级 */
+  vip_level: number;
+  /** trc20提现钱包 */
+  trc20_withdrawal_wallet?: string;
+  /** bep20提现钱包 */
+  bep20_withdrawal_wallet?: string;
+  /** trc20充值钱包 */
+  trc20_recharge_wallet?: string;
+  /** bep20充值钱包 */
+  bep20_recharge_wallet?: string;
+  /** 注册ip */
+  register_ip?: string;
+  /** 注册地区 */
+  register_area?: number;
+  /** 最后登录ip */
+  last_login_ip?: string;
+  /** 最后登录地区 */
+  last_login_area?: number;
+  /** 登录时间 */
+  last_login_at?: string;
+  /** telegram */
+  telegram?: string;
+  /** whatsapp */
+  whatsapp?: string;
+  /** 用户邮箱 */
+  email?: string;
+  /** 联系方式 */
+  telephone?: string;
+  /** 量化买投资 */
+  quant_buy_invest?: string;
+  /** 量化买投资有效时间 */
+  quant_buy_invest_effective_time?: string;
+  /** 提现买投资 */
+  withdrawal_buy_invest?: string;
+  /** 提现买投资有效时间 */
+  withdrawal_buy_invest_effective_time?: string;
+  /** 最小提现金额USDT */
+  min_withdrawal_amount_usdt?: number;
+  /** 最大提现金额USDT */
+  max_withdrawal_amount_usdt?: number;
+  /** 最小提现金额TRX */
+  min_withdrawal_amount_trx?: number;
+  /** 最大提现金额TRX */
+  max_withdrawal_amount_trx?: number;
+  /** 最小提现金额BNB */
+  min_withdrawal_amount_bnb?: number;
+  /** 最大提现金额BNB */
+  max_withdrawal_amount_bnb?: number;
+  /** 用户备注 */
+  remark?: string;
+  /** 用户分组 */
+  group_id: number;
+  /** 量化最终收益折扣 */
+  quant_final_earnings_discount?: number;
+  /** 秒合约输赢概率 */
+  second_contract_win_lose_ratio?: number;
+  /** 状态 1正常 2禁用 */
+  status: number;
+  /** 提现状态 1正常 2禁用 */
+  withdrawal_status: number;
+  /** 是否能量化 1.是 2.否 */
+  is_quant: number;
+  /** 邀请用户才能做量化 1.是 2.否 */
+  is_invite_user_quant: number;
+  /** 邀请用户才能做量化-邀请几个用户 */
+  quant_invite_user_number?: number;
+  /** 邀请用户才能做量化-邀请用户充值满多少 */
+  quant_invite_user_recharge_amount?: string;
+  /** 邀请用户才能做量化-邀请用户有效时间 */
+  quant_invite_user_effective_time?: string;
+  /** 是否代理 1.是 2.否 */
+  is_agent: number;
+  /** 是否总代理 1.是 2.否 */
+  is_total_agent: number;
+  /** 升级才能做量化 1.是 2.否 */
+  is_upgrade_quant: number;
+  /** 升级才能提现 1.是 2.否 */
+  is_upgrade_withdrawal: number;
+  /** 邀请码是否启用 1.是 2.否 */
+  is_enabled_invite_code: number;
+  /** 邀请用户才能提现 1.是 2.否 */
+  is_invite_user_withdrawal: number;
+  /** 邀请用户才能提现-邀请几个用户 */
+  withdrawal_invite_user_number?: number;
+  /** 邀请用户才能提现-邀请用户充值满多少 */
+  withdrawal_invite_user_recharge_amount?: string;
+  /** 邀请用户才能提现-邀请用户有效时间 */
+  withdrawal_invite_user_effective_time?: string;
+  /** 充值剩余抽奖次数 */
+  recharge_remain_lottery_num?: number;
+  /** 注册剩余抽奖次数 */
+  register_remain_lottery_num?: number;
+  /** 邀请剩余抽奖次数 */
+  invite_remain_lottery_num?: number;
+  /** 谷歌验证码(二次验证) */
+  google_captcha?: string;
+  /** 用户邀请码 */
+  invita_code?: string;
+  /** 邀请人ID */
+  invite_id?: number;
+  /** 语言ID */
+  lang_id: number;
+  /** 量化账户余额 */
+  quant_account?: string;
+  /** 佣金账户余额 */
+  brokerage_account?: string;
+  /** 智能账户余额 */
+  smart_account?: string;
+  /** 体验金余额 */
+  experience_account?: string;
+  /** 秒合约余额 */
+  second_contract_account?: string;
+  /** 充值账户余额 */
+  recharge_account?: string;
+  /** 最后充值时间 */
+  last_recharge_time?: string;
+  /** 最后充值金额 */
+  last_recharge_amount?: string;
+  /** 充值总额 */
+  total_recharge_amount?: string;
+  /** 最后提现时间 */
+  last_withdrawal_time?: string;
+  /** 最后提现金额 */
+  last_withdrawal_amount?: string;
+  /** 提现总额 */
+  total_withdrawal_amount?: string;
+  /** 提现次数剩余 0不限制 */
+  withdrawal_number?: number;
+  /** 在线状态 1.在线 2.离线 */
+  is_online: number;
+  /** 是否删除 1.是 2.否 */
+  is_delete: number;
+  /** 删除时间 */
+  deleted_at?: string;
+  /** 创建时间 */
+  created_at: string;
+  /** 更新时间 */
+  updated_at: string;
+  /** 类型 1:手机 2:邮箱 3:用户名 4:telegram 5:telegram小程序自动注册 */
+  type: number;
+}
+
+
+
+
+
+/**会员下级列表数据 */
+export interface MemberSubordinateListData {
+  /** 主键id */
+  id: number;
+  /** UID */
+  UID: number;
+  /** 账号 */
+  account: string;
+  /** VIP等级值 */
+  vip_level: number;
+  /** VIP名称 */
+  vip_title: string;
+  /** 在线状态 1在线 2离线 */
+  is_online: number;
+  /** 语言 */
+  language: string;
+  /** 量化余额 */
+  quant_account: string;
+  /** 佣金余额 */
+  brokerage_account: string;
+  /** 智能余额 */
+  smart_account: string;
+  /** 体验金余额 */
+  experience_account: string;
+  /** 秒合约余额 */
+  second_contract_account: string;
+  /** 充值账户余额 */
+  recharge_account: string;
+  /** 团队人数(直属) */
+  team_total: number;
+  /** 注册IP */
+  register_ip: string;
+  /** 注册时间 */
+  register_at: string;
+  /** 最后登录IP */
+  last_login_ip: string;
+  /** 最后登录时间 */
+  last_login_at: string;
+  /** 提现金额 */
+  withdraw_amount: string;
+  /** 累计充值总额 */
+  total_recharge_amount: string;
+  /** 累计提现总额 */
+  total_withdrawal_amount: string;
+  /** 注册地区 */
+  register_area: string;
+  /** 最后登录地区 */
+  last_login_area: string;
+  /** 一级上级ID */
+  parent_id: number;
+  /** 二级上级ID */
+  grandpa_id: number;
+  /** 三级上级ID */
+  great_grandpa_id: number;
 }

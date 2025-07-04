@@ -7,17 +7,18 @@ const BasePath = "/admin/bills/investRecord";
 export default {
   ...init<Query, Form>(BasePath),
 
-  detail: (id: number) => {
+  detail: (data: DetailQuery, id: number) => {
     return request<DetailQuery, DetailForm>({
       url: `${BasePath}/detail/${id}`,
-      method: "get"
+      method: "get",
+      params: data
     })
   }
 };
 /** 详情页查询接口 */
 export interface DetailQuery extends PageQuery {
   /** 用户id */
-  uid?: number;
+  // uid?: number;
   /** 期数 */
   issue?: number;
   /** 最后一期 1.是 2.否 */

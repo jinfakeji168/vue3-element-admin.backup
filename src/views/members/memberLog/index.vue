@@ -52,7 +52,7 @@ const device_types = [
 ];
 const memberList = ref<any>([]);
 const loading = ref(false);
-
+const props = defineProps<{ memberId: number }>();
 /** 查询配置 */
 const config: QueryConfig = {
   labelWidth: "100px",
@@ -69,6 +69,7 @@ const config: QueryConfig = {
         remote: true,
         clearable: true,
         loading: loading,
+        disabled: props.memberId,
         remoteMethod: async (query: string) => {
           loading.value = true;
           memberList.value = await searchMember({ account: query });
@@ -138,7 +139,17 @@ const queryParams = reactive<Query>({
   device_type: undefined,
   datetime: [],
 });
-
+watch(
+  () => props.memberId,
+  (val) => {
+    if (val) {
+      queryParams.uid = val;
+    }
+  },
+  {
+    immediate: true,
+  }
+);
 /** 表格实例 */
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 

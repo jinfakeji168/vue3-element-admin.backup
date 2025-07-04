@@ -89,7 +89,7 @@ export default class TableInstance<FormT> {
       this.queryHandler();
     });
   }
-  async changeStatus(item: FormT) {
+  async changeStatus(item: FormT & { status: StatusEnum }) {
     await this.api.changeStatus(item, item.status == StatusEnum.True ? StatusEnum.False : StatusEnum.True);
     this.queryHandler();
   }
@@ -106,8 +106,7 @@ export default class TableInstance<FormT> {
   }
 
   /** 打开弹窗 可以传递任何对象*/
-  openHandler(index: number, item?: any) {
+  openHandler(index: number) {
     this.visible.value[index] = true;
-    this.currentData.value = item;
   }
 }
