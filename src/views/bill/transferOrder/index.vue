@@ -1,24 +1,26 @@
 <template>
   <div class="app-container">
-    123
-    <!-- <div class="search-bar">
+    <div class="search-bar">
       <QueryPart ref="queryFormRef" v-model="queryParams" :config="config" @search="table.queryHandler()" @reset="table.handleResetQuery()"></QueryPart>
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="uid" label="ID" min-width="100" />
-        <el-table-column prop="uid" label="ID/用户" min-width="200">
-          <template #default="{ row }">{{ row.has_member.id }} / {{ row.has_member.account }}</template>
-        </el-table-column>
+        <el-table-column prop="id" label="ID" min-width="100" />
         <el-table-column prop="order_sn" label="订单号" min-width="120" />
-        <el-table-column prop="amount" label="转账金额" min-width="120">
+        <el-table-column label="uid/用户账号" min-width="120">
+          <template #default="{ row }">
+            <span>{{ row.has_member?.id }}/</span>
+            <span>{{ row.has_member?.account }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="amount" label="转账金额(U)" min-width="120">
           <template #default="{ row }">
             {{ row.amount }}
           </template>
         </el-table-column>
-        <el-table-column prop="fees" label="手续费" min-width="120">
+        <el-table-column prop="fees" label="手续费" min-width="100">
           <template #default="{ row }">
             {{ row.fees }}
           </template>
@@ -30,14 +32,14 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注" min-width="150" show-overflow-tooltip />
+        <el-table-column prop="remark" label="备注" min-width="120" />
         <el-table-column prop="created_at" label="添加时间" min-width="180" />
       </el-table>
 
       <template #footer>
         <pagination background :total="table.pageTotal.value" v-model:page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
       </template>
-    </el-card> -->
+    </el-card>
   </div>
 </template>
 
@@ -79,6 +81,7 @@ const config: QueryConfig = {
       props: {
         placeholder: "请输入订单号",
         style: { width: "200px" },
+        clearable: true,
       },
     },
     {

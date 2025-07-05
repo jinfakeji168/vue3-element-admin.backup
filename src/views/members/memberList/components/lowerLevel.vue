@@ -53,30 +53,49 @@
           </el-button>
         </div>
       </template>
-      <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event, ['id', 'account'])">
+      <el-table
+        ref="tableRef"
+        :data="table.list.value"
+        row-key="id"
+        @selection-change="table.selectionChangeHandler($event, ['id', 'account'])"
+        :row-class-name="tableRowClassName"
+      >
         <el-table-column type="selection" width="55" />
         <el-table-column prop="show_name" label="用户信息" min-width="200px">
           <template #default="{ row }">
-            <div>
-              <span class="text-gray-500">ID:</span>
-              <span class="text-gray-700">{{ row.id }}</span>
-              <el-button class="ml-4" type="primary" size="small" @click="table.editHandler(row, 4)">查看下级</el-button>
+            <div class="flex flex-col">
+              <div>
+                <span class="text-gray-500">ID:</span>
+                <span class="text-gray-700">{{ row.id }}</span>
+                <el-button class="ml-4" type="primary" size="small" @click="getLowerLevelHandler(row)">查看下级</el-button>
+              </div>
             </div>
-            <div>
-              <span class="text-gray-500">账号:</span>
-              <span class="text-gray-700">{{ row.account }}</span>
-            </div>
-            <div>
-              <span class="text-gray-500">等级:</span>
-              <span class="text-gray-700">{{ row.vip_level }}(离线) (trtc)</span>
-            </div>
-            <div>
-              <span class="text-gray-500">语言:</span>
-              <span class="text-gray-700">- |禁提</span>
-            </div>
-            <div>
-              <span class="text-gray-500">体验金:</span>
-              <span class="text-gray-700">{{ row.experience_account }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="show_name" label="用户信息" min-width="200px">
+          <template #default="{ row }">
+            <div class="flex flex-col">
+              <div>
+                <span class="text-gray-500">ID:</span>
+                <span class="text-gray-700">{{ row.id }}</span>
+                <span>(第{{ row.level || 1 }}级)</span>
+              </div>
+              <div>
+                <span class="text-gray-500">账号:</span>
+                <span class="text-gray-700">{{ row.account }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">等级:</span>
+                <span class="text-gray-700">{{ row.vip_level }}(离线)</span>
+              </div>
+              <div>
+                <span class="text-gray-500">语言:</span>
+                <span class="text-gray-700">- |禁提</span>
+              </div>
+              <div>
+                <span class="text-gray-500">体验金:</span>
+                <span class="text-gray-700">{{ row.experience_account }}</span>
+              </div>
             </div>
           </template>
         </el-table-column>
@@ -168,7 +187,7 @@
               </div>
               <div>
                 <span class="text-gray-500">顶级:</span>
-                <span class="text-gray-700">-/-</span>
+                <span class="text-gray-700">{{ row.parent_id }}/{{ row.parent_account }}</span>
               </div>
               <div>
                 <span class="text-gray-500">一级:</span>
@@ -241,7 +260,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right" width="200px">
+        <!-- <el-table-column label="操作" fixed="right" width="200px">
           <template #default="{ row }">
             <div class="grid grid-cols-2 gap-2">
               <el-button type="primary" size="small" @click="table.editHandler(row, 3)">详情</el-button>
@@ -253,7 +272,7 @@
               <el-button type="warning" size="small">模拟登录</el-button>
             </div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <template #footer>
         <pagination background :total="table.pageTotal.value" v-model:page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
@@ -315,6 +334,42 @@ function statusChangeHandler(row: Member, type: keyof Pick<Member, "status" | "w
     state: row[type],
   });
 }
+const tableRef = ref();
+//获取下级
+async function getLowerLevelHandler(data: { id: number; level: number }) {
+  const res = await api.getSubordinateList({ uid: data.id, page: 1, limit: 999 });
+  const temp: any = table.list.value.find((item) => item.id === data.id);
+
+  temp.children = res.list;
+  temp.children?.forEach((item: any) => {
+    item.level = (data.level || 1) + 1;
+  });
+  console.log("🚀 ~ getLowerLevelHandler ~ res:", res.list);
+  nextTick(() => {
+    tableRef.value.toggleRowExpansion(temp, true);
+  });
+}
+function tableRowClassName({ row, rowIndex }: { row: any; rowIndex: number }) {
+  console.log("🚀 ~ tableRowClassName ~ row:", row.level);
+  if (row.level == 2) {
+    return "warning-row";
+  } else if (row.level == 3) {
+    return "success-row";
+  }
+  return "";
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.cell) {
+  display: flex;
+  flex-direction: row;
+}
+:deep(.el-table) .warning-row {
+  background: oldlace;
+}
+
+:deep(.el-table) .success-row {
+  background: #f0f9eb;
+}
+</style>

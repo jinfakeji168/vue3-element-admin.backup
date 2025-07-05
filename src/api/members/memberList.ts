@@ -236,8 +236,8 @@ export default {
     });
   },
   /**会员下级列表 */
-  getSubordinateList(params: PageQuery) {
-    return request<PageQuery, MemberSubordinateListData[]>({
+  getSubordinateList(params: PageQuery & { uid: number }) {
+    return request<PageQuery, PageResult<MemberSubordinateListData>>({
       url: `${BasePath}/subordinate`,
       method: "get",
       params,

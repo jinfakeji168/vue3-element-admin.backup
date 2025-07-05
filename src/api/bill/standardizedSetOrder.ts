@@ -11,22 +11,24 @@ export default {
 };
 
 export interface Query extends PageQuery {
-  /** 用户id */
+  /** 用户ID */
   uid?: number;
-  /** 产品ID */
-  product_id?: number;
   /** 订单号 */
-  order_sn?: string;
-  /** 收益类型 1.按日返息,到期不还本 2.按日返息,到期还本 3.到期本息 */
-  yield_type?: 1 | 2 | 3;
-  /** 状态 1已兑换 2未兑换 */
-  status?: 1 | 2;
-  /** 到期时间-开始/结束时间 */
-  exp_datetime?: string[];
-  /** 结算时间-开始/结束时间 */
-  set_datetime?: string[];
-  /** 投资时间-开始/结束时间 */
-  cre_datetime?: string[];
+  order_sn?: number;
+  /** 发送地址 */
+  send_address?: string;
+  /** 接收地址 */
+  rece_address?: string;
+  /** 交易ID */
+  tx_id?: string | number;
+  /** 状态 0.处理中 1.完成 2失败 */
+  status?: 0 | 1 | 2;
+  /** 金额类型 1.TRC20-USTD 2.TRX 3.BEP10-USTD 4.BNB 5.BEP20-USTD */
+  amount_type?: 1 | 2 | 3 | 4 | 5;
+  /** 交易时间-开始/结束时间 */
+  tx_time?: [string, string];
+  /** 添加时间-开始/结束时间 */
+  created_at?: [string, string];
 }
 
 /** 类型 */
@@ -35,50 +37,30 @@ export interface Form {
   id?: number;
   /** 用户ID */
   uid?: number;
-  /** 投资金额 */
-  amount?: number;
   /** 订单号 */
   order_sn?: string;
-  /** 产品ID */
-  product_id?: number;
-  /** 投资天数 */
-  invest_days?: number;
-  /** 日收益率 */
-  days_rate?: string;
-  /** 收益类型 1.按日返息,到期不还本 2.按日返息,到期还本 3.到期本息 */
-  yield_type?: 1 | 2 | 3;
-  /** 状态 1已兑换 2未兑换 */
-  status?: 1 | 2;
-  /** 到期时间 */
-  expiration_time?: string;
-  /** 结算时间 */
-  settlement_time?: string;
-  /** 总利润 */
-  total_profit?: string;
-  /** 投资时间 */
-  created_at?: string;
+  /** 归集金额 */
+  collected_amount?: string;
+  /** 发送地址 */
+  send_address?: string;
+  /** 接收地址 */
+  rece_address?: string;
+  /** txID */
+  tx_id?: string | number;
+  /** tx手续费 */
+  tx_fees?: string;
+  /** tx时间 */
+  tx_time?: string;
+  /** 状态 0.处理中 1.完成 2失败 */
+  status?: 0 | 1 | 2;
+  /** 金额类型 1.TRC20-USTD 2.TRX 3.BEP10-USTD 4.BNB 5.BEP20-USTD */
+  amount_type?: 1 | 2 | 3 | 4 | 5;
+  /** 管理员ID */
+  manage_id?: number;
+  /** 管理员名称 */
+  manage_name?: string;
   /** 更新时间 */
   updated_at?: string;
-  /** 用户数据 */
-  has_member?: {
-    /** 会员ID */
-    id?: number;
-    /** 会员账号 */
-    account?: string;
-  };
-  /** 产品数据 */
-  has_invest_setting?: {
-    /** 产品ID */
-    id?: number;
-    /** 产品类型 1.普通投资 2.提现投资 */
-    type?: 1 | 2;
-    /** 产品名称 */
-    title?: string;
-    /** 投资周期 */
-    invest_cycle?: number;
-    /** 每日收益率 */
-    daily_yield?: string;
-    /** 收益类型 1.按日返息,到期不还本 2.按日返息,到期还本 3.到期本息 */
-    yield_type?: 1 | 2 | 3;
-  };
+  /** 创建时间 */
+  created_at?: string;
 }

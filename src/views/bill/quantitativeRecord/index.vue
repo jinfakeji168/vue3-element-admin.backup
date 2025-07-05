@@ -7,8 +7,18 @@
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="uid" label="用户ID" min-width="100" />
-        <el-table-column prop="level" label="等级" min-width="80" />
+        <el-table-column label="uid/用户账号" min-width="120">
+          <template #default="{ row }">
+            <span>{{ row.has_member?.id }}/</span>
+            <span>{{ row.has_member?.account }}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="level" label="等级" min-width="80">
+          <template #default="{ row }">
+            {{ store.vipList.find((item) => item.level == row.level)?.title }}
+          </template>
+        </el-table-column>
         <el-table-column prop="income" label="收益" min-width="120">
           <template #default="{ row }">
             {{ row.income }}
@@ -19,17 +29,21 @@
             {{ row.fees }}
           </template>
         </el-table-column>
-        <el-table-column prop="currency_id" label="币种" min-width="100" />
+        <el-table-column prop="currency_id" label="币种" min-width="100">
+          <template #default="{ row }">
+            {{ store.tradeList.find((item) => item.key == row.currency_id)?.val }}
+          </template>
+        </el-table-column>
         <el-table-column label="交易价格" min-width="200">
           <template #default="{ row }">
-            <div>买入：{{ row.buy_price }}</div>
-            <div>卖出：{{ row.sel_price }}</div>
+            <div>买入：{{ row.buy_price || "--" }}</div>
+            <div>卖出：{{ row.sel_price || "--" }}</div>
           </template>
         </el-table-column>
         <el-table-column label="交易平台" min-width="200">
           <template #default="{ row }">
-            <div>{{ row.buy_platform }}</div>
-            <div>{{ row.sel_platform }}</div>
+            <div>{{ row.buy_platform || "--" }}</div>
+            <div>{{ row.sel_platform || "--" }}</div>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态" min-width="100">
@@ -54,6 +68,8 @@
 import api, { type Form, Query } from "@/api/bill/quantitativeRecord";
 import { searchMember } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
+import { useStore } from "@/store/modules/common";
+const store = useStore();
 
 const memberList = ref<any>([]);
 const loading = ref(false);

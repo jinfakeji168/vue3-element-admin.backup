@@ -7,7 +7,13 @@
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="uid" label="用户ID" min-width="100" />
+        <el-table-column prop="id" label="ID" min-width="100" />
+        <el-table-column label="uid/用户账号" min-width="120">
+          <template #default="{ row }">
+            <span>{{ row.member.id }}/</span>
+            <span>{{ row.member.account }}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="amount" label="中奖金额(U)" min-width="120">
           <template #default="{ row }">
             {{ row.amount }}
@@ -21,7 +27,6 @@
           </template>
         </el-table-column>
         <el-table-column prop="created_at" label="添加时间" min-width="180" />
-        <el-table-column prop="updated_at" label="更新时间" min-width="180" />
       </el-table>
 
       <template #footer>

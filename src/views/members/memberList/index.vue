@@ -153,10 +153,6 @@
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
-                <span class="text-gray-500">量化账户:</span>
-                <span class="text-gray-700">{{ row.quant_account || "0.00" }}</span>
-              </div>
-              <div>
                 <span class="text-gray-500">佣金账户:</span>
                 <span class="text-gray-700">{{ row.brokerage_account || "0.00" }}</span>
               </div>
@@ -164,17 +160,22 @@
                 <span class="text-gray-500">智能账户:</span>
                 <span class="text-gray-700">{{ row.smart_account || "0.00" }}</span>
               </div>
+
               <div>
                 <span class="text-gray-500">合约账户:</span>
                 <span class="text-gray-700">{{ row.second_contract_account || "0.00" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">量化收益:</span>
-                <span class="text-gray-700">{{ row.quant_final_earnings_discount || "0.00" }}</span>
+                <span class="text-gray-500">量化账户:</span>
+                <span class="text-gray-700">{{ row.quant_account || "0.00" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">投资未结算:</span>
-                <span class="text-gray-700">{{ row.quant_buy_invest || "0.00" }}</span>
+                <span class="text-gray-500">体验金:</span>
+                <span class="text-gray-700">{{ row.experience_account || "0.00" }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">量化收益:</span>
+                <span class="text-gray-700">{{ row.quant_profit || "0.00" }}</span>
               </div>
             </div>
           </template>
@@ -200,33 +201,41 @@
               </div>
               <div>
                 <span class="text-gray-500">投资总额:</span>
-                <span class="text-gray-700">{{ row.quant_buy_invest || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.invest_total || "0.00" }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">投资未结算:</span>
+                <span class="text-gray-700">{{ row.invest_unsettled || "0.00" }}</span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="注册/登录" min-width="200px">
+        <el-table-column label="注册/登录" min-width="250px">
           <template #default="{ row }">
             <div class="flex flex-col">
-              <div>
-                <span class="text-gray-500">注册:</span>
-                <span class="text-gray-700">{{ row.created_at || "--" }}</span>
-              </div>
               <div>
                 <span class="text-gray-500">注册方式:</span>
                 <span class="text-gray-700">{{ getRegisterType(row.type) || "--" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">IP:</span>
-                <span class="text-gray-700">{{ row.register_ip || "--" }}(后台)</span>
+                <span class="text-gray-500">注册:</span>
+                <span class="text-gray-700">{{ row.created_at || "--" }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">注册IP:</span>
+                <span class="text-gray-700">{{ row.register_ip || "--" }}({{ row.register_area }})</span>
               </div>
               <div>
                 <span class="text-gray-500">最后:</span>
-                <span class="text-gray-700">{{ row.last_login_time || "--(未知)" }}</span>
+                <span class="text-gray-700">{{ row.last_login_time || "--" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">IP:</span>
-                <span class="text-gray-700">({{ row.last_login_ip || "" }})</span>
+                <span class="text-gray-500">最后IP:</span>
+                <span class="text-gray-700">{{ row.last_login_ip || "" }}({{ row.last_login_area }})</span>
+              </div>
+              <div>
+                <span class="text-gray-500">所在层级:</span>
+                <span class="text-gray-700">{{ row.group_id }}</span>
               </div>
             </div>
           </template>
@@ -235,33 +244,29 @@
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
-                <span class="text-gray-500">所在层级:</span>
-                <span class="text-gray-700">{{ row.group_id }}</span>
-              </div>
-              <div>
                 <span class="text-gray-500">顶级:</span>
-                <span class="text-gray-700">-/-</span>
+                <span class="text-gray-700">{{ row.top_id }}/{{ row.top_account }}</span>
               </div>
               <div>
                 <span class="text-gray-500">一级:</span>
-                <span class="text-gray-700">-/-</span>
+                <span class="text-gray-700">{{ row.parent_id }}/{{ row.parent_account }}</span>
               </div>
               <div>
                 <span class="text-gray-500">二级:</span>
-                <span class="text-gray-700">-/-</span>
+                <span class="text-gray-700">{{ row.grandpa_id }}/{{ row.grandpa_account }}</span>
               </div>
               <div>
                 <span class="text-gray-500">三级:</span>
-                <span class="text-gray-700">-/-</span>
+                <span class="text-gray-700">{{ row.great_grandpa_id }}/{{ row.great_grandpa_account }}</span>
               </div>
               <div>
                 <span class="text-gray-500">邀请码:</span>
-                <span class="text-gray-700">{{ row.invita_code || "" }}</span>
+                <span class="text-gray-700">{{ row.invita_code || "--" }}</span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="充提/VIP" min-width="200px">
+        <el-table-column label="充提/VIP" min-width="250px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
@@ -274,11 +279,15 @@
               </div>
               <div>
                 <span class="text-gray-500">开始时间:</span>
-                <span class="text-gray-700">{{ row.quant_buy_invest_effective_time || "2025-05-20 23:13:58" }}</span>
+                <span class="text-gray-700">{{ row.created_at || "2025-05-20 23:13:58" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">结束时间:</span>
-                <span class="text-gray-700">{{ row.withdrawal_buy_invest_effective_time || "2026-05-20 23:13:58" }}</span>
+                <span class="text-gray-700">{{ row.end_time || "2026-05-20 23:13:58" }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">直推下级:</span>
+                <span class="text-gray-700">{{ row.withdrawal_invite_user_number }}</span>
               </div>
             </div>
           </template>
@@ -286,10 +295,6 @@
         <el-table-column label="其他信息" min-width="200px">
           <template #default="{ row }">
             <div class="flex flex-col">
-              <div>
-                <span class="text-gray-500">直推下级:</span>
-                <span class="text-gray-700">{{ row.withdrawal_invite_user_number }}</span>
-              </div>
               <div>
                 <span class="text-gray-500">邮箱:</span>
                 <span class="text-gray-700">{{ row.email || "--" }}</span>
@@ -308,7 +313,7 @@
               </div>
               <div>
                 <span class="text-gray-500">ws/tg:</span>
-                <span class="text-gray-700">{{ row.whatsapp }}/{{ row.telegram }}</span>
+                <span class="text-gray-700">{{ row.whatsapp || "--" }}/{{ row.telegram || "--" }}</span>
               </div>
             </div>
           </template>
