@@ -7,7 +7,9 @@
     <el-form-item label="首页强制弹窗公告">
       <el-switch v-model="getI('index_force_notice').values" :active-value="1" :inactive-value="2" />
     </el-form-item>
-
+    <el-form-item label="弹窗公告">
+      <el-button type="primary" @click="visible[0] = true">编辑公告</el-button>
+    </el-form-item>
     <el-form-item label="首页显示假数据">
       <el-switch v-model="getI('is_show_fake_data').values" :active-value="1" :inactive-value="2" />
     </el-form-item>
@@ -19,7 +21,9 @@
     <el-form-item label="首页是否展示视频">
       <el-switch v-model="getI('index_video_is_show').values" :active-value="1" :inactive-value="2" />
     </el-form-item>
-
+    <el-form-item label="首页视频地址">
+      <el-input v-model="getI('index_video_url').values" />
+    </el-form-item>
     <el-form-item label="首页顶部提示栏名称">
       <el-input v-model="getI('home_top_tips_name').values" />
     </el-form-item>
@@ -56,17 +60,19 @@
       <el-date-picker v-model="getI('start_operation_time').values" type="date" />
     </el-form-item>
   </el-form>
+  <explain v-model="visible[0]" :data="getI('index_notice_content')" />
 </template>
 
 <script setup lang="ts">
 import { type Form } from "@/api/system/systemConfig";
 import { useStore } from "@/store/modules/common";
+import explain from "./parts/explain.vue";
 const store = useStore();
 const props = defineProps<{ configData: Form[] }>();
 function getI(key: string): Form {
   return props.configData?.find((item) => item.name === key) || {};
 }
-
+const visible = ref([false]);
 const groupLevelOptions = [
   { label: "全部", value: 0 },
   { label: "二级", value: 2 },

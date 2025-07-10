@@ -8,7 +8,7 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" min-width="100" />
-        <el-table-column label="uid/用户账号" min-width="120">
+        <el-table-column label="uid/账号" min-width="120">
           <template #default="{ row }">
             <span>{{ row.member.id }}/</span>
             <span>{{ row.member.account }}</span>

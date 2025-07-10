@@ -64,35 +64,35 @@
         </el-form-item>
       </el-collapse-item>
       <el-collapse-item title="转账配置" name="3">
-        <el-form-item label="佣金账户是否可转到量化账户">
-          <el-switch v-model="getI('transfer_is_brokerage_to_basic').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
-        <el-form-item label="量化账户是否可转到佣金账户">
-          <el-switch v-model="getI('transfer_is_basic_to_brokerage').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
         <el-form-item label="智能账户是否可转到量化账户">
           <el-switch v-model="getI('transfer_is_financial_to_basic').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="佣金账户是否可转到智能账户">
-          <el-switch v-model="getI('transfer_is_brokerage_to_financial').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
-        <el-form-item label="佣金账户是否可转到合约账户">
-          <el-switch v-model="getI('transfer_is_brokerage_to_contract').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
-        <el-form-item label="合约账户是否可转到佣金账户">
-          <el-switch v-model="getI('transfer_is_contract_to_brokerage').values" :active-value="1" :inactive-value="2" />
+        <el-form-item label="量化账户是否可转到利润账户">
+          <el-switch v-model="getI('transfer_is_basic_to_brokerage').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item label="合约账户是否可转到量化账户">
           <el-switch v-model="getI('transfer_is_contract_to_basic').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
+        <el-form-item label="合约账户是否可转到利润账户">
+          <el-switch v-model="getI('transfer_is_contract_to_brokerage').values" :active-value="1" :inactive-value="2" />
+        </el-form-item>
+        <el-form-item label="利润账户是否可转到量化账户">
+          <el-switch v-model="getI('transfer_is_brokerage_to_basic').values" :active-value="1" :inactive-value="2" />
+        </el-form-item>
+        <el-form-item label="利润账户是否可转到智能账户">
+          <el-switch v-model="getI('transfer_is_brokerage_to_financial').values" :active-value="1" :inactive-value="2" />
+        </el-form-item>
+        <el-form-item label="利润账户是否可转到合约账户">
+          <el-switch v-model="getI('transfer_is_brokerage_to_contract').values" :active-value="1" :inactive-value="2" />
+        </el-form-item>
 
-        <el-form-item label="佣金账户转出手续费百分比">
+        <el-form-item label="利润账户转出手续费百分比">
           <el-input v-model="getI('transfer_transfer_out_ratio').values" type="number" />
         </el-form-item>
-        <el-form-item label="佣金账户转出最小手续费">
+        <el-form-item label="利润账户转出最小手续费">
           <el-input v-model="getI('transfer_transfer_out_min').values" type="number" />
         </el-form-item>
-        <el-form-item label="佣金账户转出最大手续费">
+        <el-form-item label="利润账户转出最大手续费">
           <el-input v-model="getI('transfer_transfer_out_max').values" type="number" />
         </el-form-item>
         <el-form-item label="其他账户转出手续费百分比">

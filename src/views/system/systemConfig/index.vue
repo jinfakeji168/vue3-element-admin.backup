@@ -22,7 +22,7 @@
       <template #footer>
         <div class="text-center">
           <el-button @click="resetHandler">重置</el-button>
-          <el-button type="primary" @click="saveHandler" :loading="loading">保存</el-button>
+          <el-button type="primary" @click="saveHandler" :loading="loading" :disabled="!hasAuth(`systemConfig:${currentTab}:save`)">保存</el-button>
         </div>
       </template>
     </el-card>
@@ -32,6 +32,8 @@
 <script setup lang="ts">
 import systemConfig, { type Form } from "@/api/system/systemConfig";
 import { keyMap, type TabNames } from "./keyConfig";
+import { hasAuth } from "@/plugins/permission";
+
 const parts = import.meta.glob("./components/*.vue");
 const componentMap = ref<Record<string, any>>({});
 async function initPart() {

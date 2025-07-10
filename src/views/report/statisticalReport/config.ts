@@ -1,28 +1,21 @@
-function getConfig() {
+function getConfig(data: any[] | any) {
     return {
+        tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b}: {c} ({d}%)'
+        },
         legend: {
             orient: "vertical",
             left: "left",
-            data: ["Apple", "Grapes", "Pineapples", "Oranges", "Bananas"]
+            data: data.map((item: any) => item.name)
         },
         series: [{
             type: "pie",
-            data: [{
-                value: 335,
-                name: "Apple"
-            }, {
-                value: 310,
-                name: "Grapes"
-            }, {
-                value: 234,
-                name: "Pineapples"
-            }, {
-                value: 135,
-                name: "Oranges"
-            }, {
-                value: 1548,
-                name: "Bananas"
-            }]
+            data: data,
+            label: {
+                show: true,
+                formatter: '{b}: {d}%'
+            }
         }]
     }
 }

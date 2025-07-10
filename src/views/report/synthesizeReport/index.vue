@@ -2,21 +2,38 @@
   <div class="app-container">
     <el-card>
       <template #header>
-        <span>系统时间GMT+ 08（te）</span>
+        <span>系统时间GMT{{ date.timeZone > 0 ? "+" : "-" }}{{ date.timeZone }}({{ date.time }})</span>
       </template>
       <template #default>
-        <div class="flex flex-row gap-10 flex-wrap">
-          <div class="dataItem" v-for="item in list" :key="item.name">
-            <el-image fit="contain" :src="item.img" />
-            <span>{{ item.value }}</span>
-            <span>{{ item.name }}</span>
+        <div class="flex flex-row gap-10 flex-wrap w-full" v-loading="loading[0]">
+          <div class="flex-grow-1" v-for="item in list" :key="item.name">
+            <el-tooltip placement="top" :disabled="!item.tooltip">
+              <template #default>
+                <div class="dataItem">
+                  <el-image fit="contain" :src="item.img" />
+                  <span>{{ item.value }}</span>
+                  <span>{{ item.name }}</span>
+                </div>
+              </template>
+              <template #content>
+                <div v-html="item.tooltip"></div>
+              </template>
+            </el-tooltip>
           </div>
         </div>
         <div class="seach_row">
-          <el-date-picker v-model="time_range" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
-          <el-button type="primary">查询</el-button>
+          <el-date-picker
+            v-model="queryParams.datetime"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
+            format="YYYY-MM-DD"
+            value-format="YYYY-MM-DD"
+          />
+          <el-button type="primary" @click="getsynthesizeReportInterval" :loading="loading[1]">查询</el-button>
         </div>
-        <div class="flex flex-row gap-10 mt-20 flex-wrap">
+        <div class="flex flex-row gap-10 mt-10 flex-wrap" v-loading="loading[1]">
           <div class="dataItem" v-for="item in list2" :key="item.name">
             <el-image fit="contain" :src="item.img" />
             <span>{{ item.value }}</span>
@@ -27,103 +44,63 @@
           <div class="dataCard Custom">
             <span>充值人数</span>
             <div>实时</div>
-            <span>0</span>
-            <span>0</span>
+            <span>{{ realTimeData?.recharge_user_total }}</span>
+            <span>{{ realTimeData?.repeat_recharge_user_total }}</span>
             <span>总充人数</span>
             <span>复充人数</span>
           </div>
           <div class="dataCard">
             <span>总量化佣金</span>
             <div>实时</div>
-            <span>23451234</span>
+            <span>{{ realTimeData?.quant_commission_total }}</span>
           </div>
           <div class="dataCard">
             <span>用户佣金账户余额</span>
             <div>实时</div>
-            <span>23451234</span>
+            <span>{{ realTimeData?.brokerage_balance_total }}</span>
           </div>
           <div class="dataCard">
             <span>预计出款金额</span>
             <div>实时</div>
-            <span>23451234</span>
+            <span>{{ realTimeData?.predicted_withdraw_amount }}</span>
           </div>
         </div>
         <div class="flex flex-row gap-4 mt-20 flex-wrap">
-          <div class="dataContent flex flex-col gap-3">
+          <div class="dataContent flex flex-col gap-3" v-loading="loading[2]">
             <div class="flex flex-row gap-3">
               <span>归集钱包</span>
-              <el-button size="small" type="primary">点击刷新</el-button>
+              <el-button size="small" type="primary" @click="getCollectWallet" :loading="loading[2]">点击刷新</el-button>
             </div>
-            <div class="flex flex-row gap-3">
-              <span>TRC20</span>
-              <span>TBAWERAWawigjwerawEWRa</span>
-            </div>
-            <div class="flex flex-row gap-3">
+            <template v-for="item of paymentWallet" :key="item">
               <div class="flex flex-row gap-3">
-                <span>U余额</span>
-                <span>245.12USDT</span>
+                <span>{{ item.type }}</span>
+                <span>{{ item.address || "--" }}</span>
               </div>
-              <div class="flex flex-row gap-3">
-                <span>T余额</span>
-                <span>245.12</span>
+              <div class="flex flex-row flex-wrap gap-x-4">
+                <div class="flex flex-row" v-for="inner of item.currency" :key="inner.name">
+                  <span>{{ item.type }}-{{ inner.name }}余额</span>
+                  <span>{{ inner.balance }}</span>
+                </div>
               </div>
-            </div>
-            <div class="flex flex-row gap-3">
-              <span>BEP20</span>
-              <span>0x1234dqwerawieidk13dle39d</span>
-            </div>
-            <div class="flex flex-row gap-3">
-              <div class="flex flex-row gap-3">
-                <span>USDT</span>
-                <span>245.12USDT</span>
-              </div>
-              <div class="flex flex-row gap-3">
-                <span>USDC</span>
-                <span>245.12</span>
-              </div>
-              <div class="flex flex-row gap-3">
-                <span>bnb余额</span>
-                <span>245.12</span>
-              </div>
-            </div>
+            </template>
           </div>
-          <div class="dataContent flex flex-col gap-3">
+          <div class="dataContent flex flex-col gap-3" v-loading="loading[3]">
             <div class="flex flex-row gap-3">
               <span>打款钱包</span>
-              <el-button size="small" type="primary">点击刷新</el-button>
+              <el-button size="small" type="primary" @click="getPaymentWallet">点击刷新</el-button>
             </div>
-            <div class="flex flex-row gap-3">
-              <span>TRC20地址</span>
-              <span>TBAWERAWawigjwerawEWRa</span>
-            </div>
-            <div class="flex flex-row gap-3">
-              <span>BEP20地址</span>
-              <span>TBAWERAWawigjwerawEWRa</span>
-            </div>
-            <div class="flex flex-row gap-3">
+            <template v-for="item of paymentWallet" :key="item">
               <div class="flex flex-row gap-3">
-                <span>TRC20-U余额</span>
-                <span>245.12</span>
+                <span>{{ item.type }}</span>
+                <span>{{ item.address || "--" }}</span>
               </div>
-              <div class="flex flex-row gap-3">
-                <span>T余额</span>
-                <span>245.12</span>
+              <div class="flex flex-row flex-wrap gap-x-4">
+                <div class="flex flex-row" v-for="inner of item.currency" :key="inner.name">
+                  <span>{{ item.type }}-{{ inner.name }}余额</span>
+                  <span>{{ inner.balance }}</span>
+                </div>
               </div>
-            </div>
-            <div class="flex flex-row gap-3">
-              <div class="flex flex-row gap-3">
-                <span>BEP20-U余额</span>
-                <span>245.22</span>
-              </div>
-              <div class="flex flex-row gap-3">
-                <span>USDC</span>
-                <span>245.12</span>
-              </div>
-              <div class="flex flex-row gap-3">
-                <span>bnb余额</span>
-                <span>245.12</span>
-              </div>
-            </div>
+            </template>
             <div class="flex flex-row gap-3">
               <div class="flex flex-row gap-3">
                 <span>打款钱包能量</span>
@@ -152,31 +129,30 @@
               <el-button type="primary">购买</el-button>
             </div>
           </div>
-          <div class="dataContent flex flex-col gap-3">
+          <div class="dataContent flex flex-col gap-3" v-loading="loading[4]">
             <div class="flex flex-row gap-3">
               <span>能量平台</span>
-              <el-button size="small" type="primary">点击刷新</el-button>
+              <el-button size="small" type="primary" @click="getEnergyPlatform">点击刷新</el-button>
             </div>
             <div class="flex flex-row gap-3">
               <span>能量平台余额</span>
-              <span>212.41234</span>
+              <span>{{ energyPlatForm?.balance }}</span>
             </div>
             <div class="flex flex-row gap-3">
               <span>充值二维码,仅支持trx,勿充其他虚拟币</span>
             </div>
             <div class="flex flex-row gap-3">
               <span>充值地址</span>
-              <span>0x1234dqwerawieidk13dle39d</span>
+              <span>{{ energyPlatForm?.address || "--" }}</span>
             </div>
             <div class="flex flex-row gap-3">
-              <qrcode value="ttttttttttttwawerw1qwetqwetqwetawetqwetqwtqwe" :width="100"></qrcode>
+              <qrcode :value="energyPlatForm?.address || '--'" :width="100"></qrcode>
             </div>
             <div>
               <el-button type="primary">充值完成</el-button>
-              ;
             </div>
           </div>
-          <div class="dataContent flex flex-col gap-3">
+          <div class="dataContent flex flex-col gap-3" v-loading="loading[5]">
             <div class="flex flex-row gap-3">
               <span class="flex-center">
                 积分
@@ -184,27 +160,26 @@
                   <el-icon class="cursor-pointer"><QuestionFilled /></el-icon>
                 </el-tooltip>
               </span>
-              <el-button size="small" type="primary">点击刷新</el-button>
+              <el-button size="small" type="primary" @click="getIntegral">点击刷新</el-button>
             </div>
             <div class="flex flex-row gap-3">
               <span>系统剩余积分</span>
-              <span>212.41234</span>
+              <span>{{ integral?.points }}</span>
             </div>
             <div class="flex flex-row gap-3">
               <span>tron地址</span>
-              <span>TNKds12eawije2231jc134</span>
+              <span>{{ integral?.trc20_address || "--" }}</span>
             </div>
             <div class="flex flex-row gap-3">
               <span>BEP20地址</span>
-              <span>0x1234dqwerawieidk13dle39d</span>
+              <span>{{ integral?.bep20_address || "--" }}</span>
             </div>
             <div class="flex flex-row gap-3">
-              <qrcode value="ttttttttttttwawerw1qwetqwetqwetawetqwetqwtqwe" :width="100"></qrcode>
-              <qrcode value="ttttttttttttwawerw1qwetqwetqwetawetqwetqwtqwe" :width="100"></qrcode>
+              <qrcode :value="integral?.trc20_address || '--'" :width="100"></qrcode>
+              <qrcode :value="integral?.bep20_address || '--'" :width="100"></qrcode>
             </div>
             <div>
               <el-button type="primary">充值完成</el-button>
-              ;
             </div>
           </div>
         </div>
@@ -214,38 +189,169 @@
 </template>
 
 <script setup lang="ts">
+import api, { _CoinSummary, _SynthesizeReportRealtime, Intergal, TrxPlatform, WalletSummary } from "@/api/report/synthesizeReport";
+import { dayjs } from "element-plus";
 import qrcode from "vue-qrcode";
 
-const time_range = ref([]);
 const list = reactive([
-  { name: "总会员数", value: 666, img: "https://iconfont.alicdn.com/p/illus_3d/file/ZsWruISgVCKK/9fb07d50-4d27-4c9f-bd25-db023a9d2d51.png" },
-  { name: "提充差", value: -12344, img: "https://iconfont.alicdn.com/p/illus_3d/file/2OEYpu98KSmI/c460aace-bd9c-42fe-b128-b888832c80c6.png" },
-  { name: "总充值", value: -12344, img: "https://iconfont.alicdn.com/p/illus/preview_image/1p80dDcss13Y/0b3c370e-1e53-4203-a0ed-331b12f74876.png" },
-  { name: "总提现", value: -12344, img: "https://iconfont.alicdn.com/p/illus/preview_image/iL3OasGQR3yM/eb9afa6b-abaf-4c7b-994a-710d7b32adc9.png" },
-  { name: "总归集", value: -12344, img: "https://iconfont.alicdn.com/p/illus/preview_image/DupfXz8v7LiU/34a90dac-3b5f-48fa-8c3a-8334151b96d9.png" },
+  { name: "总会员数", value: "--", img: "/public/images/report_a1.png" },
+  { name: "提充差", value: "--", img: "/public/images/report_a2.png" },
+  { name: "总充值", value: "--", img: "/public/images/report_a2.png", tooltip: "" },
+  { name: "总提现", value: "--", img: "/public/images/report_a2.png", tooltip: "" },
+  { name: "总归集", value: "--", img: "/public/images/report_a3.png", tooltip: "" },
 ]);
 const list2 = reactive([
-  { name: "注册", value: 666, img: "https://iconfont.alicdn.com/p/illus_3d/file/ZsWruISgVCKK/9fb07d50-4d27-4c9f-bd25-db023a9d2d51.png" },
-  { name: "注册有做量化", value: 666, img: "https://iconfont.alicdn.com/p/illus_3d/file/ZsWruISgVCKK/9fb07d50-4d27-4c9f-bd25-db023a9d2d51.png" },
-  { name: "归集TRC20-U", value: "0(0笔)", img: "https://iconfont.alicdn.com/p/illus/preview_image/DupfXz8v7LiU/34a90dac-3b5f-48fa-8c3a-8334151b96d9.png" },
-  { name: "归集TRX", value: "0(0笔)", img: "https://iconfont.alicdn.com/p/illus/preview_image/DupfXz8v7LiU/34a90dac-3b5f-48fa-8c3a-8334151b96d9.png" },
-  { name: "归集BEP20-U", value: "0(0笔)", img: "https://iconfont.alicdn.com/p/illus/preview_image/DupfXz8v7LiU/34a90dac-3b5f-48fa-8c3a-8334151b96d9.png" },
-  { name: "归集BNB", value: "0(0笔)", img: "https://iconfont.alicdn.com/p/illus/preview_image/DupfXz8v7LiU/34a90dac-3b5f-48fa-8c3a-8334151b96d9.png" },
-  { name: "充值金额", value: "0(0人)", img: "https://iconfont.alicdn.com/p/illus/preview_image/1p80dDcss13Y/0b3c370e-1e53-4203-a0ed-331b12f74876.png" },
-  { name: "提现金额", value: "0(0人)", img: "https://iconfont.alicdn.com/p/illus/preview_image/iL3OasGQR3yM/eb9afa6b-abaf-4c7b-994a-710d7b32adc9.png" },
-  { name: "首充人数", value: "0", img: "https://iconfont.alicdn.com/p/illus_3d/file/ZsWruISgVCKK/9fb07d50-4d27-4c9f-bd25-db023a9d2d51.png" },
-  { name: "签到人数", value: "0", img: "https://iconfont.alicdn.com/p/illus_3d/file/ZsWruISgVCKK/9fb07d50-4d27-4c9f-bd25-db023a9d2d51.png" },
-  { name: "完成量化次数", value: "0", img: "https://iconfont.alicdn.com/p/illus_3d/file/XpvF1zkqkapr/377d9db0-8c65-4700-a67f-2807b9facf71.png" },
-  { name: "量化总佣金", value: "0", img: "https://iconfont.alicdn.com/p/illus_3d/file/zU85lU7qn0P4/fd041d38-97f0-4527-a647-a74e115a69ea.png" },
+  { name: "注册", value: 666, img: "/public/images/report_a4.png" },
+  { name: "注册有做量化", value: 666, img: "/public/images/report_a4.png" },
+  { name: "归集TRC20-U", value: "0(0笔)", img: "/public/images/report_a3.png" },
+  { name: "归集TRX", value: "0(0笔)", img: "/public/images/report_a3.png" },
+  { name: "归集BEP20-U", value: "0(0笔)", img: "/public/images/report_a3.png" },
+  { name: "归集BNB", value: "0(0笔)", img: "/public/images/report_a3.png" },
+  { name: "充值金额", value: "0(0人)", img: "/public/images/report_a5.png" },
+  { name: "提现金额", value: "0(0人)", img: "/public/images/report_a5.png" },
+  { name: "首充人数", value: "0", img: "/public/images/report_a5.png" },
+  { name: "签到人数", value: "0", img: "/public/images/report_a5.png" },
+  { name: "完成量化次数", value: "0", img: "/public/images/report_a6.png" },
+  { name: "量化总佣金", value: "0", img: "/public/images/report_a2.png" },
 ]);
+
+const date = reactive({
+  timeZone: -(new Date().getTimezoneOffset() / 60),
+  time: "",
+});
+let requestanimation: number;
+function initDate() {
+  requestanimation = requestAnimationFrame(() => {
+    date.time = dayjs().format("MM-DD HH:mm:ss");
+    initDate();
+  });
+}
+initDate();
+const today = dayjs();
+const queryParams = reactive({
+  datetime: [today.format("YYYY-MM-DD"), today.add(1, "day").format("YYYY-MM-DD")],
+});
+const loading = ref<boolean[]>([]);
+
+/**总数据 */
+async function getsynthesizeReport() {
+  loading.value[0] = true;
+  try {
+    const res = await api.synthesizeReport();
+    list[0].value = String(res.total_members);
+    list[1].value = res.recharge_withdraw_diff;
+    list[2].value = res.recharge_summary.total_amount;
+    list[2].tooltip = Object.entries(res.recharge_summary)
+      .filter((i) => typeof i[1] === "object")
+      .map((i) => `${i[0]}:${(i[1] as _CoinSummary)?.amount}`)
+      .join("<br/>");
+
+    list[3].value = res.withdraw_summary.total_amount;
+    list[3].tooltip = Object.entries(res.withdraw_summary)
+      .filter((i) => typeof i[1] === "object")
+      .map((i) => `${i[0]}:${(i[1] as _CoinSummary)?.amount}`)
+      .join("<br/>");
+
+    list[4].value = res.collect_summary.total_amount;
+    list[4].tooltip = Object.entries(res.collect_summary)
+      .filter((i) => typeof i[1] === "object")
+      .map((i) => `${i[0]}:${(i[1] as _CoinSummary)?.amount}`)
+      .join("<br/>");
+  } finally {
+    loading.value[0] = false;
+  }
+}
+/**区间数据 */
+async function getsynthesizeReportInterval() {
+  loading.value[1] = true;
+  const res = await api.synthesizeReportInterval(queryParams);
+  list2[0].value = res.register_count;
+  list2[1].value = res.register_quant_count;
+  list2[2].value = `${res.collect_period_overview.trc20_u.amount}(${res.collect_period_overview.trc20_u.count}笔)`;
+  list2[3].value = `${res.collect_period_overview.trx.amount}(${res.collect_period_overview.trx.count}笔)`;
+  list2[4].value = `${res.collect_period_overview.bep20_u.amount}(${res.collect_period_overview.bep20_u.count}笔)`;
+  list2[5].value = `${res.collect_period_overview.bnb.amount}(${res.collect_period_overview.bnb.count}笔)`;
+
+  list2[6].value = `${res.recharge_total_amount}(${res.recharge_user_count}人)`;
+  list2[7].value = `${res.withdraw_total_amount}(${res.withdraw_user_count}人)`;
+  list2[8].value = res.first_recharge_user_count;
+  list2[9].value = res.signin_user_count;
+  list2[10].value = res.quant_complete_count;
+  list2[11].value = res.quant_total_commission;
+  loading.value[1] = false;
+}
+
+const realTimeData = ref<_SynthesizeReportRealtime>();
+/**实时数据 */
+async function getsynthesizeReportRealTime() {
+  realTimeData.value = await api.synthesizeReportRealTime();
+}
+
+//归集钱包
+const collectWallet = ref<WalletSummary[]>([]);
+/**获取归集钱包 */
+async function getCollectWallet() {
+  loading.value[2] = true;
+  try {
+    collectWallet.value = await api.synthesizeReportCollectWallet();
+  } finally {
+    loading.value[2] = false;
+  }
+}
+const paymentWallet = ref<WalletSummary[]>([]);
+/**获取支付钱包 */
+async function getPaymentWallet() {
+  loading.value[3] = true;
+  try {
+    paymentWallet.value = await api.synthesizeReportPayWallet();
+  } finally {
+    loading.value[3] = false;
+  }
+}
+
+//平台
+const energyPlatForm = ref<TrxPlatform>();
+/**获取能量平台 */
+async function getEnergyPlatform() {
+  loading.value[4] = true;
+  try {
+    energyPlatForm.value = await api.synthesizeReportEnergyPlatform();
+  } finally {
+    loading.value[4] = false;
+  }
+}
+const integral = ref<Intergal>();
+/**获取积分 */
+async function getIntegral() {
+  loading.value[5] = true;
+  try {
+    integral.value = await api.synthesizeReportIntegralPlatform();
+  } finally {
+    loading.value[5] = false;
+  }
+}
+
+getsynthesizeReport();
+getsynthesizeReportInterval();
+getsynthesizeReportRealTime();
+getCollectWallet();
+getPaymentWallet();
+getEnergyPlatform();
+getIntegral();
+onUnmounted(() => {
+  cancelAnimationFrame(requestanimation);
+});
 </script>
 
 <style lang="scss" scoped>
 .dataItem {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
+  grid-template-columns: 1fr 2fr;
   flex-basis: 220px;
+  align-content: center;
+  align-items: center;
+  width: 220px;
+  flex-grow: 1;
   > .el-image {
     grid-column: 1/2;
     grid-row: 1/3;
@@ -254,13 +360,18 @@ const list2 = reactive([
   }
   > span:first-of-type {
     font-weight: bold;
+    font-size: 20px;
+  }
+  > span:last-of-type {
+    font-size: 15px;
+    color: #666;
   }
 }
 .seach_row {
   width: 60%;
   display: flex;
   gap: 40px;
-  margin-top: 40px;
+  margin-top: 60px;
 }
 .dataCard {
   display: grid;

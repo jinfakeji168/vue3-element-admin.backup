@@ -35,6 +35,7 @@
           "
           v-model="formData"
           :keys="['content_original', 'content_translation']"
+          type="public"
         />
       </el-tab-pane>
     </el-tabs>

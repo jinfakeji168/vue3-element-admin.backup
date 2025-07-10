@@ -29,6 +29,13 @@ watch(
     if (!visible.value) return;
     title.value = "说明";
     formData.value = props.data.values;
+    console.log("🚀 ~ formData.value:", formData.value);
+    if (!Object.hasOwn(formData.value, "translation")) {
+      formData.value = {
+        original: "",
+        translation: [],
+      };
+    }
     console.log("🚀 ~ props.data:", formData.value);
   },
   {
@@ -45,7 +52,7 @@ async function submitHandler() {
   try {
     loading.value = true;
 
-    const data = { ...props.data, original: unref(formData).original, translation: unref(formData)!.translation?.filter((item: TranslationItem) => item.content) };
+    const data = { ...props.data };
 
     const res = await systemConfig.setConfig([data]);
   } finally {

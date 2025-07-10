@@ -56,10 +56,13 @@ export default class TableInstance<FormT> {
         obj[key] = dayjs(this.queryParams[key]).unix();
       }
     }
-    const temp = await this.api.getList({ ...this.pageInfo, ...this.queryParams, ...obj });
-    this.pageTotal.value = temp.total;
-    this.loading.value = false;
-    this.list.value = Object.hasOwn(temp, "list") ? temp.list : temp.data;
+    try {
+      const temp = await this.api.getList({ ...this.pageInfo, ...this.queryParams, ...obj });
+      this.pageTotal.value = temp.total;
+      this.list.value = Object.hasOwn(temp, "list") ? temp.list : temp.data;
+    } finally {
+      this.loading.value = false;
+    }
   }
   // 异步删除处理函数
   async deleteHandler(id?: number) {

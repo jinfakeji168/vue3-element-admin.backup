@@ -56,8 +56,8 @@ const currentEditIndex = ref(-2);
 const emits = defineEmits(["initBefore"]);
 watch(formData, (val) => {
   if (!val) return;
-  val[props.keys[1]] ??= [];
   val[props.keys[0]] ??= "";
+  val[props.keys[1]] ??= [];
   getLangOptions();
 });
 /**用来保证wangeditor在值准备好之后生成，否则会有bug */
@@ -67,13 +67,16 @@ async function getLangOptions() {
   loading.value = true;
   const langList = await store.getLangListAsync();
   //translation
+  const langListMarks = langList.map((i) => i.mark);
+  unref(formData)[props.keys[1]] = unref(formData)[props.keys[1]].filter((i: any) => langListMarks.includes(i.lang));
   for (let item of langList) {
-    const result = unref(formData)[props.keys[1]]?.findIndex((val: any) => val.lang == item.mark);
-    if (result !== undefined && result >= 0) {
-      unref(formData)[props.keys[1]][result] = {
+    const index = unref(formData)[props.keys[1]]?.findIndex((val: any) => val.lang == item.mark);
+    console.log("🚀 ~ getLangOptions ~ index:", index);
+    if (index !== undefined && index >= 0) {
+      unref(formData)[props.keys[1]][index] = {
         lang: item.mark || "",
         name: item.name || "",
-        content: unref(formData)[props.keys[1]]![result].content || "",
+        content: unref(formData)[props.keys[1]]![index].content || "",
       };
     } else {
       unref(formData)[props.keys[1]].push({

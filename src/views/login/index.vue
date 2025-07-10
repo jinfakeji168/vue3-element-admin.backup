@@ -13,13 +13,7 @@
       </div>
 
       <div class="flex-y-center">
-        <el-switch
-          v-model="isDark"
-          inline-prompt
-          active-icon="Moon"
-          inactive-icon="Sunny"
-          @change="toggleTheme"
-        />
+        <el-switch v-model="isDark" inline-prompt active-icon="Moon" inactive-icon="Sunny" @change="toggleTheme" />
         <lang-select class="ml-2 cursor-pointer" />
       </div>
     </div>
@@ -41,21 +35,9 @@
               </div>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item
-                    @click="setLoginCredentials('root', '123456')"
-                  >
-                    超级管理员：root/123456
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    @click="setLoginCredentials('root@example.com', 'password')"
-                  >
-                    系统管理员：admin/123456
-                  </el-dropdown-item>
-                  <el-dropdown-item
-                    @click="setLoginCredentials('test', '123456')"
-                  >
-                    测试小游客：test/123456
-                  </el-dropdown-item>
+                  <el-dropdown-item @click="setLoginCredentials('root', '123456')">超级管理员：root/123456</el-dropdown-item>
+                  <el-dropdown-item @click="setLoginCredentials('root@example.com', 'password')">系统管理员：admin/123456</el-dropdown-item>
+                  <el-dropdown-item @click="setLoginCredentials('test', '123456')">测试小游客：test/123456</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -67,23 +49,12 @@
               <el-icon class="mx-2">
                 <User />
               </el-icon>
-              <el-input
-                ref="username"
-                v-model="loginData.username"
-                :placeholder="$t('login.username')"
-                name="username"
-                size="large"
-                class="h-[48px]"
-              />
+              <el-input ref="username" v-model="loginData.username" :placeholder="$t('login.username')" name="username" size="large" class="h-[48px]" />
             </div>
           </el-form-item>
 
           <!-- 密码 -->
-          <el-tooltip
-            :visible="isCapslock"
-            :content="$t('login.capsLock')"
-            placement="right"
-          >
+          <el-tooltip :visible="isCapslock" :content="$t('login.capsLock')" placement="right">
             <el-form-item prop="password">
               <div class="input-wrapper">
                 <el-icon class="mx-2">
@@ -114,13 +85,7 @@
           </div>
 
           <!-- 登录按钮 -->
-          <el-button
-            :loading="loading"
-            type="primary"
-            size="large"
-            class="w-full"
-            @click.prevent="handleLoginSubmit"
-          >
+          <el-button :loading="loading" type="primary" size="large" class="w-full" @click.prevent="handleLoginSubmit">
             {{ $t("login.login") }}
           </el-button>
         </el-form>
@@ -155,9 +120,7 @@ const isCapslock = ref(false); // 是否大写锁定
 const captchaBase64 = ref(); // 验证码图片Base64字符串
 
 const logo = ref(new URL("../../assets/logo.png", import.meta.url).href);
-const loginImage = ref(
-  new URL("../../assets/images/login-image.svg", import.meta.url).href
-);
+const loginImage = ref(new URL("../../assets/images/login-image.svg", import.meta.url).href);
 
 const loginData = ref<LoginData>({
   username: "admin",
@@ -254,8 +217,7 @@ function parseRedirect(): {
 
 // 主题切换
 const toggleTheme = () => {
-  const newTheme =
-    settingsStore.theme === ThemeEnum.DARK ? ThemeEnum.LIGHT : ThemeEnum.DARK;
+  const newTheme = settingsStore.theme === ThemeEnum.DARK ? ThemeEnum.LIGHT : ThemeEnum.DARK;
   settingsStore.changeTheme(newTheme);
 };
 
@@ -286,8 +248,7 @@ onMounted(() => {
   width: 100%;
   height: 100%;
   overflow-y: auto;
-  background: url("@/assets/images/login-background-light.jpg") no-repeat center
-    right;
+  background: url("@/assets/images/login-background-light.jpg") no-repeat center right;
 
   .login-header {
     position: absolute;
@@ -428,8 +389,7 @@ onMounted(() => {
 
 html.dark {
   .login {
-    background: url("@/assets/images/login-background-dark.jpg") no-repeat
-      center right;
+    background: url("@/assets/images/login-background-dark.jpg") no-repeat center right;
 
     .login-content {
       background: transparent;

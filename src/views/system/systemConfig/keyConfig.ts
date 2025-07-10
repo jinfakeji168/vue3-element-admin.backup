@@ -52,9 +52,11 @@ export const keyMap: Record<TabNames, string[]> = {
     homeConfig: [
         "index_is_login",
         "index_force_notice",
+        "index_notice_content",
         "is_show_fake_data",
         "index_show_market_data",
         "index_video_is_show",
+        "index_video_url",
         "home_top_tips_name",
         "home_top_tips_url",
         "white_paper_url",

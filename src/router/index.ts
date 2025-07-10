@@ -31,7 +31,7 @@ export const constantRoutes: RouteRecordRaw[] = [
     path: "/",
     name: "/",
     component: Layout,
-    redirect: "/dashboard",
+    redirect: "/report/synthesizeReport",
     children: [
       {
         path: "dashboard",

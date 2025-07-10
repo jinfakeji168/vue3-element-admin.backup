@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="visible" title="图片列表">
-    <el-card shadow="never">
+    <el-card shadow="never" v-loading="loading">
       <template #header>
         <el-upload ref="upload" class="upload-demo" :on-change="upLoadFileHandler" :auto-upload="false" :limit="1" :show-file-list="false">
           <el-button>
@@ -41,10 +41,15 @@ watch(visible, (val) => {
   }
 });
 const dataList = ref([]);
-
+const loading = ref(false);
 async function getList() {
-  const value = await api.getList("images");
-  dataList.value = value.data;
+  loading.value = true;
+  try {
+    const value = await api.getList("images");
+    dataList.value = value.data;
+  } finally {
+    loading.value = false;
+  }
 }
 
 const emits = defineEmits(["choose"]);
@@ -62,7 +67,6 @@ async function upLoadFileHandler(data: any) {
   const result = await api.upload(res);
   getList();
 }
-getList();
 </script>
 
 <style></style>

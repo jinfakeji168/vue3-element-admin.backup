@@ -5,16 +5,16 @@
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
-      <el-button type="primary" @click="control_win_Handler">指定赢</el-button>
-      <el-button type="danger" @click="control_lose_Handler">指定输</el-button>
+      <el-button type="primary" @click="control_win_Handler()">指定赢</el-button>
+      <el-button type="danger" @click="control_lose_Handler()">指定输</el-button>
 
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" min-width="80" />
-        <el-table-column prop="uid" label="用户信息" min-width="120">
+        <el-table-column prop="uid" label="uid/账号" min-width="120">
           <template #default="{ row }">
-            <div>ID: {{ row.uid }}</div>
-            <div v-if="row.has_member">{{ row.has_member.account }}</div>
+            <span>{{ row.uid }}/</span>
+            <span>{{ row?.member?.account }}</span>
           </template>
         </el-table-column>
         <el-table-column prop="amount" label="投资金额(U)" min-width="100" />
@@ -27,7 +27,11 @@
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="tran_pair" label="交易对" min-width="100" />
+        <el-table-column prop="tran_pair" label="交易对" min-width="100">
+          <template #default="{ row }">
+            {{ store.tradeList.find((item) => item.key == row.tran_pair)?.val }}
+          </template>
+        </el-table-column>
         <el-table-column label="建仓/结算" min-width="200">
           <template #default="{ row }">
             <div>建仓: {{ row.jiancang_index }}</div>
@@ -88,6 +92,9 @@ import api, { type Form, Query } from "@/api/bill/contractOrder";
 import { searchMember } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
 import { ElMessage } from "element-plus";
+import { useStore } from "@/store/modules/common";
+const store = useStore();
+
 //这里没做完，暂且搁置
 const memberList = ref<any>([]);
 const loading = ref(false);
