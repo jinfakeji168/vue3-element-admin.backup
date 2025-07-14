@@ -41,7 +41,7 @@ export interface Form {
   withdraw_fee_ratio?: number;
   withdraw_type?: 1 | 2;
   withdraw_config?: string;
-  exchange_rate?: string;
+  exchange_rate?: number;
   exchange_rate_update_time?: string;
   merchant_num?: string;
   merchant_key?: string;

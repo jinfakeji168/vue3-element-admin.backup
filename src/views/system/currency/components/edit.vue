@@ -47,7 +47,7 @@
         <el-input v-model="formData.withdraw_config" />
       </el-form-item>
       <el-form-item label="汇率" prop="exchange_rate">
-        <el-input v-model="formData.exchange_rate" />
+        <el-input-number v-model="formData.exchange_rate" :precision="2" />
       </el-form-item>
       <el-form-item label="商户号" prop="merchant_num">
         <el-input v-model="formData.merchant_num" />

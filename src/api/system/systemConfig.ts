@@ -30,6 +30,7 @@ export default {
     })
   },
   withdrawAutoTrigger: init<{ type: 1 | 2 | 3 | 4 | 5 | 6 }, WithdrawAutoTriggerForm>('/admin/system/autoWithdrawalTriggerSetting'),
+  //团队充值奖励区间
   teamRechargeAward: init<any, TeamRechargeAward>('/admin/system/teamRechargePaymentRange'),
   /**获取用户注册自增id */
   getAutoIncrementId() {
@@ -52,7 +53,9 @@ export default {
       url: '/admin/global/getAreaCode',
       method: 'get'
     })
-  }
+  },
+  //首充奖励区间
+  rechargeAward: init<any, RechargeAward>('/admin/system/rechargePaymentRange'),
 };
 
 
@@ -118,3 +121,21 @@ export interface TeamRechargeAward {
   updated_at: string;
 }
 
+
+/** 首充奖励区间类型 */
+export interface RechargeAward {
+  /** ID */
+  id?: number;
+  /** 最小充值包含 */
+  min_recharge: string;
+  /** 最大充值不包含 */
+  max_recharge: string;
+  /** 首充送款百分比 */
+  first_charge_ratio: number;
+  /** 首充送款封顶 */
+  first_charge_cap: string;
+  /** 添加时间 */
+  created_at?: string;
+  /** 更新时间 */
+  updated_at?: string;
+}

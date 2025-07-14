@@ -52,7 +52,7 @@ export const keyMap: Record<TabNames, string[]> = {
     homeConfig: [
         "index_is_login",
         "index_force_notice",
-        "index_notice_content",
+        // "index_notice_content",
         "is_show_fake_data",
         "index_show_market_data",
         "index_video_is_show",
@@ -130,7 +130,10 @@ export const keyMap: Record<TabNames, string[]> = {
         "again_charge_rebate_min",
         "is_open_team_again_charge_rebate",
         "give_team_brokerage_account",
-        "give_team_type"
+        "give_team_type",
+        "team_recharge_spread_level",
+        "give_team_brokerage_limit",
+        "give_team_brokerage_num"
     ],
     quantitationConfig: [
         "task_show_income_type",
