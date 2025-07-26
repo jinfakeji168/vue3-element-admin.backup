@@ -14,7 +14,7 @@
         <el-input-number v-model="formData.max_withdraw" :min="0" />
       </el-form-item>
       <el-form-item label="提现手续费(%)" prop="withdraw_fee_ratio">
-        <el-input v-model="formData.withdraw_fee_ratio" type="text" :formatter="parserHandler" :parser="parserHandler" />
+        <el-input-number v-model="formData.withdraw_fee_ratio" :precision="2" :min="0" :step="0.1" />
       </el-form-item>
       <el-form-item label="最大手续费(当前币种单位)" prop="max_withdraw_fee">
         <el-input-number v-model="formData.max_withdraw_fee" :min="0" />

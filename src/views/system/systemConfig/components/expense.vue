@@ -45,7 +45,15 @@
         <el-form-item label="自动出款安全值">
           <el-input-number v-model="getI('auto_payment_safety_value').values" :min="0" />
         </el-form-item>
-        <el-form-item label="最小提现配置">
+        <el-form-item>
+          <template #label>
+            <el-tooltip content="选择全局由充提币种菜单配置控制，选择局部由vip配置菜单里控制" placement="top">
+              <div class="flex-center">
+                <span>最小提现配置</span>
+                <el-icon class="el-icon--right"><question-filled /></el-icon>
+              </div>
+            </el-tooltip>
+          </template>
           <el-radio-group v-model="getI('min_extract_config').values">
             <el-radio :label="1">全局</el-radio>
             <el-radio :label="2">局部</el-radio>

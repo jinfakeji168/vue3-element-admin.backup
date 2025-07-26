@@ -8,6 +8,8 @@ export default {
 };
 
 export interface Query extends PageQuery {
+  /**uid */
+  uid?: number
   /** 订单号 */
   order_sn?: string;
   /** 发送地址 */

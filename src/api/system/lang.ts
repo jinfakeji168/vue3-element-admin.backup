@@ -41,7 +41,7 @@ export interface Form {
   mark?: string;
   status?: StatusEnum;
   sort?: number;
-  // display_name?: string;
+  display_name?: string;
 }
 
 /**全局content组件vmodel参数 */

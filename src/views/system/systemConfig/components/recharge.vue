@@ -1,5 +1,12 @@
 <template>
   <el-form label-width="240px">
+    <el-form-item label="允许充值账户">
+      <el-checkbox-group v-model="getI('account_type_options').values" :min="1">
+        <el-checkbox :label="1">量化账户</el-checkbox>
+        <el-checkbox :label="4">智能账户</el-checkbox>
+        <el-checkbox :label="5">秒合约账户</el-checkbox>
+      </el-checkbox-group>
+    </el-form-item>
     <el-form-item label="充值返利类型">
       <el-radio-group v-model="getI('vip_rebate_type').values">
         <el-radio :label="1">仅限充值在量化账户才可三级返利</el-radio>
@@ -174,7 +181,7 @@ const visible = ref([false, false]);
 
 const levelMap = ref<Awaited<ReturnType<typeof api.getOptions>>>([]);
 async function getLevelMap() {
-  levelMap.value = await api.getOptions();
+  levelMap.value = await store.getTeamLevelListAsync();
 }
 getLevelMap();
 </script>

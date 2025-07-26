@@ -287,7 +287,6 @@ import type { FormInstance } from "element-plus";
 import TableInstance from "@/utils/tableInstance";
 import api, { Member, type MemberSubordinateListData } from "@/api/members/memberList";
 import batchOperation from "./batchOperation.vue";
-import { StatusEnum } from "@/enums/MenuTypeEnum";
 
 const visible = defineModel<boolean>();
 const tabIndex = ref(0);
@@ -303,7 +302,6 @@ const emit = defineEmits<{
 }>();
 
 const formRef = ref<FormInstance>();
-const loading = reactive([false, false]);
 
 // 监听会员ID变化
 watch(visible, (val) => {
@@ -320,20 +318,7 @@ function handleClosed() {
   formRef.value?.clearValidate();
   visible.value = false;
 }
-function statusChangeHandler(row: Member, type: keyof Pick<Member, "status" | "withdrawal_status" | "is_quant" | "is_upgrade_withdrawal" | "is_enabled_invite_code">) {
-  const apiMap = {
-    status: api.changeStatus,
-    withdrawal_status: api.changeWithdrawalStatus,
-    is_quant: api.changeQuantStatus,
-    is_upgrade_withdrawal: api.changeUpgradeWithdrawalStatus,
-    is_enabled_invite_code: api.changeInvitationStatus,
-  };
 
-  apiMap[type]({
-    id: row.id,
-    state: row[type],
-  });
-}
 const tableRef = ref();
 //获取下级
 async function getLowerLevelHandler(data: { id: number; level: number }) {

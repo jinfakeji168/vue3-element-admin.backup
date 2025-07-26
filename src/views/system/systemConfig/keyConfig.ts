@@ -48,6 +48,7 @@ export const keyMap: Record<TabNames, string[]> = {
     ],
     package: [
         'package_app_download_show_switch',
+        'app_download_url'
     ],
     homeConfig: [
         "index_is_login",
@@ -118,6 +119,7 @@ export const keyMap: Record<TabNames, string[]> = {
         "pwd_email_code_num"
     ],
     recharge: [
+        "account_type_options",
         "vip_rebate_type",
         "recharge_rebate_account",
         "is_open_first_charge_rebate",

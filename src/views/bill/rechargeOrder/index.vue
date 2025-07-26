@@ -45,11 +45,32 @@ import TableInstance from "@/utils/tableInstance";
 
 const memberList = ref<any>([]);
 const loading = ref(false);
+const props = defineProps<{ uid: number }>();
 
 /** 查询配置 */
 const config: QueryConfig = {
   labelWidth: "100px",
   formItem: [
+    {
+      type: "select",
+      modelKey: "uid",
+      label: "用户",
+      options: memberList,
+      props: {
+        placeholder: "请输入用户进行查询",
+        style: { width: "200px" },
+        filterable: true,
+        remote: true,
+        clearable: true,
+        loading: loading,
+        disabled: props.uid,
+        remoteMethod: async (res: string) => {
+          loading.value = true;
+          memberList.value = await searchMember({ account: res });
+          loading.value = false;
+        },
+      },
+    },
     {
       type: "input",
       modelKey: "order_sn",
@@ -143,6 +164,7 @@ const queryFormRef = ref(ElForm);
 
 /** 查询参数 */
 const queryParams = reactive<Query>({
+  uid: undefined,
   order_sn: undefined,
   tx_id: undefined,
   is_first_charge: undefined,
@@ -151,7 +173,15 @@ const queryParams = reactive<Query>({
   datetime: undefined,
   tx_time: undefined,
 });
-
+watch(
+  () => props.uid,
+  (val) => {
+    if (val) queryParams.uid = val;
+  },
+  {
+    immediate: true,
+  }
+);
 /** 表格实例 */
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 

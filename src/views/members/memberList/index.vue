@@ -322,12 +322,12 @@
           <template #default="{ row }">
             <div class="grid grid-cols-2 gap-2">
               <el-button type="primary" size="small" @click="table.editHandler(row, 3)">详情</el-button>
-              <el-button type="success" size="small">补单</el-button>
-              <el-button type="warning" size="small">查钱</el-button>
+              <el-button type="success" size="small" @click="replenishmentHandler(row)">补单</el-button>
+              <el-button type="warning" size="small" :loading="loading[0]" @click="checkMoney(row)">查钱</el-button>
               <el-button type="info" size="small" @click="table.editHandler(row, 2)">改钱</el-button>
-              <el-button type="success" size="small">下级充值</el-button>
-              <el-button type="danger" size="small">下线</el-button>
-              <el-button type="warning" size="small">模拟登录</el-button>
+              <el-button type="success" size="small" @click="table.editHandler(row, 5)">下级充值</el-button>
+              <el-button type="danger" size="small" @click="forceOfflineHandler(row)">下线</el-button>
+              <el-button type="warning" size="small" :loading="loading[1]" @click="simulateLogin(row)">模拟登录</el-button>
             </div>
           </template>
         </el-table-column>
@@ -341,6 +341,7 @@
     <changeBalance v-model="table.visible.value[2]" :member-id="table.currentData.value?.id" @finish="table.queryHandler()" />
     <detail v-model="table.visible.value[3]" :member-id="table.currentData.value?.id" @finish="table.queryHandler()" />
     <lowerLevel v-model="table.visible.value[4]" :member-id="table.currentData.value?.id" @finish="table.queryHandler()" />
+    <lowerLevelRecharge v-model="table.visible.value[5]" :member-id="table.currentData.value?.id" @finish="table.queryHandler()" />
   </div>
 </template>
 
@@ -354,6 +355,7 @@ import batchOperation from "./components/batchOperation.vue";
 import changeBalance from "./components/changeBalance.vue";
 import detail from "./components/detail.vue";
 import lowerLevel from "./components/lowerLevel.vue";
+import lowerLevelRecharge from "./components/lowerLevelRecharge.vue";
 import commonApi from "@/api/common";
 import { useStore } from "@/store/modules/common";
 const commonStore = useStore();
@@ -361,24 +363,9 @@ const commonStore = useStore();
 const queryFormRef = ref<FormInstance>();
 
 /** 会员列表加载状态 */
-const loading = ref(false);
+const loading = ref([false, false]);
 /** 会员选项列表 */
 const memberList = ref<any>([]);
-
-/** 搜索会员处理函数 */
-// async function searchMemberHandler(query: string) {
-//   loading.value = true;
-//   if (query !== "") {
-//     const res = await commonApi.getMemberSelect(query);
-//     memberList.value = res.map((val) => ({
-//       value: val.id,
-//       label: val.account,
-//     }));
-//   } else {
-//     memberList.value = [];
-//   }
-//   loading.value = false;
-// }
 
 /** 查询配置 */
 const config: QueryConfig = {
@@ -636,6 +623,50 @@ function getRegisterType(type: number) {
   else if (type == 4) return "telegram";
   else if (type == 5) return "auto telegram";
   else return type;
+}
+
+async function replenishmentHandler(row: Member) {
+  await ElMessageBox.confirm("确认补单？", "提示", {
+    type: "warning",
+    beforeClose: async (action, instance, done) => {
+      if (action === "confirm") {
+        instance.confirmButtonLoading = true;
+        await api.addOrder(row.id);
+        ElMessage.success("操作成功");
+      }
+      done();
+    },
+  });
+}
+async function checkMoney(row: Member) {
+  loading.value[0] = true;
+  const res = await api.checkMoney(row.id);
+  ElMessageBox.confirm(res.msg, {
+    showCancelButton: false,
+  });
+  loading.value[0] = false;
+}
+/**模拟登录 */
+async function simulateLogin(row: Member) {
+  loading.value[1] = true;
+  const res = await api.simulateLogin(row.id);
+  loading.value[1] = false;
+  if (res) {
+    window.open(res, "_blank");
+  }
+}
+
+async function forceOfflineHandler(row: Member) {
+  await ElMessageBox.confirm("确认强制下线？", "提示", {
+    type: "warning",
+    beforeClose: async (action, instance, done) => {
+      if (action === "confirm") {
+        instance.confirmButtonLoading = true;
+        await api.forceOffline(row.id);
+      }
+      done();
+    },
+  });
 }
 </script>
 

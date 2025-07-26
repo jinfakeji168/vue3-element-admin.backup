@@ -140,7 +140,15 @@
         </el-checkbox-group>
       </el-form-item>
       <el-form-item label="可提现时间" prop="cash_withdrawal_time">
-        <el-time-picker is-range v-model="formData.cash_withdrawal_time" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" format="HH:mm:ss" />
+        <el-time-picker
+          is-range
+          v-model="formData.cash_withdrawal_time"
+          range-separator="至"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+          format="HH:mm:ss"
+          value-format="HH:mm:ss"
+        />
       </el-form-item>
     </el-form>
 

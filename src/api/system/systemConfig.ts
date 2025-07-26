@@ -56,8 +56,54 @@ export default {
   },
   //首充奖励区间
   rechargeAward: init<any, RechargeAward>('/admin/system/rechargePaymentRange'),
+  /**获取google验证状态*/
+  getGoogleAuthStatus() {
+    return request<any, GoogleAuthStatus>({
+      url: '/admin/auth/google2fa/status',
+      method: 'get'
+    })
+  },
+  /*获取google验证信息*/
+  getGoogleAuth() {
+    return request<any, GoogleAuthInfo>({
+      url: '/admin/auth/google2fa/enable-info',
+      method: "get"
+    })
+  },
+  /**确认启用google验证 */
+  confirmGoogleAuth(code: string) {
+    return request({
+      url: '/admin/auth/google2fa/enable',
+      method: 'post',
+      data: { code }
+    })
+  },
+  /**验证google */
+  verifyGoogleAuth(code: string, admin_id: string) {
+    return request({
+      url: '/admin/auth/google2fa/verify',
+      method: 'post',
+      data: { code, admin_id }
+    })
+  }
 };
 
+/** 是否启用类型 */
+export interface GoogleAuthStatus {
+  /** 是否启用 */
+  enabled: boolean;
+  /** 启用时间 */
+  enabled_at?: string;
+}
+/** google验证信息类型 */
+export interface GoogleAuthInfo {
+  /** 密钥 */
+  secret: string;
+  /** 二维码URL */
+  qr_code_url: string;
+  /** 手动输入密钥 */
+  manual_entry_key: string;
+}
 
 
 /** 类型 */
@@ -131,7 +177,7 @@ export interface RechargeAward {
   /** 最大充值不包含 */
   max_recharge: string;
   /** 首充送款百分比 */
-  first_charge_ratio: number;
+  first_charge_ratio: string;
   /** 首充送款封顶 */
   first_charge_cap: string;
   /** 添加时间 */

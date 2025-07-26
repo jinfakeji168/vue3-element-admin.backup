@@ -33,6 +33,7 @@
 import systemConfig, { type Form } from "@/api/system/systemConfig";
 import { keyMap, type TabNames } from "./keyConfig";
 import { hasAuth } from "@/plugins/permission";
+import { useTemplateRef } from "vue";
 
 const parts = import.meta.glob("./components/*.vue");
 const componentMap = ref<Record<string, any>>({});
@@ -66,15 +67,25 @@ function getCurrentTabChangeData() {
   hasChange = hasChange?.filter((item, index) => {
     if (item.name == "register_account_status") {
       return item.values.join(",") != originConfigData.find((v) => v.name == item.name)?.values.join(",");
+    } else if (item.name == "account_type_options") {
+      return item.values.join(",") != originConfigData.find((v) => v.name == item.name)?.values.join(",");
     }
     return item.values != originConfigData.find((v) => v.name == item.name)?.values;
   });
   return hasChange;
 }
+
+const configRef = useTemplateRef<InstanceType<(typeof componentMap.value)["securityConfig"]>>("configRef");
 const loading = ref(false);
 async function saveHandler() {
   const hasChange = getCurrentTabChangeData();
+  console.log("🚀 ~ saveHandler ~ hasChange:", hasChange);
   if (hasChange?.length) {
+    //判断是否是需要谷歌验证的字段
+    const needGoogleverify = hasChange.some((i) => ["update_money_google_secret", "edit_address_is_google", "extract_check_is_google_code"].includes(i.name || ""));
+    if (needGoogleverify) {
+      await configRef.value.saveGoogleVerifyHandler();
+    }
     try {
       loading.value = true;
       const res = await systemConfig.setConfig(hasChange);

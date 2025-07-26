@@ -1,6 +1,6 @@
 import axios, { type InternalAxiosRequestConfig, type AxiosResponse } from "axios";
 import qs from "qs";
-import { useUserStoreHook } from "@/store/modules/user";
+
 import { ResultEnum, ResultMsg } from "@/enums/ResultEnum";
 import { getToken } from "@/utils/auth";
 import router from "@/router";
@@ -14,13 +14,15 @@ const service = axios.create({
     return qs.stringify(params);
   },
 });
-
+let utc: any = -(new Date().getTimezoneOffset() / 60) // 获取当前时区
+utc = utc < 0 ? String(utc) : String('+' + utc)
 // 请求拦截器
 service.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const accessToken = getToken();
     if (accessToken || config.url?.match(/(?<=\/)login/)) {
       config.headers.Authorization = accessToken;
+      config.headers["X-UTC"] = utc
       return config;
     } else {
       return Promise.reject("未登录");

@@ -194,25 +194,25 @@ import { dayjs } from "element-plus";
 import qrcode from "vue-qrcode";
 
 const list = reactive([
-  { name: "总会员数", value: "--", img: "/public/images/report_a1.png" },
-  { name: "提充差", value: "--", img: "/public/images/report_a2.png" },
-  { name: "总充值", value: "--", img: "/public/images/report_a2.png", tooltip: "" },
-  { name: "总提现", value: "--", img: "/public/images/report_a2.png", tooltip: "" },
-  { name: "总归集", value: "--", img: "/public/images/report_a3.png", tooltip: "" },
+  { name: "总会员数", value: "--", img: "/images/report_a1.png" },
+  { name: "提充差", value: "--", img: "/images/report_a2.png" },
+  { name: "总充值", value: "--", img: "/images/report_a2.png", tooltip: "" },
+  { name: "总提现", value: "--", img: "/images/report_a2.png", tooltip: "" },
+  { name: "总归集", value: "--", img: "/images/report_a3.png", tooltip: "" },
 ]);
 const list2 = reactive([
-  { name: "注册", value: 666, img: "/public/images/report_a4.png" },
-  { name: "注册有做量化", value: 666, img: "/public/images/report_a4.png" },
-  { name: "归集TRC20-U", value: "0(0笔)", img: "/public/images/report_a3.png" },
-  { name: "归集TRX", value: "0(0笔)", img: "/public/images/report_a3.png" },
-  { name: "归集BEP20-U", value: "0(0笔)", img: "/public/images/report_a3.png" },
-  { name: "归集BNB", value: "0(0笔)", img: "/public/images/report_a3.png" },
-  { name: "充值金额", value: "0(0人)", img: "/public/images/report_a5.png" },
-  { name: "提现金额", value: "0(0人)", img: "/public/images/report_a5.png" },
-  { name: "首充人数", value: "0", img: "/public/images/report_a5.png" },
-  { name: "签到人数", value: "0", img: "/public/images/report_a5.png" },
-  { name: "完成量化次数", value: "0", img: "/public/images/report_a6.png" },
-  { name: "量化总佣金", value: "0", img: "/public/images/report_a2.png" },
+  { name: "注册", value: 666, img: "/images/report_a4.png" },
+  { name: "注册有做量化", value: 666, img: "/images/report_a4.png" },
+  { name: "归集TRC20-U", value: "0(0笔)", img: "/images/report_a3.png" },
+  { name: "归集TRX", value: "0(0笔)", img: "/images/report_a3.png" },
+  { name: "归集BEP20-U", value: "0(0笔)", img: "/images/report_a3.png" },
+  { name: "归集BNB", value: "0(0笔)", img: "/images/report_a3.png" },
+  { name: "充值金额", value: "0(0人)", img: "/images/report_a5.png" },
+  { name: "提现金额", value: "0(0人)", img: "/images/report_a5.png" },
+  { name: "首充人数", value: "0", img: "/images/report_a5.png" },
+  { name: "签到人数", value: "0", img: "/images/report_a5.png" },
+  { name: "完成量化次数", value: "0", img: "/images/report_a6.png" },
+  { name: "量化总佣金", value: "0", img: "/images/report_a2.png" },
 ]);
 
 const date = reactive({

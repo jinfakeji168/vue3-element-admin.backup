@@ -51,14 +51,14 @@
         <el-form-item label="TRC20充值钱包" prop="trc20_recharge_wallet">
           <div class="flex flex-row gap2 w-full">
             <el-input v-model="memberForm.trc20_recharge_wallet" placeholder="请输入TRC20充值钱包地址" />
-            <el-button type="primary">更换充值钱包</el-button>
+            <el-button type="primary" @click="changeWallet(1)">更换充值钱包</el-button>
           </div>
         </el-form-item>
 
         <el-form-item label="BEP20充值钱包" prop="bep20_recharge_wallet">
           <div class="flex flex-row gap2 w-full">
             <el-input v-model="memberForm.bep20_recharge_wallet" placeholder="请输入BEP20充值钱包地址" />
-            <el-button type="primary">更换充值钱包</el-button>
+            <el-button type="primary" @click="changeWallet(1)">更换充值钱包</el-button>
           </div>
         </el-form-item>
       </el-card>
@@ -286,6 +286,15 @@ async function getInvestList() {
 getInvestList();
 async function submitForm() {
   return api.saveMemberDetail(memberForm.value);
+}
+
+async function changeWallet(type: number) {
+  const res = await ElMessageBox.confirm("是否确认更换充值账户？原有充值账户将会被覆盖，无法恢复，请确保地址余额已归集后操作！", "警告", {});
+
+  api.changeWallet({
+    id: memberForm.value.id,
+    type: type == 1 ? "trc20" : "bep20",
+  });
 }
 
 defineExpose({

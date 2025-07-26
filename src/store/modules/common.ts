@@ -1,5 +1,6 @@
 import langApi, { Form } from "@/api/system/lang";
 import api from "@/api/common";
+import systemApi, { type TeamRechargeAward } from "@/api/system/systemConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 
 export const useStore = defineStore("common", () => {
@@ -56,17 +57,30 @@ export const useStore = defineStore("common", () => {
     if (!_timeZoneList.value) getTimeZoneListAsync();
     return unref(_timeZoneList) || [];
   })
+
+  /**团队下级 层级*/
+  const _teamLevelList = ref<{ key: number; val: string }[]>();
+  async function getTeamLevelListAsync() {
+    if (!_teamLevelList.value) _teamLevelList.value = await systemApi.getOptions();
+    return Promise.resolve(_teamLevelList.value);
+  }
+  const teamLevelList = computed<{ key: number; val: string }[]>(() => {
+    if (!_teamLevelList.value) getTeamLevelListAsync();
+    return unref(_teamLevelList) || [];
+  })
   return {
     getLangListAsync,
     getVipListAsync,
     getGroupListAsync,
     getTradeListAsync,
     getTimeZoneListAsync,
+    getTeamLevelListAsync,
     vipList,
     langList,
     groupList,
     tradeList,
-    timeZoneList
+    timeZoneList,
+    teamLevelList
   };
 });
 

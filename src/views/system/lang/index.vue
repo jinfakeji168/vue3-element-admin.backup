@@ -22,7 +22,7 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="id" label="ID" min-width="100" />
-        <!-- <el-table-column prop="display_name" label="前端显示名称" min-width="200" /> -->
+        <el-table-column prop="display_name" label="前端显示名称" min-width="200" />
         <el-table-column prop="name" label="名称" min-width="200" />
         <el-table-column prop="mark" label="标识" min-width="200" />
         <el-table-column prop="status" label="状态" width="100">

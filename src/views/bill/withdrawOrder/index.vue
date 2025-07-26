@@ -53,6 +53,7 @@ import TableInstance from "@/utils/tableInstance";
 
 const memberList = ref<any>([]);
 const loading = ref(false);
+const props = defineProps<{ uid: number }>();
 
 /** 查询配置 */
 const config: QueryConfig = {
@@ -70,6 +71,7 @@ const config: QueryConfig = {
         remote: true,
         clearable: true,
         loading: loading,
+        disabled: props.uid,
         remoteMethod: async (res: string) => {
           loading.value = true;
           memberList.value = await searchMember({ account: res });
@@ -167,6 +169,15 @@ const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 onMounted(() => {
   table.queryHandler();
 });
+watch(
+  () => props.uid,
+  (val) => {
+    if (val) queryParams.uid = val;
+  },
+  {
+    immediate: true,
+  }
+);
 
 // 订单状态处理函数
 const getStatusType = (status: number) => {

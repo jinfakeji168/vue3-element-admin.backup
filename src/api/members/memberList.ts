@@ -242,6 +242,54 @@ export default {
       method: "get",
       params,
     })
+  },
+  /**修改用户钱包地址 */
+  changeWallet(data: ChangeWalletForm) {
+    return request({
+      url: `${BasePath}/updateWallet`,
+      method: "put",
+      data,
+    });
+  },
+  /**补单 */
+  addOrder(uid: number) {
+    return request({
+      url: `${BasePath}/manualOrderPatch`,
+      method: "get",
+      params: { uid },
+    })
+  },
+  /**查钱 */
+  checkMoney(uid: number) {
+    return request<any, any>({
+      url: `${BasePath}/fixedBalanceQuery`,
+      method: "get",
+      params: { uid },
+    })
+  },
+  /**模拟登录 */
+  simulateLogin(uid: number) {
+    return request<SimulateLoginResult>({
+      url: `${BasePath}/simulateLoginByUid`,
+      method: "get",
+      params: { uid }
+    })
+  },
+  /**强制下线 */
+  forceOffline(uid: number) {
+    return request({
+      url: `${BasePath}/forceLogout`,
+      method: 'post',
+      data: { uid }
+    })
+  },
+  /**下级充值统计 */
+  getSubordinateRecharge(params: { uid: number; datetime?: [string, string] }) {
+    return request<SubordinateRechargeStatistics>({
+      url: `${BasePath}/subordinateRechargeStats`,
+      method: "get",
+      params,
+    })
   }
 };
 /* 查询表单 */
@@ -768,4 +816,40 @@ export interface MemberSubordinateListData {
   grandpa_id: number;
   /** 三级上级ID */
   great_grandpa_id: number;
+}
+
+
+/**修改用户钱包地址参数 */
+export interface ChangeWalletForm {
+  /** 用户ID */
+  id: number;
+  /** 链类型 trc20 或 bep20 */
+  type: "trc20" | "bep20";
+  /** 谷歌验证码（当系统配置edit_address_is_google=1时必填） */
+  google2fa_code?: string;
+}
+
+
+/**模拟登录返回 */
+/**模拟登录返回类型 */
+export interface SimulateLoginResult {
+  /** 前端跳转链接 */
+  url: string;
+  /** 提示信息 */
+  msg: string;
+}
+
+
+/**下级充值统计 */
+export interface SubordinateRechargeStatistics {
+  /**级别 */
+  level: number;
+  /**充值金额 */
+  recharge_amount: string;
+  /**充值笔数 */
+  recharge_count: number;
+  /**总人数 */
+  total_members: number;
+  /**有效人数 */
+  valid_members: number;
 }

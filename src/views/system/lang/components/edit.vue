@@ -1,8 +1,11 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="600px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
+      <el-form-item label="前端显示名称" prop="display_name">
+        <el-input v-model="formData.display_name" placeholder="请输入名称" />
+      </el-form-item>
       <el-form-item label="语言名称" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入名称" disabled />
+        <el-input v-model="formData.name" placeholder="请输入名称" />
       </el-form-item>
       <el-form-item label="语言编码" prop="mark">
         <el-input v-model="formData.mark" placeholder="请输入编码" />
@@ -53,6 +56,7 @@ watch(
 const formData = ref<Form>({});
 
 const rules = {
+  display_name: [{ required: true, message: "请输入前端显示名称", trigger: "blur" }],
   name: [{ required: true, message: "请输入语言名称", trigger: "blur" }],
   mark: [{ required: true, message: "请输入语言编码", trigger: "blur" }],
   status: [{ required: true, message: "请选择状态", trigger: "blur" }],

@@ -133,7 +133,6 @@ function getI(key: string): Form {
 }
 const activeNames = ["1", "2", "3", "4"];
 const groupLevelOptions = [
-  { label: "全部", value: 0 },
   { label: "二级", value: 2 },
   { label: "三级", value: 3 },
   { label: "四级", value: 4 },

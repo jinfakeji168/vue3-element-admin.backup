@@ -81,6 +81,8 @@
 import api, { type TeamRechargeAward } from "@/api/system/systemConfig";
 import TableInstance from "@/utils/tableInstance";
 import { FormInstance } from "element-plus";
+import { useStore } from "@/store/modules/common";
+const store = useStore();
 const props = withDefaults(defineProps<{}>(), {});
 const visible = defineModel<boolean>();
 const formRef = ref<FormInstance>();
@@ -92,6 +94,7 @@ const title = ref("团队充值奖励区间配置");
 watch(visible, (val) => {
   if (val) {
     table.queryHandler();
+    getLevelMap();
   }
 });
 
@@ -100,9 +103,8 @@ const dialogTitle = ref("");
 const levelMap = ref<{ key: number; val: string }[]>([]);
 
 async function getLevelMap() {
-  levelMap.value = await api.getOptions();
+  levelMap.value = await store.getTeamLevelListAsync();
 }
-getLevelMap();
 
 /**表单数据 */
 const formData = reactive<TeamRechargeAward>({
