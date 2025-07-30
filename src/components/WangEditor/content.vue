@@ -1,7 +1,7 @@
 <template>
   <div ref="box" style="overflow-y: scroll" v-loading="loading">
     <div class="main_container">
-      <el-card class="container" v-if="mounted">
+      <el-card class="container" v-if="mounted" @click="currentEditIndex = -1">
         <template #header>
           <div class="flex_row">
             <span :class="{ isnull: !notNull }">
@@ -9,7 +9,7 @@
               原文
               {{ notNull ? "" : "(请输入原文内容)" }}
             </span>
-            <el-button size="small" :disabled="disabled" type="primary" @click="currentEditIndex == -1 ? (currentEditIndex = -2) : (currentEditIndex = -1)">
+            <el-button size="small" :disabled="disabled" type="primary">
               {{ currentEditIndex == -1 ? "预览" : "编辑" }}
             </el-button>
           </div>
@@ -21,11 +21,11 @@
         <el-input :disabled="currentEditIndex != -1" v-model="formData![keys[0]]" v-else />
       </el-card>
 
-      <el-card class="container" v-for="(item, index) of formData![keys[1]]" :key="item.lang">
+      <el-card class="container" v-for="(item, index) of formData![keys[1]]" :key="item.lang" @click="currentEditIndex = index">
         <template #header>
           <div class="flex_row">
             <span>{{ item.name }}</span>
-            <el-button size="small" :disabled="disabled" type="primary" @click="currentEditIndex == index ? (currentEditIndex = -2) : (currentEditIndex = index)">
+            <el-button size="small" :disabled="disabled" type="primary">
               {{ currentEditIndex == index ? "预览" : "编辑" }}
             </el-button>
           </div>

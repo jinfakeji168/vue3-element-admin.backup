@@ -111,5 +111,7 @@ export default class TableInstance<FormT> {
   /** 打开弹窗 可以传递任何对象*/
   openHandler(index: number) {
     this.visible.value[index] = true;
+    if (this.selectList.value.length > 0) this.currentData.value = undefined; //如果没有选择，则将currentData.value置为undefined
+
   }
 }

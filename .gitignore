@@ -4,7 +4,7 @@ dist
 dist-ssr
 *.local
 .history
-
+*.zip
 # Editor directories and files
 .idea
 *.suo

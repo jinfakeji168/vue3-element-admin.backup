@@ -207,9 +207,21 @@ const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
  * 指定赢处理函数
  */
 function control_win_Handler(ids?: number[]) {
-  api.control({ ids: ids || unref(table.ids), state: 1 }).then(() => {
-    ElMessage.success("操作成功");
-    table.queryHandler();
+  ElMessageBox.confirm("确定要指定赢吗？", "提示", {
+    beforeClose: async (action, instance, done) => {
+      if (action === "confirm") {
+        try {
+          instance.confirmButtonLoading = true;
+          await api.control({ ids: ids || unref(table.selectList), state: 1 });
+          table.queryHandler();
+        } finally {
+          instance.confirmButtonLoading = false;
+        }
+        done();
+      } else {
+        done();
+      }
+    },
   });
 }
 
@@ -217,9 +229,21 @@ function control_win_Handler(ids?: number[]) {
  * 指定输处理函数
  */
 function control_lose_Handler(ids?: number[]) {
-  api.control({ ids: ids || unref(table.ids), state: 2 }).then(() => {
-    ElMessage.success("操作成功");
-    table.queryHandler();
+  ElMessageBox.confirm("确定要指定输吗？", "提示", {
+    beforeClose: async (action, instance, done) => {
+      if (action === "confirm") {
+        try {
+          instance.confirmButtonLoading = true;
+          await api.control({ ids: ids || unref(table.selectList), state: 2 });
+          table.queryHandler();
+        } finally {
+          instance.confirmButtonLoading = false;
+        }
+        done();
+      } else {
+        done();
+      }
+    },
   });
 }
 
@@ -227,9 +251,21 @@ function control_lose_Handler(ids?: number[]) {
  * 结算处理函数
  */
 function settlement_Handler(ids?: number[]) {
-  api.settlement(ids || unref(table.ids)).then(() => {
-    ElMessage.success("结算成功");
-    table.queryHandler();
+  ElMessageBox.confirm("确定要结算？", "提示", {
+    beforeClose: async (action, instance, done) => {
+      if (action === "confirm") {
+        try {
+          instance.confirmButtonLoading = true;
+          api.settlement(ids || unref(table.selectList));
+          table.queryHandler();
+        } finally {
+          instance.confirmButtonLoading = false;
+        }
+        done();
+      } else {
+        done();
+      }
+    },
   });
 }
 

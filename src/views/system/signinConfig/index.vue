@@ -18,7 +18,7 @@
 
         <el-form-item label="签到所需最低等级">
           <el-select v-model="formData.sign_min_level" style="width: 240px">
-            <el-option v-for="item of store.vipList.value" :key="item.id" :label="item.title" :value="item.level" />
+            <el-option v-for="item of store.vipList" :key="item.id" :label="item.title" :value="item.level" />
           </el-select>
         </el-form-item>
         <el-form-item label="签到奖品设置">
