@@ -19,8 +19,8 @@
         </el-form-item>
         <el-form-item label="用户出款功能激活方式">
           <el-radio-group v-model="getI('withdrawal_activation_type').values">
-            <el-radio :label="1">升级VIP0以上</el-radio>
-            <el-radio :label="2">升级VIP0以上或购买投资</el-radio>
+            <el-radio :label="1">升级为VIP</el-radio>
+            <el-radio :label="2">升级为VIP或购买过投资</el-radio>
             <el-radio :label="3">注册即激活</el-radio>
           </el-radio-group>
         </el-form-item>

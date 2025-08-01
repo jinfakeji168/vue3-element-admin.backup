@@ -110,7 +110,9 @@
           </el-form-item>
 
           <el-form-item label="VIP等级" prop="vip_level">
-            <el-input-number v-model="memberForm.vip_level" :min="1" :max="10" style="width: 200px" />
+            <el-select v-model="memberForm.vip_level" placeholder="请选择VIP等级" style="width: 200px" clearable>
+              <el-option v-for="i of vipList" :label="i.title" :value="i.level" />
+            </el-select>
           </el-form-item>
         </div>
         <div class="flex flex-row">
@@ -255,6 +257,11 @@ import { useStore } from "@/store/modules/common";
 import api from "@/api/members/memberList";
 import commApi from "@/api/common";
 const store = useStore();
+const vipList = computed(() => {
+  const temp = store.vipList;
+  temp.splice(0, 0, { level: 0, title: "普通用户", id: 0 });
+  return temp;
+});
 
 const props = withDefaults(
   defineProps<{

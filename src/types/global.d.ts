@@ -90,9 +90,9 @@ declare global {
    */
   interface OptionType {
     /** 值 */
-    value: string | number;
+    value?: string | number;
     /** 文本 */
-    label: string;
+    label?: string;
     /** 子列表  */
     children?: OptionType[];
     /** 是否禁用 */
@@ -136,4 +136,4 @@ declare global {
     }[];
   }
 }
-export {};
+export { };

@@ -30,9 +30,11 @@ export default {
     })
   },
   /**忽略 */
-  ignore(id: any) {
+  ignore(ids: any[], remark = '') {
     return request({
-
+      url: `${BasePath}/batchIgnore`,
+      method: "post",
+      data: { ids, remark }
     })
   },
   /**一键出款 对转账失败的订单重新打款 */
@@ -64,6 +66,13 @@ export default {
       url: `${BasePath}/oneClickRefund`,
       method: "post",
       data: { ids },
+    })
+  },
+  /**获取提币订单未处理数量 */
+  getUnprocessedCount() {
+    return request<any, WithdrawOrderCount>({
+      url: `${BasePath}/pending-count`,
+      method: "get",
     })
   }
 
@@ -192,4 +201,19 @@ export interface ManualWithdrawParams {
   address?: string;
   /** 备注 */
   remark?: string;
+}
+
+
+/** 提现订单统计数量类型 */
+export interface WithdrawOrderCount {
+  /** 未处理提现订单总数量 */
+  pending_count: number;
+  /** 待审核订单数量 */
+  audit_count: number;
+  /** 处理中订单数量 */
+  processing_count: number;
+  /** 队列中订单数量 */
+  queue_count: number;
+  /** 余额不足订单数量 */
+  insufficient_count: number;
 }

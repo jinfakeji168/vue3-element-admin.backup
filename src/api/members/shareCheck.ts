@@ -9,7 +9,7 @@ export default {
   check: function (data: { ids: number[]; status: 1 | 2; remark: string }) {
     return request({
       url: `${BasePath}/audit`,
-      method: "put",
+      method: "post",
       data,
     });
   },

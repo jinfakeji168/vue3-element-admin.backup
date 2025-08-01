@@ -126,11 +126,15 @@ const config: QueryConfig = {
       },
     },
     {
-      type: "input-number",
+      type: "select",
       modelKey: "level",
       label: "等级",
+      options: store.vipList.map((item) => ({
+        label: item.title,
+        value: item.level,
+      })),
       props: {
-        placeholder: "请输入等级",
+        placeholder: "请选择等级",
         style: { width: "200px" },
         min: 0,
       },

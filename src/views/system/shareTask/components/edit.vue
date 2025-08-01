@@ -22,10 +22,12 @@
       </el-form-item>
 
       <el-form-item label="奖励VIP等级" prop="reward_vip_level">
-        <el-input v-model="formData.reward_vip_level" type="text" />
+        <el-select v-model="formData.reward_vip_level">
+          <el-option v-for="item of commonStore.vipList" :key="item.level" :label="item.title" :value="item.level" />
+        </el-select>
       </el-form-item>
       <el-form-item label="奖励VIP天数" prop="reward_vip_days">
-        <el-input v-model="formData.reward_vip_days" :min="0" />
+        <el-input v-model="formData.reward_vip_days" :min="0" type="number" />
       </el-form-item>
 
       <el-form-item label="启用状态" prop="status">
@@ -92,7 +94,8 @@ import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { FormInstance } from "element-plus";
 import uploadPart from "@/components/Upload/uploadPart.vue";
 import Content from "@/components/WangEditor/content.vue";
-
+import { useStore } from "@/store/modules/common";
+const commonStore = useStore();
 const props = defineProps<{
   data?: Form;
 }>();

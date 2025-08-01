@@ -104,10 +104,10 @@ const formData = reactive<RechargeAward>({
 
 /**表单验证规则 */
 const rules = {
-  recharge_amount: [{ required: true, message: "请输入充值金额", trigger: "blur" }],
-  gift_amount: [{ required: true, message: "请输入赠送金额", trigger: "blur" }],
-  grade_id: [{ required: true, message: "请输入等级ID", trigger: "blur" }],
-  recharge_type: [{ required: true, message: "请选择充值类型", trigger: "change" }],
+  min_recharge: [{ required: true, message: "请输入最低充值金额", trigger: "blur" }],
+  max_recharge: [{ required: true, message: "请输入最高充值金额", trigger: "blur" }],
+  first_charge_cap: [{ required: true, message: "请输入送款封顶金额", trigger: "blur" }],
+  first_charge_ratio: [{ required: true, message: "请输入送款比例", trigger: "blur" }],
 };
 
 watch(

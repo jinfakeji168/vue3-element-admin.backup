@@ -5,7 +5,7 @@
         <el-input v-model="formData.title" placeholder="请输入VIP名称" />
       </el-form-item>
       <el-form-item label="VIP等级" prop="level">
-        <el-input v-model="formData.level" placeholder="请输入VIP等级" type="number" />
+        <el-input v-model="formData.level" placeholder="请输入VIP等级" type="number" :min="1" />
       </el-form-item>
       <el-form-item label="图标" prop="icon">
         <upload-part v-model="formData.icon"></upload-part>

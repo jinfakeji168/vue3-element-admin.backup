@@ -7,12 +7,14 @@
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
         <div class="flex gap-2">
-          <el-button type="primary" @click="table.openHandler(2)" :disabled="!table.ischecked()">一键审核</el-button>
-          <el-button type="success" @click="rePayHandler">失败订单重新出款</el-button>
-          <el-button type="danger" @click="changePayStatusHandler(table.selectList.value)" :disabled="!table.ischecked()">一键手动出款</el-button>
-          <el-button type="info" @click="returnHandler(table.selectList.value)" :disabled="!table.ischecked()">一键退回</el-button>
+          <el-button type="primary" @click="table.openHandler(2)" :disabled="!table.ischecked()" v-hasPerm="['withdrawOrder:audit']">一键审核</el-button>
+          <el-button type="success" @click="rePayHandler" v-hasPerm="['withdrawOrder:rePay']">失败订单重新出款</el-button>
+          <el-button type="danger" @click="changePayStatusHandler(table.selectList.value)" :disabled="!table.ischecked()" v-hasPerm="['withdrawOrder:manualPay']">
+            一键手动出款
+          </el-button>
+          <el-button type="info" @click="returnHandler(table.selectList.value)" :disabled="!table.ischecked()" v-hasPerm="['withdrawOrder:return']">一键退回</el-button>
           <!-- <el-button type="default">导出订单</el-button> -->
-          <el-button type="primary" @click="table.openHandler(4)">手动提现</el-button>
+          <el-button type="primary" @click="table.openHandler(4)" v-hasPerm="['withdrawOrder:manualWithdraw']">手动提现</el-button>
         </div>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
@@ -94,7 +96,7 @@
           <template #default="{ row }">
             <div>
               <span>状态：</span>
-              <el-tag :type="getStatusType(row.status)">{{ getStatusText(row.status) }}</el-tag>
+              <el-tag :type="getStatusTypeHandler(row.status)">{{ getStatusTextHandler(row.status) }}</el-tag>
             </div>
             <div>
               <span>备注：</span>
@@ -137,10 +139,10 @@
         <el-table-column prop="updated_at" label="操作" min-width="160" fixed="right">
           <template #default="{ row }">
             <div class="grid grid-cols-2 gap-2">
-              <el-button type="primary" size="small" @click="queryHandler(row.order_sn)" :disabled="row.payment_status != 2">查询</el-button>
-              <el-button type="danger" size="small" @click="table.editHandler(row, 2)" :disabled="row.status != 0">审核</el-button>
-              <el-button type="info" size="small" @click="ignoreHandler(row.id)" :disabled="row.status != 0">忽略</el-button>
-              <el-button type="danger" size="small" @click="payHandler(row.id)" :disabled="row.status != 1">出款</el-button>
+              <el-button type="primary" size="small" @click="queryHandler(row.order_sn)" :disabled="row.payment_status != 2" v-hasPerm="['withdrawOrder:query']">查询</el-button>
+              <el-button type="danger" size="small" @click="table.editHandler(row, 2)" :disabled="![0, 4].includes(row.status)" v-hasPerm="['withdrawOrder:audit']">审核</el-button>
+              <el-button type="info" size="small" @click="ignoreHandler(row.id)" :disabled="row.status != 0" v-hasPerm="['withdrawOrder:ignore']">忽略</el-button>
+              <el-button type="danger" size="small" @click="payHandler(row.id)" :disabled="row.status != 1" v-hasPerm="['withdrawOrder:paymentOut']">出款</el-button>
             </div>
           </template>
         </el-table-column>
@@ -164,7 +166,21 @@ import manuallyWithdraw from "./components/manuallyWithdraw.vue";
 const memberList = ref<any>([]);
 const loading = ref(false);
 const props = defineProps<{ uid: number }>();
-
+/** 订单状态列表 */
+const statusList = [
+  { label: "审核中", value: 0 },
+  { label: "处理中", value: 1 },
+  { label: "提现成功", value: 2 },
+  { label: "提现拒绝", value: 3 },
+  { label: "提现忽略", value: 4 },
+  { label: "余额不足", value: 5 },
+  { label: "队列中", value: 6 },
+];
+const order_result = [
+  { label: "未出款", value: 0 },
+  { label: "出款成功", value: 1 },
+  { label: "出款失败", value: 2 },
+];
 /** 查询配置 */
 const config: QueryConfig = {
   labelWidth: "100px",
@@ -213,12 +229,7 @@ const config: QueryConfig = {
       type: "select",
       modelKey: "status",
       label: "订单状态",
-      options: [
-        { label: "待审核", value: 0 },
-        { label: "打款中", value: 1 },
-        { label: "已完成", value: 2 },
-        { label: "失败", value: 3 },
-      ],
+      options: statusList,
       props: {
         placeholder: "请选择订单状态",
         style: { width: "150px" },
@@ -229,11 +240,7 @@ const config: QueryConfig = {
       type: "select",
       modelKey: "order_result",
       label: "转账状态",
-      options: [
-        { label: "未转", value: 0 },
-        { label: "成功", value: 1 },
-        { label: "失败", value: 2 },
-      ],
+      options: order_result,
       props: {
         placeholder: "请选择转账状态",
         style: { width: "150px" },
@@ -349,7 +356,7 @@ async function ignoreHandler(id: number) {
       if (action == "confirm") {
         instance.confirmButtonLoading = true;
         try {
-          await api.ignore(id);
+          await api.ignore([id]);
           done();
           table.queryHandler();
         } finally {
@@ -384,24 +391,26 @@ async function returnHandler(ids: any[]) {
 }
 
 // 订单状态处理函数
-const getStatusType = (status: number) => {
-  const statusMap: Record<number, string> = { 0: "warning", 1: "primary", 2: "success", 3: "danger" };
-  return statusMap[status] || "info";
-};
+/** 获取订单状态标签类型 */
+function getStatusTypeHandler(status: number) {
+  const statusTypeArr = ["warning", "primary", "success", "danger", "info", "danger", "info"];
+  return statusTypeArr[status] ?? "info";
+}
 
-const getStatusText = (status: number) => {
-  const statusMap: Record<number, string> = { 0: "待审核", 1: "处理中", 2: "已完成", 3: "不通过" };
-  return statusMap[status] || "未知";
-};
+/** 获取订单状态文本 */
+function getStatusTextHandler(status: number) {
+  const statusTextArr = statusList.map((item) => item.label);
+  return statusTextArr[status] ?? "未知";
+}
 
 // 转账状态处理函数
 const getOrderResultType = (result: number) => {
-  const resultMap: Record<number, string> = { 0: "warning", 1: "success", 2: "danger" };
+  const resultMap: Record<number, string> = ["warning", "success", "danger"];
   return resultMap[result] || "info";
 };
 
 const getOrderResultText = (result: number) => {
-  const resultMap: Record<number, string> = { 0: "待确认", 1: "成功", 2: "失败" };
+  const resultMap: Record<number, string> = order_result.map((item) => item.label);
   return resultMap[result] || "未知";
 };
 </script>

@@ -33,12 +33,12 @@
             </template>
             批量操作
           </el-button>
-          <el-button v-hasPerm="['memberList:export']" type="info">
+          <!-- <el-button v-hasPerm="['memberList:export']" type="info">
             <template #icon>
               <Plus />
             </template>
             导出会员
-          </el-button>
+          </el-button> -->
           <el-button
             v-hasPerm="['memberList:batch']"
             type="danger"
@@ -84,7 +84,7 @@
             </div>
             <div>
               <span class="text-gray-500">等级:</span>
-              <span class="text-gray-700">{{ row.vip_level }}({{ row.is_online == 1 ? "在线" : "离线" }})</span>
+              <span class="text-gray-700">Level:{{ row.vip_level }}({{ row.is_online == 1 ? "在线" : "离线" }})</span>
             </div>
             <div>
               <span class="text-gray-500">语言:</span>
@@ -223,7 +223,7 @@
               </div>
               <div>
                 <span class="text-gray-500">注册IP:</span>
-                <span class="text-gray-700">{{ row.register_ip || "--" }}({{ row.register_area }})</span>
+                <span class="text-gray-700">{{ row.register_ip || "后台" }}({{ row.register_area }})</span>
               </div>
               <div>
                 <span class="text-gray-500">最后:</span>
@@ -322,12 +322,12 @@
           <template #default="{ row }">
             <div class="grid grid-cols-2 gap-2">
               <el-button type="primary" size="small" @click="table.editHandler(row, 3)">详情</el-button>
-              <el-button type="success" size="small" @click="replenishmentHandler(row)">补单</el-button>
-              <el-button type="warning" size="small" :loading="loading[0]" @click="checkMoney(row)">查钱</el-button>
-              <el-button type="info" size="small" @click="table.editHandler(row, 2)">改钱</el-button>
-              <el-button type="success" size="small" @click="table.editHandler(row, 5)">下级充值</el-button>
-              <el-button type="danger" size="small" @click="forceOfflineHandler(row)">下线</el-button>
-              <el-button type="warning" size="small" :loading="loading[1]" @click="simulateLogin(row)">模拟登录</el-button>
+              <el-button type="success" size="small" v-hasPerm="['memberList:supplement']" @click="replenishmentHandler(row)">补单</el-button>
+              <el-button type="warning" size="small" v-hasPerm="['memberList:checkMoney']" :loading="loading[0]" @click="checkMoney(row)">查钱</el-button>
+              <el-button type="info" size="small" v-hasPerm="['memberList:changeMoney']" @click="table.editHandler(row, 2)">改钱</el-button>
+              <el-button type="success" size="small" v-hasPerm="['memberList:lowerLevelRecharge']" @click="table.editHandler(row, 5)">下级充值</el-button>
+              <el-button type="danger" size="small" v-hasPerm="['memberList:forceOffLine']" @click="forceOfflineHandler(row)">下线</el-button>
+              <el-button type="warning" size="small" v-hasPerm="['memberList:simulateLogin']" :loading="loading[1]" @click="simulateLogin(row)">模拟登录</el-button>
             </div>
           </template>
         </el-table-column>
@@ -364,9 +364,19 @@ const queryFormRef = ref<FormInstance>();
 
 /** 会员列表加载状态 */
 const loading = ref([false, false]);
-/** 会员选项列表 */
-const memberList = ref<any>([]);
 
+const langOptions = ref<OptionType[]>([]);
+async function getLangOptions() {
+  const list = await commonStore.getLangListAsync();
+  langOptions.value = list.map((val) => ({ label: val.name, value: val.id }));
+}
+const groupOptions = ref<OptionType[]>([]);
+async function getGroupOptions() {
+  const list = await commonStore.getGroupListAsync();
+  groupOptions.value = list.map((val) => ({ label: val.title, value: val.id }));
+}
+getGroupOptions();
+getLangOptions();
 /** 查询配置 */
 const config: QueryConfig = {
   labelWidth: "100px",
@@ -437,11 +447,12 @@ const config: QueryConfig = {
       },
     },
     {
-      type: "input",
+      type: "select",
       modelKey: "group_id",
-      label: "用户组ID",
+      label: "用户组",
+      options: groupOptions,
       props: {
-        placeholder: "请输入用户组ID",
+        placeholder: "请选择用户组",
         style: { width: "200px" },
       },
     },
@@ -457,15 +468,6 @@ const config: QueryConfig = {
         placeholder: "请选择状态",
         style: { width: "200px" },
         clearable: true,
-      },
-    },
-    {
-      type: "input",
-      modelKey: "vip_level",
-      label: "等级",
-      props: {
-        placeholder: "请输入等级",
-        style: { width: "200px" },
       },
     },
     {
@@ -530,15 +532,18 @@ const config: QueryConfig = {
       props: {
         placeholder: "请输入充值钱包",
         style: { width: "200px" },
+        clearable: true,
       },
     },
     {
-      type: "input",
+      type: "select",
       modelKey: "lang_id",
-      label: "语言ID",
+      label: "语言",
+      options: langOptions,
       props: {
-        placeholder: "请输入语言ID",
+        placeholder: "请选择语言",
         style: { width: "200px" },
+        clearable: true,
       },
     },
   ],
@@ -590,6 +595,8 @@ async function getvipList() {
     res.reverse();
     const number = res.map((val) => val.number).reduce((pre, cur) => pre + cur);
     res.unshift({ title: "全部", number, vip_level: -1 });
+    res.sort((a, b) => a.vip_level - b.vip_level);
+    res.find((val) => !val.title)!.title = "普通用户";
     vipList.value = res;
     console.log("🚀 ~ getvipList ~ vipList.value :", vipList.value);
     currentVip.value = res[0].vip_level as number;

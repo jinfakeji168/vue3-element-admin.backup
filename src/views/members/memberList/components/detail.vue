@@ -9,7 +9,7 @@
     <template #footer>
       <div class="flex flex-row justify-end">
         <el-button @click="visible = false">取消</el-button>
-        <el-button type="primary" @click="saveHandler" :disabled="activeTab !== 'memberEdit'">保存</el-button>
+        <el-button type="primary" @click="saveHandler" :disabled="activeTab !== 'memberEdit'" v-hasPerm="['memberListDetail:save']">保存</el-button>
       </div>
     </template>
   </el-dialog>

@@ -6,7 +6,7 @@
           <div class="flex flex-row">
             <el-input-number v-model="current_autoIncrementId" style="margin-right: 14px" :min="originId" :disabled="!current_autoIncrementId" />
             <el-button @click="getAutoIncrementId" :loading="loading">查询</el-button>
-            <el-button type="primary" @click="setAutoIncrementId" :loading="loading" :disabled="!current_autoIncrementId">修改</el-button>
+            <el-button type="primary" @click="setAutoIncrementId" :loading="loading" :disabled="!current_autoIncrementId || current_autoIncrementId == originId">修改</el-button>
           </div>
         </el-form-item>
         <el-form-item label="注册发送站内信">
@@ -206,10 +206,12 @@ async function getAutoIncrementId() {
 
 const loading = ref(false);
 async function setAutoIncrementId() {
+  await ElMessageBox.confirm("是否确认修改用户自增ID", "提示", {});
   if (current_autoIncrementId.value != originId.value) {
     loading.value = true;
     try {
       await systemConfig.setAutoIncrementId(current_autoIncrementId.value);
+      originId.value = current_autoIncrementId.value;
     } finally {
       loading.value = false;
     }

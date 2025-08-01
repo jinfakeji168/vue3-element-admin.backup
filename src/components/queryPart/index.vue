@@ -37,7 +37,6 @@ function searchHandler() {
 function renderFormItem(item: QueryConfig["formItem"][0]) {
   const formItemProps = {
     label: item.label,
-    prop: Array.isArray(item.modelKey) ? item.modelKey[0] : item.modelKey,
     rules: item.rules,
   };
 
@@ -45,6 +44,7 @@ function renderFormItem(item: QueryConfig["formItem"][0]) {
     ...item.props,
   };
   for (let k in commonProps) {
+    commonProps.clearable = true;
     commonProps[k] = unref(commonProps[k]);
   }
 
@@ -90,8 +90,6 @@ function renderFormItem(item: QueryConfig["formItem"][0]) {
         return h(ElInput, inputProps);
     }
   });
-
-  // return h(ElFormItem, { style: {}, ...formItemProps }, () => (inputs.length > 1 ? h("div", { style: { display: "flex", gap: "8px" } }, inputs) : inputs[0]));
 
   return h(
     "div",

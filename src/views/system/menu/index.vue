@@ -27,7 +27,7 @@
 
     <el-card shadow="never" class="table-wrapper" v-loading="loading">
       <template #header>
-        <el-button v-hasPerm="['menu:add']" type="success" @click="handleOpenDialog(0)">
+        <el-button v-hasPerm="['menu:add']" type="success" @click="handleOpenDialog()">
           <template #icon>
             <Plus />
           </template>
@@ -85,7 +85,7 @@
 
         <el-table-column fixed="right" align="center" label="操作" width="220">
           <template #default="scope">
-            <el-button v-if="scope.row.type == MenuTypeEnum.MENU" v-hasPerm="['menu:add']" type="primary" link size="small" @click.stop="handleOpenDialog(scope.row.id)">
+            <el-button v-if="scope.row.type == MenuTypeEnum.MENU" v-hasPerm="['menu:add']" type="primary" link size="small" @click.stop="handleOpenDialog(scope.row)">
               <template #icon>
                 <Plus />
               </template>
@@ -398,7 +398,7 @@ function getMenuOptions(list: any[]): any[] {
  * @param parent_id 父菜单ID
  * @param menuId 菜单ID
  */
-async function handleOpenDialog(parent_id?: number, menu?: MenuVO) {
+async function handleOpenDialog(row?: MenuVO, menu?: MenuVO) {
   // const data = await MenuAPI.getOptions(true);
   menuOptions.value = [
     {
@@ -416,7 +416,8 @@ async function handleOpenDialog(parent_id?: number, menu?: MenuVO) {
     });
   } else {
     dialog.title = "新增菜单";
-    formData.value.parent_id = parent_id;
+    formData.value.parent_id = row?.id as number;
+    formData.value.sort = (row?.children?.length || 0) + 1;
   }
 }
 

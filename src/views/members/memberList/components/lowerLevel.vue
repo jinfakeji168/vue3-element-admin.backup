@@ -86,11 +86,11 @@
               </div>
               <div>
                 <span class="text-gray-500">等级:</span>
-                <span class="text-gray-700">{{ row.vip_level }}(离线)</span>
+                <span class="text-gray-700">Level:{{ row.vip_level }}({{ row.is_online == 1 ? "在线" : "离线" }})</span>
               </div>
               <div>
                 <span class="text-gray-500">语言:</span>
-                <span class="text-gray-700">- |禁提</span>
+                <span class="text-gray-700">{{ commonStore.langList.find((i) => i.id == row.lang_id)?.name }}</span>
               </div>
               <div>
                 <span class="text-gray-500">体验金:</span>
@@ -165,7 +165,7 @@
               </div>
               <div>
                 <span class="text-gray-500">IP:</span>
-                <span class="text-gray-700">{{ row.register_ip || "--" }}(后台)</span>
+                <span class="text-gray-700">{{ row.register_ip || "(后台)" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">最后:</span>
@@ -287,7 +287,8 @@ import type { FormInstance } from "element-plus";
 import TableInstance from "@/utils/tableInstance";
 import api, { Member, type MemberSubordinateListData } from "@/api/members/memberList";
 import batchOperation from "./batchOperation.vue";
-
+import { useStore } from "@/store/modules/common";
+const commonStore = useStore();
 const visible = defineModel<boolean>();
 const tabIndex = ref(0);
 const props = withDefaults(
