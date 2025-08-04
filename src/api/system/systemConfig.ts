@@ -79,11 +79,11 @@ export default {
     })
   },
   /**验证google */
-  verifyGoogleAuth(code: string, admin_id: string) {
+  verifyGoogleAuth(code: string) {
     return request({
       url: '/admin/auth/google2fa/verify',
       method: 'post',
-      data: { code, admin_id }
+      data: { code }
     })
   }
 };

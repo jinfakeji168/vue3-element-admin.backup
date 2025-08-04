@@ -18,45 +18,45 @@
               <div>
                 <el-button v-hasPerm="['user:add']" type="success" @click="open_dialog_handler()">
                   <template #icon><Plus /></template>
-                  新增
+                  {{ $t("xinZeng") }}
                 </el-button>
                 <el-button v-hasPerm="['user:delete']" type="danger" :disabled="removeIds.length === 0" @click="delete_handler()">
                   <template #icon><Delete /></template>
-                  删除
+                  {{ $t("shanChu_0") }}
                 </el-button>
               </div>
             </div>
           </template>
           <el-table :data="pageData" @selection-change="selection_change_handler">
             <el-table-column type="selection" :selectable="selectableHandler" width="50" align="center" />
-            <el-table-column key="uid" label="编号" align="center" prop="uid" width="60" />
-            <el-table-column key="username" label="用户名" align="center" prop="username" width="200" />
-            <el-table-column label="用户昵称" align="center" prop="nickname" />
-            <el-table-column label="部门" width="150" align="center" prop="department.title" />
-            <el-table-column label="手机号码" align="center" prop="mobile" width="120" />
-            <el-table-column label="邮箱" align="center" prop="email" width="180" />
-            <el-table-column label="状态" align="center" prop="status" width="100">
+            <el-table-column key="uid" :label="$t('bianHao')" align="center" prop="uid" width="60" />
+            <el-table-column key="username" :label="$t('login.username')" align="center" prop="username" width="200" />
+            <el-table-column :label="$t('yongHuNiCheng')" align="center" prop="nickname" />
+            <el-table-column :label="$t('buMen')" width="150" align="center" prop="department.title" />
+            <el-table-column :label="$t('shouJiHaoMa')" align="center" prop="mobile" width="120" />
+            <el-table-column :label="$t('youXiang')" align="center" prop="email" width="180" />
+            <el-table-column :label="$t('zhuangTai')" align="center" prop="status" width="100">
               <template #default="scope">
                 <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
                   {{ scope.row.status == StatusEnum.False ? "正常" : "禁用" }}
                 </el-tag>
               </template>
             </el-table-column>
-            <el-table-column label="最后登录时间" align="center" prop="last_login_at" width="180" />
-            <el-table-column label="操作" fixed="right">
+            <el-table-column :label="$t('zuiHouDengLuShiJian')" align="center" prop="last_login_at" width="180" />
+            <el-table-column :label="$t('caoZuo')" fixed="right">
               <template #default="scope">
                 <el-button v-hasPerm="['user:edit']" type="primary" size="small" link @click="reset_password_handler(scope.row)">
                   <template #icon><RefreshLeft /></template>
-                  重置密码
+                  {{ $t("zhongZhiMiMa") }}
                 </el-button>
                 <template v-if="scope.row.uid !== 1">
                   <el-button v-hasPerm="['user:edit']" type="primary" link size="small" @click="open_dialog_handler(scope.row)">
                     <template #icon><EditPen /></template>
-                    编辑
+                    {{ $t("bianJi") }}
                   </el-button>
                   <el-button v-hasPerm="['user:delete']" type="danger" link size="small" @click="delete_handler(scope.row.uid)">
                     <template #icon><Delete /></template>
-                    删除
+                    {{ $t("shanChu_0") }}
                   </el-button>
                   <el-button
                     v-hasPerm="['user:status']"
@@ -86,7 +86,7 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, unref } from "vue";
 defineOptions({
-  name: "User",
+  name: $t("user"),
   inheritAttrs: false,
 });
 
@@ -115,30 +115,30 @@ const queryConfig = {
     {
       type: "input",
       modelKey: "username",
-      label: "用户名",
-      props: { placeholder: "请输入用户名", style: { width: "200px" } },
+      label: $t("login.username"),
+      props: { placeholder: $t("login.message.username.required"), style: { width: "200px" } },
     },
     {
       type: "input",
       modelKey: "mobile",
-      label: "手机号",
-      props: { placeholder: "请输入手机号", style: { width: "200px" } },
+      label: $t("shouJiHao"),
+      props: { placeholder: $t("qingShuRuShouJiHao"), style: { width: "200px" } },
     },
     {
       type: "input",
       modelKey: "email",
-      label: "邮箱",
-      props: { placeholder: "请输入邮箱", style: { width: "200px" } },
+      label: $t("youXiang"),
+      props: { placeholder: $t("qingShuRuYouXiang"), style: { width: "200px" } },
     },
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: [
-        { value: StatusEnum.False, label: "正常" },
-        { value: StatusEnum.True, label: "禁用" },
+        { value: StatusEnum.False, label: $t("zhengChang_1") },
+        { value: StatusEnum.True, label: $t("jinYong_1") },
       ],
-      props: { placeholder: "全部", style: { width: "100px" }, clearable: true },
+      props: { placeholder: $t("quanBu"), style: { width: "100px" }, clearable: true },
     },
   ],
 };
@@ -181,9 +181,9 @@ function selection_change_handler(selection: any) {
 /**注释 重置密码 */
 async function reset_password_handler(row: { [key: string]: any }) {
   try {
-    const { value } = await ElMessageBox.prompt(`请输入用户「${row.username}」的新密码`, "重置密码");
+    const { value } = await ElMessageBox.prompt($t("qingShuRuYongHuRowu", [row.username]), $t("zhongZhiMiMa_0"));
     if (!value || value.length < 8) {
-      ElMessage.warning("密码至少需要8位字符，请重新输入");
+      ElMessage.warning($t("miMaZhiShaoXuYao_8"));
       return;
     }
     await UserAPI.resetPassword({ uid: row.uid, password: value });
@@ -197,10 +197,10 @@ async function reset_password_handler(row: { [key: string]: any }) {
 function open_dialog_handler(item?: UserPageVO) {
   dialog.visible = true;
   if (item) {
-    dialog.title = "修改用户";
+    dialog.title = $t("xiuGaiYongHu");
     unref(dialogRef)?.setFormData(item);
   } else {
-    dialog.title = "新增用户";
+    dialog.title = $t("xinZengYongHu");
   }
 }
 
@@ -208,11 +208,11 @@ function open_dialog_handler(item?: UserPageVO) {
 async function delete_handler(uid?: number) {
   const userIds = uid ? [uid] : removeIds.value;
   if (userIds.length === 0) {
-    ElMessage.warning("请勾选删除项");
+    ElMessage.warning($t("qingGouXuanShanChuX"));
     return;
   }
   try {
-    await ElMessageBox.confirm("确认删除用户?", "警告", { type: "warning" });
+    await ElMessageBox.confirm($t("queRenShanChuYongHu"), $t("jingGao"), { type: "warning" });
     loading.value = true;
     await UserAPI.deleteByIds(userIds);
     await reset_query_handler();

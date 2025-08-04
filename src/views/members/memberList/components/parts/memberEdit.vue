@@ -50,14 +50,14 @@
 
         <el-form-item label="TRC20充值钱包" prop="trc20_recharge_wallet">
           <div class="flex flex-row gap2 w-full">
-            <el-input v-model="memberForm.trc20_recharge_wallet" placeholder="请输入TRC20充值钱包地址" />
+            <el-input v-model="memberForm.trc20_recharge_wallet" placeholder="TRC20充值钱包地址" disabled />
             <el-button type="primary" @click="changeWallet(1)">更换充值钱包</el-button>
           </div>
         </el-form-item>
 
         <el-form-item label="BEP20充值钱包" prop="bep20_recharge_wallet">
           <div class="flex flex-row gap2 w-full">
-            <el-input v-model="memberForm.bep20_recharge_wallet" placeholder="请输入BEP20充值钱包地址" />
+            <el-input v-model="memberForm.bep20_recharge_wallet" placeholder="BEP20充值钱包地址" disabled />
             <el-button type="primary" @click="changeWallet(1)">更换充值钱包</el-button>
           </div>
         </el-form-item>

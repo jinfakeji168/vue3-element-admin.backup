@@ -2,6 +2,7 @@ import langApi, { Form } from "@/api/system/lang";
 import api from "@/api/common";
 import systemApi, { type TeamRechargeAward } from "@/api/system/systemConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
+import configApi from "@/api/system/systemConfig";
 
 export const useStore = defineStore("common", () => {
   /**语言列表 */
@@ -68,6 +69,21 @@ export const useStore = defineStore("common", () => {
     if (!_teamLevelList.value) getTeamLevelListAsync();
     return unref(_teamLevelList) || [];
   })
+
+  /**获取配置 */
+
+  const config = ref();
+  async function getConfigAsync() {
+    if (!config.value) config.value = await configApi.getConfig();
+  }
+
+  async function keyByConfigValue(key: string) {
+    if (!config.value) await getConfigAsync();
+    return Promise.resolve(config.value?.find((i: any) => i.name == key)?.values)
+  }
+  function setNewConfig(newConfig: any) {
+    config.value = newConfig;
+  }
   return {
     getLangListAsync,
     getVipListAsync,
@@ -80,7 +96,9 @@ export const useStore = defineStore("common", () => {
     groupList,
     tradeList,
     timeZoneList,
-    teamLevelList
+    teamLevelList,
+    keyByConfigValue,
+    setNewConfig
   };
 });
 

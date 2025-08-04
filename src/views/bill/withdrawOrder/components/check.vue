@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 import api, { type Form } from "@/api/bill/withdrawOrder";
-
+import systemConfig from "@/api/system/systemConfig";
 const visible = defineModel<boolean>();
 const props = defineProps<{ data: Form; ids: number[] }>();
 const model = ref({
@@ -34,6 +34,9 @@ const model = ref({
   status: 1,
   remark: "",
 });
+
+import { useStore } from "@/store/modules/common";
+const commonStore = useStore();
 
 const emits = defineEmits<{
   finish: [];
@@ -44,6 +47,15 @@ async function submitHandler() {
     model.value.ids = [props.data.id as number];
   } else if (props.ids) {
     model.value.ids = props.ids;
+  }
+  const enableGoogleVerify = await commonStore.keyByConfigValue("update_money_google_secret");
+  if (enableGoogleVerify == 1) {
+    const res = await ElMessageBox.prompt("输入谷歌验证码进行修改");
+    if (res.action == "confirm" && res.value) {
+      await systemConfig.verifyGoogleAuth(res.value);
+    } else {
+      return;
+    }
   }
   try {
     loading.value = true;

@@ -43,7 +43,7 @@
 import type { FormInstance } from "element-plus";
 import type { AccountBalanceChangeForm, AccountBalanceData } from "@/api/members/memberList";
 import api from "@/api/members/memberList";
-
+import systemConfig, { type Form, GoogleAuthStatus } from "@/api/system/systemConfig";
 const visible = defineModel<boolean>();
 
 const props = withDefaults(
@@ -104,14 +104,25 @@ function handleClosed() {
   formRef.value?.resetFields();
   formRef.value?.clearValidate();
   visible.value = false;
-}
+} //edit_address_is_google
+import { useStore } from "@/store/modules/common";
+const commonStore = useStore();
 
 async function submitHandle() {
   if (!formRef.value) return;
   await formRef.value.validate(async (valid, fields) => {
     if (valid) {
-      loading[1] = true;
+      const enableGoogleVerify = await commonStore.keyByConfigValue("update_money_google_secret");
+      if (enableGoogleVerify == 1) {
+        const res = await ElMessageBox.prompt("输入谷歌验证码进行修改");
+        if (res.action == "confirm" && res.value) {
+          await systemConfig.verifyGoogleAuth(res.value);
+        } else {
+          return;
+        }
+      }
       try {
+        loading[1] = true;
         await api.changeBalance(form);
         handleClosed();
         emit("finish");

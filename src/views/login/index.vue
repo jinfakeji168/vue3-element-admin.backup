@@ -35,9 +35,7 @@
               </div>
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click="setLoginCredentials('root', '123456')">超级管理员：root/123456</el-dropdown-item>
-                  <el-dropdown-item @click="setLoginCredentials('root@example.com', 'password')">系统管理员：admin/123456</el-dropdown-item>
-                  <el-dropdown-item @click="setLoginCredentials('test', '123456')">测试小游客：test/123456</el-dropdown-item>
+                  <el-dropdown-item @click="setLoginCredentials('Admin', 'Admin123')">管理员：Admin/Admin123</el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -75,7 +73,7 @@
             </el-form-item>
           </el-tooltip>
           <div class="flex-x-between w-full py-1">
-            <el-checkbox>
+            <el-checkbox v-model="rememberMe">
               {{ $t("login.rememberMe") }}
             </el-checkbox>
 
@@ -122,9 +120,12 @@ const captchaBase64 = ref(); // 验证码图片Base64字符串
 const logo = ref(new URL("../../assets/logo.png", import.meta.url).href);
 const loginImage = ref(new URL("../../assets/images/login-image.svg", import.meta.url).href);
 
+let temp: any = localStorage.getItem("Account");
+temp = JSON.parse(temp);
+
 const loginData = ref<LoginData>({
-  username: "admin",
-  password: "Admin123",
+  username: temp?.username || "",
+  password: temp?.password || "",
   captchaKey: "",
   captchaCode: "",
 });
@@ -167,7 +168,7 @@ function getCaptcha() {
     captchaBase64.value = data.captchaBase64;
   });
 }
-
+const rememberMe = ref(true);
 /** 登录表单提交 */
 async function handleLoginSubmit() {
   loginFormRef.value?.validate((valid: boolean) => {
@@ -177,8 +178,10 @@ async function handleLoginSubmit() {
         .login(loginData.value)
         .then(async () => {
           await userStore.getUserInfo();
-          //await dictStore.loadDictionaries(); // 需要在路由跳转前加载字典数据，否则会出现字典数据未加载完成导致页面渲染异常
           // 跳转到登录前的页面
+          if (rememberMe.value) {
+            localStorage.setItem("Account", JSON.stringify(loginData.value));
+          }
           const { path, queryParams } = parseRedirect();
           router.push({ path: path, query: queryParams });
         })

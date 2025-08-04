@@ -137,3 +137,7 @@ declare global {
   }
 }
 export { };
+
+declare global {
+  const $t: typeof import('./src/lang/index')['$t']
+}

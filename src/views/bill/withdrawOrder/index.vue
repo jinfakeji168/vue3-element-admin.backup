@@ -15,6 +15,7 @@
           <el-button type="info" @click="returnHandler(table.selectList.value)" :disabled="!table.ischecked()" v-hasPerm="['withdrawOrder:return']">一键退回</el-button>
           <!-- <el-button type="default">导出订单</el-button> -->
           <el-button type="primary" @click="table.openHandler(4)" v-hasPerm="['withdrawOrder:manualWithdraw']">手动提现</el-button>
+          <el-button type="primary" @click="table.queryHandler()">刷新订单</el-button>
         </div>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">

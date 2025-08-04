@@ -2,8 +2,8 @@ import type { App } from "vue";
 import { createI18n } from "vue-i18n";
 import { useAppStoreHook } from "@/store/modules/app";
 // 本地语言包
-import enLocale from "./package/en";
-import zhCnLocale from "./package/zh-cn";
+import enLocale from "./package/en.json";
+import zhCnLocale from "./package/zh-cn.json";
 
 const appStore = useAppStoreHook();
 
@@ -29,3 +29,7 @@ export function setupI18n(app: App<Element>) {
 }
 
 export default i18n;
+
+export function $t(str: string) {
+  return i18n.global.t(str);
+}

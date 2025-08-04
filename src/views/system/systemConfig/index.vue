@@ -3,17 +3,17 @@
     <el-card class="box-card" v-loading="!configData">
       <template #header>
         <el-tabs v-model="currentTab" :beforeLeave="beforeLeaveHandler">
-          <el-tab-pane label="基本功能" name="basicFeature"></el-tab-pane>
-          <el-tab-pane label="安装包" name="package"></el-tab-pane>
-          <el-tab-pane label="首页配置" name="homeConfig"></el-tab-pane>
-          <el-tab-pane label="出款模块" name="expense"></el-tab-pane>
-          <el-tab-pane label="归集" name="collection"></el-tab-pane>
-          <el-tab-pane label="登录/注册" name="register"></el-tab-pane>
-          <el-tab-pane label="充值配置" name="recharge"></el-tab-pane>
-          <el-tab-pane label="量化配置" name="quantitationConfig"></el-tab-pane>
-          <el-tab-pane label="投资配置" name="investmentConfig"></el-tab-pane>
-          <el-tab-pane label="分享奖励" name="shareConfig"></el-tab-pane>
-          <el-tab-pane label="安全设置" name="securityConfig"></el-tab-pane>
+          <el-tab-pane :label="$t('jiBenGongNeng')" name="basicFeature"></el-tab-pane>
+          <el-tab-pane :label="$t('anZhuangBao')" name="package"></el-tab-pane>
+          <el-tab-pane :label="$t('shouYePeiZhi')" name="homeConfig"></el-tab-pane>
+          <el-tab-pane :label="$t('chuKuanMoKuai')" name="expense"></el-tab-pane>
+          <el-tab-pane :label="$t('guiJi')" name="collection"></el-tab-pane>
+          <el-tab-pane :label="$t('dengLuZhuCe')" name="register"></el-tab-pane>
+          <el-tab-pane :label="$t('chongZhiPeiZhi')" name="recharge"></el-tab-pane>
+          <el-tab-pane :label="$t('liangHuaPeiZhi')" name="quantitationConfig"></el-tab-pane>
+          <el-tab-pane :label="$t('touZiPeiZhi')" name="investmentConfig"></el-tab-pane>
+          <el-tab-pane :label="$t('fenXiangJiangLi')" name="shareConfig"></el-tab-pane>
+          <el-tab-pane :label="$t('anQuanSheZhi')" name="securityConfig"></el-tab-pane>
         </el-tabs>
       </template>
       <template v-if="configData">
@@ -21,8 +21,8 @@
       </template>
       <template #footer>
         <div class="text-center">
-          <el-button @click="resetHandler">重置</el-button>
-          <el-button type="primary" @click="saveHandler" :loading="loading" :disabled="!hasAuth(`systemConfig:${currentTab}:save`)">保存</el-button>
+          <el-button @click="resetHandler">{{ $t("zhongZhi") }}</el-button>
+          <el-button type="primary" @click="saveHandler" :loading="loading" :disabled="!hasAuth(`systemConfig:${currentTab}:save`)">{{ $t("baoCun") }}</el-button>
         </div>
       </template>
     </el-card>
@@ -30,7 +30,8 @@
 </template>
 
 <script setup lang="ts">
-import systemConfig, { type Form } from "@/api/system/systemConfig";
+import systemConfig, { type Form, GoogleAuthStatus } from "@/api/system/systemConfig";
+
 import { keyMap, type TabNames } from "./keyConfig";
 import { hasAuth } from "@/plugins/permission";
 import { useTemplateRef } from "vue";
@@ -51,12 +52,10 @@ const configEveryIndex = [];
 const configData = ref<Form[]>();
 let originConfigData: Form[] = [];
 async function getSystemConfig() {
-  try {
-    const res = await systemConfig.getConfig();
-    console.log(res);
-    originConfigData = JSON.parse(JSON.stringify(res));
-    configData.value = res;
-  } catch (error) {}
+  const res = await systemConfig.getConfig();
+  originConfigData = JSON.parse(JSON.stringify(res));
+  configData.value = res;
+  return Promise.resolve(res);
 }
 getSystemConfig();
 
@@ -75,22 +74,48 @@ function getCurrentTabChangeData() {
   return hasChange;
 }
 
+const googleStatus = ref<GoogleAuthStatus>({
+  enabled: true,
+});
+async function getGoogleStatus() {
+  const res = await systemConfig.getGoogleAuthStatus();
+  googleStatus.value.enabled = Boolean(res?.enabled);
+}
+import { useStore } from "@/store/modules/common";
+const commonStore = useStore();
+getGoogleStatus();
 const configRef = useTemplateRef<InstanceType<(typeof componentMap.value)["securityConfig"]>>("configRef");
 const loading = ref(false);
 async function saveHandler() {
   const hasChange = getCurrentTabChangeData();
   console.log("🚀 ~ saveHandler ~ hasChange:", hasChange);
+
   if (hasChange?.length) {
+    const enableGoogleVerify = await commonStore.keyByConfigValue("edit_address_is_google");
+
     //判断是否是需要谷歌验证的字段
     const needGoogleverify = hasChange.some((i) => ["update_money_google_secret", "edit_address_is_google", "extract_check_is_google_code"].includes(i.name || ""));
-    if (needGoogleverify) {
-      await configRef.value.saveGoogleVerifyHandler();
+    const needGoogleverify1 = hasChange.some((i) => ["bep20_payment_wallet", "payment_wallet", "auto_payment_safety_value"].includes(i.name || ""));
+    console.log("🚀 ~ saveHandler ~ needGoogleverify1:", needGoogleverify1, enableGoogleVerify);
+    if ((needGoogleverify && googleStatus.value.enabled) || (needGoogleverify1 && enableGoogleVerify == 1)) {
+      // await configRef.value.saveGoogleVerifyHandler();
+      const res = await ElMessageBox.prompt("输入谷歌验证码进行修改", {});
+      console.log("🚀 ~ saveHandler ~ res:", res);
+      if (res.action == "confirm" && res.value) {
+        await systemConfig.verifyGoogleAuth(res.value);
+      } else {
+        return;
+      }
     }
     try {
       loading.value = true;
       const res = await systemConfig.setConfig(hasChange);
       console.log(res);
-      getSystemConfig();
+      const result = await getSystemConfig();
+      if (needGoogleverify) {
+        console.log("🚀 ~ saveHandler ~ result:", result);
+        commonStore.setNewConfig(result);
+      }
     } finally {
       loading.value = false;
     }
@@ -102,9 +127,9 @@ function beforeLeaveHandler(activeName: string, oldActiveName: string) {
   const hasChange = getCurrentTabChangeData();
   if (hasChange?.length) {
     return new Promise((resolve, inject) => {
-      const res = ElMessageBox.confirm("当前页面有未保存的配置，是否离开？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      const res = ElMessageBox.confirm($t("dangQianYeMianYouWe"), $t("tiShi"), {
+        confirmButtonText: $t("queDing_0"),
+        cancelButtonText: $t("quXiao_0"),
         type: "warning",
       })
         .then(() => {

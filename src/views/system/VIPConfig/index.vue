@@ -10,77 +10,68 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button v-hasPerm="['VIPConfig:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="title" label="会员名称" min-width="120" />
-        <el-table-column prop="icon" label="图片" min-width="100">
+        <el-table-column prop="title" :label="$t('huiYuanMingCheng')" min-width="120" />
+        <el-table-column prop="icon" :label="$t('tuPian')" min-width="100">
           <template #default="{ row }">
             <el-image :src="row.icon" class="icon" fit="contain" :preview-src-list="[row.icon]" preview-teleported :z-index="9999" />
           </template>
         </el-table-column>
-        <el-table-column prop="level" label="会员等级" min-width="80" />
-        <el-table-column prop="min_rate_of_return" label="收益率范围" min-width="120">
-          <template #default="{ row }">{{ row.min_rate_of_return }}%- {{ row.max_rate_of_return }}%</template>
+        <el-table-column prop="level" :label="$t('huiYuanDengJi')" min-width="80" />
+        <el-table-column prop="min_rate_of_return" :label="$t('shouYiShuaiFanWei_1')" min-width="120">
+          <template #default="{ row }">{{ $t("rowMinRateOfReturn", [row.min_rate_of_return, row.max_rate_of_return]) }}</template>
         </el-table-column>
-        <el-table-column prop="quant_num" label="量化次数" min-width="80" />
-        <el-table-column prop="min_unlock_amount" label="解锁金额" min-width="120" />
-        <el-table-column prop="quant_effect_days" label="量化天数" min-width="100" />
-        <el-table-column prop="service_fee_ratio" label="平台服务费" min-width="120">
-          <template #default="{ row }">{{ row.service_fee_ratio }}%</template>
+        <el-table-column prop="quant_num" :label="$t('liangHuaCiShu')" min-width="80" />
+        <el-table-column prop="min_unlock_amount" :label="$t('jieSuoJinE')" min-width="120" />
+        <el-table-column prop="quant_effect_days" :label="$t('liangHuaTianShu')" min-width="100" />
+        <el-table-column prop="service_fee_ratio" :label="$t('pingTaiFuWuFei')" min-width="120">
+          <template #default="{ row }">{{ $t("rowServiceFeeRatio", [row.service_fee_ratio]) }}</template>
         </el-table-column>
 
-        <!-- <el-table-column prop="unlock_invitation_num" label="解锁邀请人数" min-width="100" />
-        <el-table-column prop="invited_comp_level" label="邀请计算层级" min-width="100" />
-        <el-table-column prop="invited_num_effect_recharge" label="邀请人数有效充值" min-width="120" />
-        <el-table-column prop="show_service_fee" label="是否显示服务费" min-width="100">
-          <template #default="{ row }">
-            {{ row.show_service_fee == 1 ? "是" : "否" }}
-          </template>
-        </el-table-column> -->
-
-        <el-table-column prop="recharge_rebate_ratio" label="充值返利%" min-width="100" />
-        <el-table-column prop="quant_rebate_ratio" label="量化返利%" min-width="100" />
-        <el-table-column prop="recharge_yield_ratio" label="复充收益率/封顶" min-width="100">
+        <el-table-column prop="recharge_rebate_ratio" :label="$t('chongZhiFanLi_0')" min-width="100" />
+        <el-table-column prop="quant_rebate_ratio" :label="$t('liangHuaFanLi_0')" min-width="100" />
+        <el-table-column prop="recharge_yield_ratio" :label="$t('fuChongShouYiShuaiF')" min-width="100">
           <template #default="{ row }">{{ row.recharge_yield_ratio }}% / {{ row.recharge_cap }}</template>
         </el-table-column>
-        <el-table-column prop="is_unlock_purchase" label="是否可解锁购买" min-width="120">
+        <el-table-column prop="is_unlock_purchase" :label="$t('shiFouKeJieSuoGouM')" min-width="120">
           <template #default="{ row }">
-            <el-tag v-if="row.is_unlock_purchase == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
+            <el-tag v-if="row.is_unlock_purchase == StatusEnum.False" type="success">{{ $t("zhengChang") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jinYong") }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="status" :label="$t('zhuangTai')" width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.status == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
+            <el-tag v-if="row.status == StatusEnum.False" type="success">{{ $t("zhengChang_0") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jinYong_0") }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" fixed="right" align="left" width="200">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="200">
           <template #default="{ row }">
             <el-button v-hasPerm="['VIPConfig:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
             <el-button v-hasPerm="['VIPConfig:editExplain']" type="primary" link size="small" @click.stop="table.editHandler(row, 1)">
               <template #icon><EditPen /></template>
-              充值说明
+              {{ $t("chongZhiShuoMing") }}
             </el-button>
             <el-button v-hasPerm="['VIPConfig:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
             <el-button v-hasPerm="['VIPConfig:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               <template #icon><Switch /></template>
@@ -108,8 +99,8 @@ import TableInstance from "@/utils/tableInstance";
 
 /** 状态选项 */
 const status_types = [
-  { value: StatusEnum.False, label: "正常" },
-  { value: StatusEnum.True, label: "禁用" },
+  { value: StatusEnum.False, label: $t("zhengChang_1") },
+  { value: StatusEnum.True, label: $t("jinYong_1") },
 ];
 
 /** 查询配置 */
@@ -119,7 +110,7 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "title",
-      label: "会员名称",
+      label: $t("huiYuanMingCheng_0"),
       props: {
         clearable: true,
         style: { width: "200px" },
@@ -128,7 +119,7 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "level",
-      label: "会员等级",
+      label: $t("huiYuanDengJi_0"),
       props: {
         clearable: true,
         style: { width: "200px" },
@@ -137,7 +128,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: status_types,
       props: {
         clearable: true,
@@ -147,7 +138,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "is_unlock_purchase",
-      label: "是否可解锁",
+      label: $t("shiFouKeJieSuo"),
       options: status_types,
       props: {
         clearable: true,

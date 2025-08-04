@@ -210,7 +210,7 @@ export default UserAPI;
 /** 登录用户信息 */
 export interface UserInfo {
   /** 用户ID */
-  userId?: number;
+  uid?: number;
 
   /** 用户名 */
   username?: string;
@@ -218,14 +218,83 @@ export interface UserInfo {
   /** 昵称 */
   nickname?: string;
 
+  /** 用户邮箱 */
+  email?: string;
+
+  /** 手机号 */
+  mobile?: string;
+
   /** 头像URL */
   avatar?: string;
 
-  /** 角色 */
-  roles: { id: number; name: string }[];
+  /** 部门ID */
+  department_id?: number;
 
-  /** 权限 */
-  perms: string[];
+  /** 性别 */
+  gender?: number;
+
+  /** 备注 */
+  remark?: string;
+
+  /** 用户状态(1:正常;0:禁用) */
+  status?: number;
+
+  /** 最后登录IP */
+  last_login_ip?: string;
+
+  /** 最后登录时间 */
+  last_login_at?: string;
+
+  /** 邮箱验证时间 */
+  email_verified_at?: string;
+
+  /** 手机验证时间 */
+  mobile_verified_at?: string;
+
+  /** 创建时间 */
+  created_at?: string;
+
+  /** 更新时间 */
+  updated_at?: string;
+
+  /** 是否开启谷歌验证(1:开启;0:关闭) */
+  google2fa_enabled?: number;
+
+  /** 谷歌验证开启时间 */
+  google2fa_enabled_at?: string;
+
+  /** 角色列表 */
+  roles?: {
+    id: number;
+    title: string;
+    name: string;
+    data_range: string;
+    sort: number;
+    status: number;
+    description: string;
+    created_at: string;
+    updated_at: string;
+    pivot?: {
+      uid: number;
+      role_id: number;
+    };
+  }[];
+
+  /** 部门信息 */
+  department?: {
+    id: number;
+    parent_id: number;
+    title: string;
+    name: string;
+    sort: number;
+    status: number;
+    description: string;
+    created_at: string;
+    updated_at: string;
+  };
+
+  /** 权限列表 */
+  perms?: string[];
 }
 
 /**

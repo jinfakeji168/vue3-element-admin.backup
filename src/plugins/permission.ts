@@ -79,10 +79,10 @@ export function hasAuth(value: string | string[], type: "button" | "role" = "but
   const { roles, perms } = useUserStore().userInfo;
 
   // 超级管理员 拥有所有权限
-  if (roles.some((val) => val.id == 1)) {
+  if (roles?.some((val) => val.id == 1)) {
     return true;
   }
 
   const auths = type === "button" ? perms : roles;
-  return typeof value === "string" ? auths.includes(value) : value.some((perm) => auths.includes(perm));
+  return typeof value === "string" ? auths?.includes(value) : value.some((perm) => auths?.includes(perm));
 }

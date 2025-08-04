@@ -27,15 +27,15 @@ interface FormItem {
 
 /** 表单配置项 */
 const formItems: FormItem[] = [
-  { label: "用户名", prop: "username", type: "input", readonly: (form) => !!form.uid },
-  { label: "用户昵称", prop: "nickname", type: "input" },
-  { label: "所属部门", prop: "department_id", type: "tree-select" },
-  { label: "角色", prop: "roles", type: "select", multiple: true },
-  { label: "密码", prop: "password", type: "input", showOn: (form) => !form.uid },
-  { label: "确认密码", prop: "password2", type: "input", showOn: (form) => !form.uid },
-  { label: "手机号码", prop: "mobile", type: "input", maxlength: 11 },
-  { label: "邮箱", prop: "email", type: "input", maxlength: 50 },
-  { label: "状态", prop: "status", type: "switch" },
+  { label: $t("login.username"), prop: "username", type: "input", readonly: (form) => !!form.uid },
+  { label: $t("yongHuNiCheng"), prop: "nickname", type: "input" },
+  { label: $t("suoShuBuMen"), prop: "department_id", type: "tree-select" },
+  { label: $t("jiaoSe"), prop: "roles", type: "select", multiple: true },
+  { label: $t("login.password"), prop: "password", type: "input", showOn: (form) => !form.uid },
+  { label: $t("queRenMiMa"), prop: "password2", type: "input", showOn: (form) => !form.uid },
+  { label: $t("shouJiHaoMa"), prop: "mobile", type: "input", maxlength: 11 },
+  { label: $t("youXiang"), prop: "email", type: "input", maxlength: 50 },
+  { label: $t("zhuangTai"), prop: "status", type: "switch" },
 ];
 
 /** 事件处理 */
@@ -54,30 +54,30 @@ const roleOptions = ref<OptionType[]>([]);
 
 /** 表单校验规则 */
 const rules = {
-  username: [{ required: true, message: "用户名不能为空", trigger: "blur" }],
-  nickname: [{ required: true, message: "用户昵称不能为空", trigger: "blur" }],
-  department_id: [{ required: true, message: "所属部门不能为空", trigger: "blur" }],
-  roles: [{ required: true, message: "用户角色不能为空", trigger: "blur" }],
+  username: [{ required: true, message: $t("yongHuMingBuNengWei"), trigger: "blur" }],
+  nickname: [{ required: true, message: $t("yongHuNiChengBuNeng"), trigger: "blur" }],
+  department_id: [{ required: true, message: $t("suoShuBuMenBuNengW"), trigger: "blur" }],
+  roles: [{ required: true, message: $t("yongHuJiaoSeBuNeng"), trigger: "blur" }],
   password: [
     {
       required: true,
-      message: "密码至少需要6位字符",
+      message: $t("miMaZhiShaoXuYao_6"),
       trigger: "blur",
       pattern: /^.{6,}$/,
     },
   ],
-  password2: [{ required: true, message: "确认密码不能为空", trigger: "blur" }],
+  password2: [{ required: true, message: $t("queRenMiMaBuNengWe"), trigger: "blur" }],
   email: [
     {
       pattern: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}/,
-      message: "请输入正确的邮箱地址",
+      message: $t("qingShuRuZhengQueDe_2"),
       trigger: "blur",
     },
   ],
   mobile: [
     {
       pattern: /^1[3|4|5|6|7|8|9][0-9]\d{8}$/,
-      message: "请输入正确的手机号码",
+      message: $t("qingShuRuZhengQueDe_3"),
       trigger: "blur",
     },
   ],
@@ -150,7 +150,7 @@ defineExpose({ setFormData });
             v-model="formData[item.prop as keyof UserForm]"
             :readonly="item.readonly?.(formData)"
             :maxlength="item.maxlength"
-            :placeholder="'请输入' + item.label"
+            :placeholder="$t('qingShuRuItemlabel', [item.label])"
           />
           <el-tree-select
             v-else-if="item.type === 'tree-select'"
@@ -159,9 +159,14 @@ defineExpose({ setFormData });
             filterable
             check-strictly
             :render-after-expand="false"
-            :placeholder="'请选择' + item.label"
+            :placeholder="$t('qingXuanZeItemlabel', [item.label])"
           />
-          <el-select v-else-if="item.type === 'select'" v-model="formData[item.prop as keyof UserForm]" :multiple="item.multiple" :placeholder="'请选择' + item.label">
+          <el-select
+            v-else-if="item.type === 'select'"
+            v-model="formData[item.prop as keyof UserForm]"
+            :multiple="item.multiple"
+            :placeholder="$t('qingXuanZeItemlabel_0', [item.label])"
+          >
             <el-option v-for="opt in roleOptions" :key="opt.value" :label="opt.label" :value="opt.value" :disabled="opt.disabled" />
           </el-select>
           <el-switch
@@ -179,8 +184,8 @@ defineExpose({ setFormData });
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" :loading="loading" @click="submitHandler">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" :loading="loading" @click="submitHandler">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-drawer>

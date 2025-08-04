@@ -1,7 +1,7 @@
 <!-- 部门树 -->
 <template>
   <el-card shadow="never">
-    <el-input v-model="deptName" placeholder="部门名称" clearable>
+    <el-input v-model="deptName" :placeholder="$t('buMenMingCheng')" clearable>
       <template #prefix>
         <el-icon><Search /></el-icon>
       </template>
@@ -66,7 +66,7 @@ function handleNodeClick(data: { [key: string]: any }) {
 
 onBeforeMount(() => {
   DeptAPI.getList().then((data) => {
-    deptList.value = [{ id: "", title: "全部", children: data }];
+    deptList.value = [{ id: "", title: $t("quanBu"), children: data }];
   });
 });
 </script>

@@ -81,6 +81,7 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
           // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
           ElementPlusResolver(),
         ],
+        dirs: ['src/lang/*.ts'],
         eslintrc: {
           // 是否自动生成 eslint 规则，建议生成之后设置 false
           enabled: false,

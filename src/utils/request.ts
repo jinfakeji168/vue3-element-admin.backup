@@ -58,7 +58,7 @@ service.interceptors.response.use(
         setTimeout(() => {
           router.push("/login");
         }, 1000);
-      } else if (code === ResultEnum.FAIL) {
+      } else {
         //500错误 打印错误并reject
         ElMessage.error(message);
         return Promise.reject(message);
@@ -69,6 +69,7 @@ service.interceptors.response.use(
   },
   (error: any) => {
     console.log("🚀 ~ error:", error);
+    ElMessage.error(error.message);
     return Promise.reject(error.message);
   }
 );

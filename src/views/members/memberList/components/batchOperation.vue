@@ -221,6 +221,8 @@ import api, { Member, type BatchOperationForm } from "@/api/members/memberList";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { FormInstance } from "element-plus";
 import { dayjs } from "element-plus";
+import systemConfig from "@/api/system/systemConfig";
+
 import { searchMember } from "@/utils";
 import { useStore } from "@/store/modules/common";
 const store = useStore();
@@ -410,6 +412,15 @@ async function submitForm() {
 
     if (postData.withdrawal_invite_user_effective_time) {
       postData.withdrawal_invite_user_effective_time = dayjs(postData.withdrawal_invite_user_effective_time).format("YYYY-MM-DD HH:mm:ss");
+    }
+    const enableGoogleVerify = await store.keyByConfigValue("update_money_google_secret");
+    if (enableGoogleVerify == 1 && activeTab.value == 7) {
+      const res = await ElMessageBox.prompt("输入谷歌验证码进行修改");
+      if (res.action == "confirm" && res.value) {
+        await systemConfig.verifyGoogleAuth(res.value);
+      } else {
+        return;
+      }
     }
     // 调用对应tab的API函数
     await tabs[activeTab.value].fu(postData);

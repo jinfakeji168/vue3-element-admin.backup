@@ -5,8 +5,8 @@
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
-      <el-button type="primary" @click="control_win_Handler()">指定赢</el-button>
-      <el-button type="danger" @click="control_lose_Handler()">指定输</el-button>
+      <el-button type="primary" @click="control_win_Handler()" v-hasPerm="['contractOrder:controll']">指定赢</el-button>
+      <el-button type="danger" @click="control_lose_Handler()" v-hasPerm="['contractOrder:controll']">指定输</el-button>
 
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
@@ -72,9 +72,25 @@
         <el-table-column label="操作" width="180" fixed="right">
           <template #default="{ row }">
             <el-button-group>
-              <el-button type="primary" link @click="settlement_Handler([row.id])" :disabled="row.status === 1">结算</el-button>
-              <el-button :type="row.is_control === 1 ? 'success' : 'primary'" link @click="control_win_Handler([row.id])" :disabled="row.status === 1">指定赢</el-button>
-              <el-button :type="row.is_control === 2 ? 'danger' : 'primary'" link @click="control_lose_Handler([row.id])" :disabled="row.status === 1">指定输</el-button>
+              <el-button type="primary" link @click="settlement_Handler([row.id])" :disabled="row.status === 1" v-hasPerm="['contractOrder:settlement']">结算</el-button>
+              <el-button
+                :type="row.is_control === 1 ? 'success' : 'primary'"
+                link
+                @click="control_win_Handler([row.id])"
+                :disabled="row.status === 1"
+                v-hasPerm="['contractOrder:controll']"
+              >
+                指定赢
+              </el-button>
+              <el-button
+                :type="row.is_control === 2 ? 'danger' : 'primary'"
+                link
+                @click="control_lose_Handler([row.id])"
+                :disabled="row.status === 1"
+                v-hasPerm="['contractOrder:controll']"
+              >
+                指定输
+              </el-button>
             </el-button-group>
           </template>
         </el-table-column>

@@ -1,9 +1,9 @@
 <template>
   <el-form label-width="240px">
-    <el-form-item label="分享审核">
+    <el-form-item :label="$t('fenXiangShenHe')">
       <el-radio-group v-model="getI('is_auto_check').values">
-        <el-radio :label="1">自动审核</el-radio>
-        <el-radio :label="2">手动审核</el-radio>
+        <el-radio :label="1">{{ $t("ziDongShenHe") }}</el-radio>
+        <el-radio :label="2">{{ $t("shouDongShenHe") }}</el-radio>
       </el-radio-group>
     </el-form-item>
   </el-form>

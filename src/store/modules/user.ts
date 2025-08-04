@@ -52,6 +52,8 @@ export const useUserStore = defineStore("user", () => {
         });
     });
   }
+  const isSuper = computed(() => userInfo.value.roles?.some(i => i.id == 1))
+
   function setUserInfoPermission(permissions: string[]) {
     return new Promise<void>((resolve) => {
       userInfo.value.perms = permissions;
@@ -63,6 +65,10 @@ export const useUserStore = defineStore("user", () => {
    */
   function logout() {
     return new Promise<void>((resolve) => {
+      const interval = sessionStorage.getItem("intervalId");
+      if (interval) {
+        clearInterval((interval));
+      }
       AuthAPI.logout()
         .then()
         .finally(() => {
@@ -93,6 +99,7 @@ export const useUserStore = defineStore("user", () => {
     logout,
     clearUserSession,
     setUserInfoPermission,
+    isSuper
   };
 });
 
