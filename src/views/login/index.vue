@@ -179,6 +179,8 @@ async function handleLoginSubmit() {
         .then(async () => {
           await userStore.getUserInfo();
           // 跳转到登录前的页面
+          console.log("----------------");
+
           if (rememberMe.value) {
             localStorage.setItem("Account", JSON.stringify(loginData.value));
           }

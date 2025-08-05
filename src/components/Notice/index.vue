@@ -64,6 +64,8 @@ import configApi from "@/api/system/systemConfig";
 import router from "@/router";
 import api from "@/api/bill/withdrawOrder";
 import { useStore } from "@/store/modules/common";
+import { usePermissionStore } from "@/store";
+
 const activeTab = ref("notice");
 const notices = ref<NoticePageVO[]>([]);
 const noticeDetailRef = ref();
@@ -92,7 +94,11 @@ async function getOrderNum() {
   }, 10000);
   sessionStorage.setItem("intervalId", intervalId.toString());
 }
-getOrderNum();
+const permissionStore = usePermissionStore();
+console.log("🚀 ~ permissionStore.hasWithdrawOrder:", permissionStore.hasWithdrawOrder);
+if (permissionStore.hasWithdrawOrder) {
+  getOrderNum();
+}
 
 const commonStore = useStore();
 

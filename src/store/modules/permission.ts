@@ -16,7 +16,8 @@ export const usePermissionStore = defineStore("permission", () => {
   const mixLeftMenus = ref<RouteRecordRaw[]>([]);
 
   const isRoutesLoaded = ref(false);
-
+  /**是否有提现订单权限 */
+  const hasWithdrawOrder = ref(false);
   /**
    * 生成动态路由
    */
@@ -25,11 +26,13 @@ export const usePermissionStore = defineStore("permission", () => {
     return new Promise<RouteRecordRaw[]>((resolve, reject) => {
       MenuAPI.getRoutes()
         .then((data) => {
+          console.log("🚀 ~ generateRoutes ~ data:", data)
           //data.permissions 存入 userinfo
           userStore.setUserInfoPermission(data.permissions);
           const dynamicRoutes = transformRoutes(data.menu);
           routes.value = constantRoutes.concat(dynamicRoutes);
           isRoutesLoaded.value = true;
+          hasOrderPermission(dynamicRoutes)
           resolve(dynamicRoutes);
         })
         .catch((error) => {
@@ -37,6 +40,13 @@ export const usePermissionStore = defineStore("permission", () => {
         });
     });
   }
+  /**查询是否有订单页面权限 */
+  function hasOrderPermission(list: RouteRecordRaw[]) {
+    const res = list.find(i => i.name == 'bill')?.children?.find(i => i.name == "withdrawOrder")
+    hasWithdrawOrder.value = !!res
+  }
+
+
 
   /**
    * 混合模式菜单下根据顶部菜单路径设置左侧菜单
@@ -73,6 +83,7 @@ export const usePermissionStore = defineStore("permission", () => {
     setMixLeftMenus,
     isRoutesLoaded,
     resetRouter,
+    hasWithdrawOrder
   };
 });
 
@@ -97,7 +108,11 @@ const transformRoutes = (routes: RouteVO[]) => {
     }
 
     if (tmpRoute.children) {
-      tmpRoute.children = transformRoutes(route.children);
+      if (tmpRoute.children[0].type == 'menu') {
+        tmpRoute.children = transformRoutes(route.children);
+      } else {
+        tmpRoute.children = [];
+      }
     }
 
     asyncRoutes.push(tmpRoute);
