@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" title="下级信息" width="80%" :close-on-click-modal="false" append-to-body @closed="handleClosed">
+  <el-dialog v-model="visible" :title="$t('xiaJiXinXi')" width="80%" :close-on-click-modal="false" append-to-body @closed="handleClosed">
     <div class="app-container">
       <div class="search-bar">
         <QueryPart ref="queryFormRef" v-model="queryParams" :config="config" @search="table.queryHandler()" @reset="table.handleResetQuery()"></QueryPart>
@@ -10,13 +10,13 @@
 
         <el-table :data="table.list.value" row-key="level" @selection-change="table.selectionChangeHandler($event)">
           <el-table-column type="selection" width="55" />
-          <el-table-column prop="level" label="级别" min-width="80" />
-          <el-table-column prop="recharge_amount" label="充值金额" min-width="120">
-            <template #default="{ row }">¥{{ row.recharge_amount }}</template>
+          <el-table-column prop="level" :label="$t('jiBie')" min-width="80" />
+          <el-table-column prop="recharge_amount" :label="$t('chongZhiJinE_0')" min-width="120">
+            <template #default="{ row }">{{ $t("cnyRowRechargeAmount", [row.recharge_amount]) }}</template>
           </el-table-column>
-          <el-table-column prop="recharge_count" label="充值笔数" min-width="100" />
-          <el-table-column prop="total_members" label="总人数" min-width="100" />
-          <el-table-column prop="valid_members" label="有效人数" min-width="100" />
+          <el-table-column prop="recharge_count" :label="$t('chongZhiBiShu_0')" min-width="100" />
+          <el-table-column prop="total_members" :label="$t('zongRenShu')" min-width="100" />
+          <el-table-column prop="valid_members" :label="$t('youXiaoRenShu')" min-width="100" />
         </el-table>
         <template #footer>
           <pagination background :total="table.pageTotal.value" v-model:page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
@@ -39,7 +39,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "datetime",
-      label: "时间范围",
+      label: $t("shiJianFanWei"),
       props: {
         style: { width: "400px" },
       },

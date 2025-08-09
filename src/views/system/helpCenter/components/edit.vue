@@ -1,18 +1,18 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="800px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
-      <el-form-item label="启用状态" prop="status">
+      <el-form-item :label="$t('qiYongZhuangTai')" prop="status">
         <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item>
-      <el-form-item label="显示排序" prop="sort">
+      <el-form-item :label="$t('xianShiPaiXu')" prop="sort">
         <el-input-number v-model="formData.sort" :min="1" />
       </el-form-item>
-      <el-form-item label="发布时间" prop="push_time">
-        <el-date-picker v-model="formData.push_time" type="datetime" placeholder="选择发布时间" />
+      <el-form-item :label="$t('faBuShiJian')" prop="push_time">
+        <el-date-picker v-model="formData.push_time" type="datetime" :placeholder="$t('xuanZeFaBuShiJian')" />
       </el-form-item>
     </el-form>
     <el-tabs v-model="currentIndex">
-      <el-tab-pane label="标题" :name="0">
+      <el-tab-pane :label="$t('biaoTi')" :name="0">
         <Content
           class="content"
           :ref="
@@ -25,7 +25,7 @@
           type="public"
         ></Content>
       </el-tab-pane>
-      <el-tab-pane label="内容" :name="1">
+      <el-tab-pane :label="$t('neiRong')" :name="1">
         <Content
           class="content"
           :ref="
@@ -40,8 +40,8 @@
     </el-tabs>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -63,10 +63,10 @@ watch(
   () => {
     if (!visible.value) return;
     if (props.data) {
-      title.value = "编辑";
+      title.value = $t("bianJi");
       formData.value = { ...props.data };
     } else {
-      title.value = "新增";
+      title.value = $t("xinZeng");
       formData.value = { sort: 1, status: StatusEnum.False };
     }
   },
@@ -78,7 +78,7 @@ const loading = ref(false);
 const formData = ref<Form>({});
 
 const rules = {
-  push_time: { required: true, message: "请选择发布时间", trigger: "blur" },
+  push_time: { required: true, message: $t("qingXuanZeFaBuShiJ"), trigger: "blur" },
 };
 const formRef = ref<FormInstance>();
 const contentRef = ref<InstanceType<typeof Content>[]>([]);
@@ -92,7 +92,7 @@ async function submitHandler() {
     if (props.data) {
       await api.edit(unref(formData));
     } else {
-      await api.add({ ...unref(formData), push_time: dayjs(unref(formData)?.push_time).format("YYYY-MM-DD HH:mm:ss") });
+      await api.add({ ...unref(formData), push_time: dayjs(unref(formData)?.push_time).format($t("yyyyMmDdHhMmSs")) });
     }
   } finally {
     loading.value = false;

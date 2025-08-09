@@ -3,8 +3,8 @@
     <content v-model="formData" :disabled="!hasEditAuth" :keys="['lottery_remark_original', 'lottery_remark_translation']" style="height: 70vh" />
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -26,7 +26,7 @@ watch(
   visible,
   () => {
     if (!visible.value) return;
-    title.value = "抽奖说明";
+    title.value = $t("chouJiangShuoMing");
 
     formData.value = { ...props.data };
     console.log("🚀 ~ props.data:", props.data);
@@ -35,20 +35,21 @@ watch(
     flush: "post",
   }
 );
-const formData = ref<Form>({});
+const formData = ref<Partial<Form>>({});
 
 const formRef = ref<FormInstance>();
 const emit = defineEmits(["finish"]);
-const loading=ref(false)
+const loading = ref(false);
 async function submitHandler() {
   await formRef.value?.validate();
- try{ loading.value=true
-  await api.setLotteryConfigTranslation({
-    lottery_remark_original: unref(formData).lottery_remark_original,
-    lottery_remark_translation: unref(formData).lottery_remark_translation?.filter((item: TranslationItem) => item.content),
-  })
-  }finally{
-    loading.value=false
+  try {
+    loading.value = true;
+    await api.setLotteryConfigTranslation({
+      lottery_remark_original: unref(formData).lottery_remark_original,
+      lottery_remark_translation: unref(formData).lottery_remark_translation?.filter((item: TranslationItem) => item.content),
+    });
+  } finally {
+    loading.value = false;
   }
   visible.value = false;
   emit("finish");

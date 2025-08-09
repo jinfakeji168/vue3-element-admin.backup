@@ -2,14 +2,14 @@
   <div class="app-container">
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="关键字" prop="title">
-          <el-input v-model="queryParams.title" placeholder="部门名称" @keyup.enter="handleQuery" />
+        <el-form-item :label="$t('guanJianZi')" prop="title">
+          <el-input v-model="queryParams.title" :placeholder="$t('buMenMingCheng')" @keyup.enter="handleQuery" />
         </el-form-item>
 
-        <el-form-item label="部门状态" prop="status">
-          <el-select v-model="queryParams.status" placeholder="全部" clearable class="!w-[100px]">
-            <el-option :value="StatusEnum.False" label="正常" />
-            <el-option :value="StatusEnum.True" label="禁用" />
+        <el-form-item :label="$t('buMenZhuangTai')" prop="status">
+          <el-select v-model="queryParams.status" :placeholder="$t('quanBu')" clearable class="!w-[100px]">
+            <el-option :value="StatusEnum.False" :label="$t('zhengChang')" />
+            <el-option :value="StatusEnum.True" :label="$t('jinYong')" />
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -17,13 +17,13 @@
             <template #icon>
               <Search />
             </template>
-            搜索
+            {{ $t("souSuo") }}
           </el-button>
           <el-button @click="handleResetQuery">
             <template #icon>
               <Refresh />
             </template>
-            重置
+            {{ $t("zhongZhi") }}
           </el-button>
         </el-form-item>
       </el-form>
@@ -35,51 +35,51 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button v-hasPerm="['dept:delete']" type="danger" :disabled="ids.length === 0" @click="handleDelete()">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu_0") }}
         </el-button>
       </template>
 
       <el-table :data="deptList" row-key="id" default-expand-all :tree-props="{ children: 'children', hasChildren: 'hasChildren' }" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column prop="title" label="部门名称" min-width="200" />
-        <el-table-column prop="name" label="部门编号" width="200" />
-        <el-table-column prop="description" label="部门描述" width="200" />
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="title" :label="$t('buMenMingCheng')" min-width="200" />
+        <el-table-column prop="name" :label="$t('buMenBianHao')" width="200" />
+        <el-table-column prop="description" :label="$t('buMenMiaoShu')" width="200" />
+        <el-table-column prop="status" :label="$t('zhuangTai')" width="100">
           <template #default="scope">
-            <el-tag v-if="scope.row.status == 1" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
+            <el-tag v-if="scope.row.status == 1" type="success">{{ $t("zhengChang") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jinYong") }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column prop="sort" label="排序" width="100" />
+        <el-table-column prop="sort" :label="$t('paiXu')" width="100" />
 
-        <el-table-column label="操作" fixed="right" align="left" width="400">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="400">
           <template #default="scope">
             <el-button v-hasPerm="['dept:add']" type="primary" link size="small" @click.stop="handleOpenDialog(scope.row.id, undefined)">
               <template #icon>
                 <Plus />
               </template>
-              新增
+              {{ $t("xinZeng") }}
             </el-button>
             <el-button v-hasPerm="['dept:edit']" type="primary" link size="small" @click.stop="handleOpenDialog(scope.row.parent_id, scope.row)">
               <template #icon><EditPen /></template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
             <el-button v-hasPerm="['dept:delete']" type="danger" link size="small" @click.stop="handleDelete(scope.row.id)">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
             <el-button v-hasPerm="['dept:status']" :type="scope.row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="changeStatus(scope.row)">
               <template #icon><Switch /></template>
-              {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
+              {{ scope.row.status == StatusEnum.False ? $t("jinYong") : $t("qiYong") }}
             </el-button>
           </template>
         </el-table-column>
@@ -88,19 +88,19 @@
 
     <el-dialog v-model="dialog.visible" :title="dialog.title" width="600px" @closed="handleCloseDialog">
       <el-form ref="deptFormRef" :model="formData" :rules="rules" label-width="80px">
-        <el-form-item label="上级部门" prop="parent_id">
-          <el-tree-select v-model="formData.parent_id" placeholder="选择上级部门" :data="deptOptions" filterable check-strictly :render-after-expand="false" />
+        <el-form-item :label="$t('shangJiBuMen')" prop="parent_id">
+          <el-tree-select v-model="formData.parent_id" :placeholder="$t('xuanZeShangJiBuMen')" :data="deptOptions" filterable check-strictly :render-after-expand="false" />
         </el-form-item>
-        <el-form-item label="部门名称" prop="title">
-          <el-input v-model="formData.title" placeholder="请输入部门名称" />
+        <el-form-item :label="$t('buMenMingCheng')" prop="title">
+          <el-input v-model="formData.title" :placeholder="$t('qingShuRuBuMenMing')" />
         </el-form-item>
-        <el-form-item label="部门编号" prop="name">
-          <el-input v-model="formData.name" placeholder="请输入部门编号" />
+        <el-form-item :label="$t('buMenBianHao_0')" prop="name">
+          <el-input v-model="formData.name" :placeholder="$t('qingShuRuBuMenBian')" />
         </el-form-item>
-        <el-form-item label="部门描述" prop="description">
-          <el-input v-model="formData.description" placeholder="请输入部门描述" />
+        <el-form-item :label="$t('buMenMiaoShu_0')" prop="description">
+          <el-input v-model="formData.description" :placeholder="$t('qingShuRuBuMenMiao')" />
         </el-form-item>
-        <el-form-item label="显示排序" prop="sort">
+        <el-form-item :label="$t('xianShiPaiXu')" prop="sort">
           <el-input-number v-model="formData.sort" controls-position="right" style="width: 100px" :min="0" />
         </el-form-item>
         <!-- <el-form-item label="部门状态">
@@ -113,8 +113,8 @@
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button @click="handleCloseDialog">取 消</el-button>
-          <el-button type="primary" @click="handleSubmit" :loading="loading[1]">确 定</el-button>
+          <el-button @click="handleCloseDialog">{{ $t("quXiao") }}</el-button>
+          <el-button type="primary" @click="handleSubmit" :loading="loading[1]">{{ $t("queDing") }}</el-button>
         </div>
       </template>
     </el-dialog>
@@ -123,7 +123,7 @@
 
 <script setup lang="ts">
 defineOptions({
-  name: "Dept",
+  name: $t("dept"),
   inheritAttrs: false,
 });
 
@@ -156,10 +156,10 @@ const formData = reactive<DeptForm>({
 });
 
 const rules = reactive({
-  parent_id: [{ required: true, message: "上级部门不能为空", trigger: "change" }],
-  title: [{ required: true, message: "部门名称不能为空", trigger: "blur" }],
-  name: [{ required: true, message: "部门编号不能为空", trigger: "blur" }],
-  sort: [{ required: true, message: "显示排序不能为空", trigger: "blur" }],
+  parent_id: [{ required: true, message: $t("shangJiBuMenBuNeng"), trigger: "change" }],
+  title: [{ required: true, message: $t("buMenMingChengBuNen"), trigger: "blur" }],
+  name: [{ required: true, message: $t("buMenBianHaoBuNeng"), trigger: "blur" }],
+  sort: [{ required: true, message: $t("xianShiPaiXuBuNeng"), trigger: "blur" }],
 });
 
 /** 查询部门 */
@@ -194,7 +194,7 @@ async function handleOpenDialog(parent_id?: number, item?: DeptVO) {
   deptOptions.value = [
     {
       value: 0,
-      label: "顶级部门",
+      label: $t("dingJiBuMen"),
       children: deepChangeOption(data, [
         ["label", "title"],
         ["value", "id"],
@@ -204,16 +204,16 @@ async function handleOpenDialog(parent_id?: number, item?: DeptVO) {
 
   dialog.visible = true;
   if (item) {
-    dialog.title = "修改部门";
+    dialog.title = $t("xiuGaiBuMen");
     nextTick(() => {
       Object.assign(formData, item);
       formData.parent_id = parent_id ?? item.parent_id;
     });
   } else if (parent_id) {
-    dialog.title = "新增子部门";
+    dialog.title = $t("xinZengZiBuMen");
     formData.parent_id = parent_id;
   } else {
-    dialog.title = "新增部门";
+    dialog.title = $t("xinZengBuMen");
     formData.parent_id = parent_id ?? 0;
   }
 }
@@ -242,11 +242,11 @@ function handleDelete(deptId?: number) {
   const deptIds: number[] = [...ids.value, deptId as number];
 
   if (!deptIds) {
-    ElMessage.warning("请勾选删除项");
+    ElMessage.warning($t("qingGouXuanShanChuX"));
     return;
   }
 
-  ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
+  ElMessageBox.confirm($t("queRenShanChuYiXuan"), $t("jingGao"), {
     type: "warning",
   }).then(() => {
     DeptAPI.deleteByIds(deptIds).then(() => {

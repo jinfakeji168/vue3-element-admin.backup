@@ -7,37 +7,37 @@
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="order_sn" label="订单号" min-width="180" />
-        <el-table-column prop="uid" label="用户ID" min-width="200">
+        <el-table-column prop="order_sn" :label="$t('dingDanHao')" min-width="180" />
+        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="200">
           <template #default="{ row }">{{ row.has_member?.id }} / {{ row.has_member?.account }}</template>
         </el-table-column>
-        <el-table-column prop="has_invest_setting" label="产品名称" min-width="200">
+        <el-table-column prop="has_invest_setting" :label="$t('chanPinMingCheng')" min-width="200">
           <template #default="{ row }">{{ row.has_invest_setting?.id }} / {{ row.has_invest_setting?.title }}</template>
         </el-table-column>
 
-        <el-table-column prop="amount" label="投资金额(U)" min-width="120" />
-        <el-table-column prop="invest_days" label="投资天数" min-width="100" />
-        <el-table-column prop="days_rate" label="日利率" min-width="100">
-          <template #default="{ row }">{{ row.has_invest_setting?.daily_yield }}%</template>
+        <el-table-column prop="amount" :label="$t('touZiJineu')" min-width="120" />
+        <el-table-column prop="invest_days" :label="$t('touZiTianShu')" min-width="100" />
+        <el-table-column prop="days_rate" :label="$t('riLiShuai')" min-width="100">
+          <template #default="{ row }">{{ $t("rowHasInvestSettingD", [row.has_invest_setting?.daily_yield]) }}</template>
         </el-table-column>
-        <el-table-column prop="yield_type" label="收益类型" min-width="180">
+        <el-table-column prop="yield_type" :label="$t('shouYiLeiXing_0')" min-width="180">
           <template #default="{ row }">
             <el-tag>{{ getYieldTypeLabel(row.yield_type) }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" min-width="100">
+        <el-table-column prop="status" :label="$t('zhuangTai')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'warning'">
-              {{ row.status === 1 ? "已兑换" : "未兑换" }}
+              {{ row.status === 1 ? $t("yiDuiHuan") : $t("weiDuiHuan") }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="expiration_time" label="到期时间" min-width="180" />
-        <el-table-column prop="settlement_time" label="结算时间" min-width="180" />
-        <el-table-column prop="total_profit" label="总收益" min-width="120" />
-        <el-table-column label="操作" fixed="right" width="150">
+        <el-table-column prop="expiration_time" :label="$t('daoQiShiJian_0')" min-width="180" />
+        <el-table-column prop="settlement_time" :label="$t('jieSuanShiJian_0')" min-width="180" />
+        <el-table-column prop="total_profit" :label="$t('zongShouYi')" min-width="120" />
+        <el-table-column :label="$t('caoZuo')" fixed="right" width="150">
           <template #default="{ row }">
-            <el-button type="primary" link @click="handleViewDetail(row)">详情</el-button>
+            <el-button type="primary" link @click="handleViewDetail(row)">{{ $t("xiangQing") }}</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -72,10 +72,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -92,10 +92,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "product_id",
-      label: "产品",
+      label: $t("chanPin"),
       options: productList,
       props: {
-        placeholder: "请输入产品进行查询",
+        placeholder: $t("qingShuRuChanPinJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -111,7 +111,7 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "order_sn",
-      label: "订单号",
+      label: $t("dingDanHao_0"),
       props: {
         clearable: true,
         style: { width: "200px" },
@@ -120,7 +120,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "yield_type",
-      label: "收益类型",
+      label: $t("shouYiLeiXing_0"),
       options: yieldTypeOptions,
       props: {
         clearable: true,
@@ -130,10 +130,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: [
-        { label: "已兑换", value: 1 },
-        { label: "未兑换", value: 0 },
+        { label: $t("yiDuiHuan"), value: 1 },
+        { label: $t("weiDuiHuan"), value: 0 },
       ],
       props: {
         clearable: true,
@@ -143,7 +143,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "exp_datetime",
-      label: "到期时间",
+      label: $t("daoQiShiJian_0"),
       props: {
         style: { width: "400px" },
       },
@@ -151,7 +151,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "set_datetime",
-      label: "结算时间",
+      label: $t("jieSuanShiJian_0"),
       props: {
         style: { width: "400px" },
       },
@@ -159,7 +159,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "cre_datetime",
-      label: "创建时间",
+      label: $t("chuangJianShiJian"),
       props: {
         style: { width: "400px" },
       },

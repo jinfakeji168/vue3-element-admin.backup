@@ -3,8 +3,8 @@
     <content v-model="formData" :disabled="!hasEditAuth" :keys="['original', 'translation']" style="height: 70vh" />
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -27,7 +27,7 @@ watch(
   visible,
   () => {
     if (!visible.value) return;
-    title.value = "说明";
+    title.value = $t("shuoMing");
     formData.value = props.data.values;
     console.log("🚀 ~ formData.value:", formData.value);
     if (!Object.hasOwn(formData.value, "translation")) {

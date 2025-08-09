@@ -1,10 +1,10 @@
 <template>
   <el-form label-width="240px">
-    <el-form-item label="TRC20归集地址">
-      <el-input v-model="getI('collection_wallet').values" placeholder="请输入TRC20归集地址" />
+    <el-form-item :label="$t('trc20GuiJiDiZhi')">
+      <el-input v-model="getI('collection_wallet').values" :placeholder="$t('qingShuRuTrc20GuiJi')" />
     </el-form-item>
-    <el-form-item label="BEP20归集地址">
-      <el-input v-model="getI('bep20_collection_wallet').values" placeholder="请输入BEP20归集地址" />
+    <el-form-item :label="$t('bep20GuiJiDiZhi')">
+      <el-input v-model="getI('bep20_collection_wallet').values" :placeholder="$t('qingShuRuBep20GuiJi')" />
     </el-form-item>
   </el-form>
 

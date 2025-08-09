@@ -38,7 +38,7 @@ async function submitUpload(file: UploadFile) {
   const res = await api.upload(file, props.type);
 
   if (res) {
-    previewURL.value = import.meta.env.VITE_APP_File_API_URL + res.path;
+    previewURL.value = res.url;
     loading.value = false;
   }
 }
@@ -48,6 +48,7 @@ function onchange(data: any) {
 }
 function chooseHandler(url: string) {
   previewURL.value = url;
+  console.log("🚀 ~ chooseHandler ~ url:", url);
 }
 
 const dialogVisible = ref(false);

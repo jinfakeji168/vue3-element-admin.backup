@@ -1,44 +1,44 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="800px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
-      <el-form-item label="分享任务图片" prop="icon">
+      <el-form-item :label="$t('fenXiangRenWuTuPian')" prop="icon">
         <upload-part v-model="formData.icon"></upload-part>
       </el-form-item>
-      <el-form-item label="奖励类型" prop="type">
+      <el-form-item :label="$t('jiangLiLeiXing')" prop="type">
         <el-radio-group v-model="formData.type">
-          <el-radio :label="1">佣金账户</el-radio>
-          <el-radio :label="2">奖励VIP</el-radio>
-          <el-radio :label="3">基础账户</el-radio>
+          <el-radio :label="1">{{ $t("yongJinZhangHu_1") }}</el-radio>
+          <el-radio :label="2">{{ $t("jiangLiVip") }}</el-radio>
+          <el-radio :label="3">{{ $t("jiChuZhangHu") }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="奖励次数(类型)" prop="reward_type">
+      <el-form-item :label="$t('jiangLiCiShuLeiXing')" prop="reward_type">
         <el-radio-group v-model="formData.reward_type">
-          <el-radio :label="1">总共一次</el-radio>
-          <el-radio :label="2">每日一次</el-radio>
+          <el-radio :label="1">{{ $t("zongGongYiCi") }}</el-radio>
+          <el-radio :label="2">{{ $t("meiRiYiCi") }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="佣金金额" prop="share_amount">
+      <el-form-item :label="$t('yongJinJinE')" prop="share_amount">
         <el-input v-model="formData.share_amount" :min="0" />
       </el-form-item>
 
-      <el-form-item label="奖励VIP等级" prop="reward_vip_level">
+      <el-form-item :label="$t('jiangLiVipDengJi')" prop="reward_vip_level">
         <el-select v-model="formData.reward_vip_level">
           <el-option v-for="item of commonStore.vipList" :key="item.level" :label="item.title" :value="item.level" />
         </el-select>
       </el-form-item>
-      <el-form-item label="奖励VIP天数" prop="reward_vip_days">
+      <el-form-item :label="$t('jiangLiVipTianShu')" prop="reward_vip_days">
         <el-input v-model="formData.reward_vip_days" :min="0" type="number" />
       </el-form-item>
 
-      <el-form-item label="启用状态" prop="status">
+      <el-form-item :label="$t('qiYongZhuangTai')" prop="status">
         <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item>
-      <el-form-item label="显示排序" prop="sort">
+      <el-form-item :label="$t('xianShiPaiXu')" prop="sort">
         <el-input-number v-model="formData.sort" :min="0" />
       </el-form-item>
     </el-form>
     <el-tabs v-model="currentIndex">
-      <el-tab-pane label="标题" :name="0">
+      <el-tab-pane :label="$t('biaoTi')" :name="0">
         <Content
           class="content"
           style="height: 40vh"
@@ -52,7 +52,7 @@
           type="public"
         ></Content>
       </el-tab-pane>
-      <el-tab-pane label="步骤" :name="1">
+      <el-tab-pane :label="$t('buZhou')" :name="1">
         <Content
           class="content"
           :ref="
@@ -65,7 +65,7 @@
           :keys="['step_original', 'step_translation']"
         />
       </el-tab-pane>
-      <el-tab-pane label="内容" :name="2">
+      <el-tab-pane :label="$t('neiRong')" :name="2">
         <Content
           class="content"
           :ref="
@@ -81,8 +81,8 @@
     </el-tabs>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -106,10 +106,10 @@ watch(
   () => {
     if (!visible.value) return;
     if (props.data) {
-      title.value = "编辑";
+      title.value = $t("bianJi");
       formData.value = { ...props.data };
     } else {
-      title.value = "新增";
+      title.value = $t("xinZeng");
       formData.value = { sort: 1, reward_type: 1, type: 1, status: StatusEnum.False };
     }
   },
@@ -120,7 +120,7 @@ watch(
 const formData = ref<Form>({});
 
 const rules = {
-  share_amount: [{ required: true, message: "填写佣金金额", trigger: "blur" }],
+  share_amount: [{ required: true, message: $t("tianXieYongJinJinE"), trigger: "blur" }],
 };
 
 const formRef = ref<FormInstance>();

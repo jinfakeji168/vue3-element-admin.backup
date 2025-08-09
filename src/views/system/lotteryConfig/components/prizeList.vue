@@ -1,34 +1,34 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="70%" @closed="closeHandler">
     <el-form class="el_form" ref="formRef" :model="formData![_key]" label-width="100px" :rules="rules">
-      <el-form-item :label="`奖项${index + 1}`" v-for="(item, index) of formData![_key]">
+      <el-form-item ::label="$t('jiangXiangIndex_1', [index + 1])" v-for="(item, index) of formData![_key]">
         <div class="input_row">
           <div class="input_item">
-            <span>ID/唯一值</span>
-            <el-input class="el_input" :disabled="disabled" v-model="item.prize_id" placeholder="请输入奖项ID" />
+            <span>{{ $t("idWeiYiZhi") }}</span>
+            <el-input class="el_input" :disabled="disabled" v-model="item.prize_id" :placeholder="$t('qingShuRuJiangXiang')" />
           </div>
           <div class="input_item">
-            <span>中奖金额/U</span>
+            <span>{{ $t("zhongJiangJineu") }}</span>
             <el-form-item :prop="`min_prize_num${index}`">
-              <el-input class="el_input" :disabled="disabled" v-model="item.min_prize_num" placeholder="请输入中奖金额" />
+              <el-input class="el_input" :disabled="disabled" v-model="item.min_prize_num" :placeholder="$t('qingShuRuZhongJiang')" />
             </el-form-item>
           </div>
           <div class="input_item">
-            <span>概率/%</span>
-            <el-input-number class="el_input" :disabled="disabled" v-model="item.probability" :min="0" :max="100" placeholder="请输入概率" />
+            <span>{{ $t("gaiShuai") }}</span>
+            <el-input-number class="el_input" :disabled="disabled" v-model="item.probability" :min="0" :max="100" :placeholder="$t('qingShuRuGaiShuai')" />
           </div>
-          <el-button type="danger" @click="removeHandler(index)" :disabled="prizeListLength <= 6">删除</el-button>
+          <el-button type="danger" @click="removeHandler(index)" :disabled="prizeListLength <= 6">{{ $t("shanChu_0") }}</el-button>
         </div>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="addHandler" :disabled="prizeListLength >= 10">添加奖项</el-button>
+        <el-button type="primary" @click="addHandler" :disabled="prizeListLength >= 10">{{ $t("tianJiaJiangXiang") }}</el-button>
       </el-form-item>
     </el-form>
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :disabled="disabled" :loading="loading">保存</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :disabled="disabled" :loading="loading">{{ $t("baoCun") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -62,7 +62,7 @@ const rules = computed(() => {
   formData.value[props._key]?.forEach((item, index) => {
     rules[`min_prize_num${index}`] = [
       {
-        message: "请输入中奖金额",
+        message: $t("qingShuRuZhongJiang_0"),
         trigger: "blur",
         required: true,
         validator: (rule: any, value: any) => {

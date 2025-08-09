@@ -7,22 +7,22 @@
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="uid" label="用户ID" min-width="80" />
-        <el-table-column prop="member.account" label="会员账号" min-width="120" />
-        <el-table-column prop="old_level" label="原始等级" min-width="100" />
-        <el-table-column prop="new_level" label="升级后等级" min-width="100" />
-        <el-table-column prop="amount_spent" label="花费金额" min-width="120" />
-        <el-table-column prop="member_expiration_time" label="会员到期时间" min-width="180" />
-        <el-table-column prop="contract_expiration_time" label="合约到期时间" min-width="180" />
-        <el-table-column prop="contract_status" label="合约状态" min-width="100">
+        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="80" />
+        <el-table-column prop="member.account" :label="$t('huiYuanZhangHao')" min-width="120" />
+        <el-table-column prop="old_level" :label="$t('yuanShiDengJi')" min-width="100" />
+        <el-table-column prop="new_level" :label="$t('shengJiHouDengJi')" min-width="100" />
+        <el-table-column prop="amount_spent" :label="$t('huaFeiJinE')" min-width="120" />
+        <el-table-column prop="member_expiration_time" :label="$t('huiYuanDaoQiShiJian')" min-width="180" />
+        <el-table-column prop="contract_expiration_time" :label="$t('heYueDaoQiShiJian')" min-width="180" />
+        <el-table-column prop="contract_status" :label="$t('heYueZhuangTai')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.contract_status === 1 ? 'success' : 'info'">
               {{ contract_status_types.find((t) => t.value === row.contract_status)?.label }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="添加时间" min-width="180" />
-        <el-table-column prop="updated_at" label="更新时间" min-width="180" />
+        <el-table-column prop="created_at" :label="$t('tianJiaShiJian')" min-width="180" />
+        <el-table-column prop="updated_at" :label="$t('gengXinShiJian')" min-width="180" />
       </el-table>
 
       <template #footer>
@@ -39,8 +39,8 @@ import TableInstance from "@/utils/tableInstance";
 
 /** 合约状态选项 */
 const contract_status_types = [
-  { value: 1, label: "已返还" },
-  { value: 2, label: "未返还" },
+  { value: 1, label: $t("yiFanHuan") },
+  { value: 2, label: $t("weiFanHuan") },
 ];
 
 const memberList = ref<any>([]);
@@ -53,10 +53,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -72,10 +72,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "contract_status",
-      label: "合约状态",
+      label: $t("heYueZhuangTai_0"),
       options: contract_status_types,
       props: {
-        placeholder: "请选择合约状态",
+        placeholder: $t("qingXuanZeHeYueZhua"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -83,7 +83,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "datetime",
-      label: "时间范围",
+      label: $t("shiJianFanWei"),
       props: {
         style: { width: "400px" },
       },

@@ -7,143 +7,149 @@
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
         <div class="flex gap-2">
-          <el-button type="primary" @click="table.openHandler(2)" :disabled="!table.ischecked()" v-hasPerm="['withdrawOrder:audit']">一键审核</el-button>
-          <el-button type="success" @click="rePayHandler" v-hasPerm="['withdrawOrder:rePay']">失败订单重新出款</el-button>
+          <el-button type="primary" @click="table.openHandler(2)" :disabled="!table.ischecked()" v-hasPerm="['withdrawOrder:audit']">{{ $t("yiJianShenHe") }}</el-button>
+          <el-button type="success" @click="rePayHandler" v-hasPerm="['withdrawOrder:rePay']">{{ $t("shiBaiDingDanZhongX") }}</el-button>
           <el-button type="danger" @click="changePayStatusHandler(table.selectList.value)" :disabled="!table.ischecked()" v-hasPerm="['withdrawOrder:manualPay']">
-            一键手动出款
+            {{ $t("yiJianShouDongChuKu") }}
           </el-button>
-          <el-button type="info" @click="returnHandler(table.selectList.value)" :disabled="!table.ischecked()" v-hasPerm="['withdrawOrder:return']">一键退回</el-button>
+          <el-button type="info" @click="returnHandler(table.selectList.value)" :disabled="!table.ischecked()" v-hasPerm="['withdrawOrder:return']">
+            {{ $t("yiJianTuiHui") }}
+          </el-button>
           <!-- <el-button type="default">导出订单</el-button> -->
-          <el-button type="primary" @click="table.openHandler(4)" v-hasPerm="['withdrawOrder:manualWithdraw']">手动提现</el-button>
-          <el-button type="primary" @click="table.queryHandler()">刷新订单</el-button>
+          <el-button type="primary" @click="table.openHandler(4)" v-hasPerm="['withdrawOrder:manualWithdraw']">{{ $t("shouDongTiXian") }}</el-button>
+          <el-button type="primary" @click="table.queryHandler()">{{ $t("shuaXinDingDan") }}</el-button>
         </div>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" fixed="left" />
-        <el-table-column label="用户信息" min-width="160">
+        <el-table-column :label="$t('yongHuXinXi')" min-width="160">
           <template #default="{ row }">
             <div>
-              <span>用户：</span>
-              <span>{{ row.uid }}/</span>
+              <span>{{ $t("yongHu_0") }}</span>
+              <span>{{ $t("rowUid_1", [row.uid]) }}</span>
               <span>{{ row.account }}</span>
             </div>
             <div>
-              <span>国家：</span>
+              <span>{{ $t("guoJia") }}</span>
               <span>{{ row.user_country }}</span>
             </div>
             <div>
-              <span>顶级上级：</span>
+              <span>{{ $t("dingJiShangJi") }}</span>
               <span>{{ row.top_parent_id }}/{{ row.top_parent_account }}</span>
             </div>
             <div>
-              <span>一级上级：</span>
+              <span>{{ $t("yiJiShangJi") }}</span>
               <span>{{ row.first_parent_id }}/{{ row.first_parent_account }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="order_sn" label="订单信息" min-width="240">
+        <el-table-column prop="order_sn" :label="$t('dingDanXinXi')" min-width="240">
           <template #default="{ row }">
             <div>
-              <span>订单号：</span>
+              <span>{{ $t("dingDanHao_1") }}</span>
               <span>{{ row.order_sn }}</span>
             </div>
             <div>
-              <span>申请时间：</span>
+              <span>{{ $t("shenQingShiJian_1") }}</span>
               <span>{{ row.created_at }}</span>
             </div>
             <div>
-              <span>最近充值：</span>
+              <span>{{ $t("zuiJinChongZhi") }}</span>
               <span>{{ row.last_recharge_amount }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="withdraw_amount" label="提现金额" min-width="200">
+        <el-table-column prop="withdraw_amount" :label="$t('tiXianJinE')" min-width="200">
           <template #default="{ row }">
             <div>
-              <span>提现金额：</span>
+              <span>{{ $t("tiXianJine") }}</span>
               <span>{{ row.withdraw_amount }}</span>
             </div>
             <div>
-              <span>手续费</span>
+              <span>{{ $t("shouXuFei") }}</span>
               <span>{{ row.fees }}</span>
             </div>
             <div>
-              <span>实际到账：</span>
+              <span>{{ $t("shiJiDaoZhang_0") }}</span>
               <span>{{ row.arrival_amount }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="提现信息" min-width="200">
+        <el-table-column :label="$t('tiXianXinXi')" min-width="200">
           <template #default="{ row }">
             <div>
-              <span>币种：</span>
+              <span>{{ $t("biZhong_1") }}</span>
               <span>{{ row.channel }}</span>
             </div>
             <div>
-              <span>提现地址：</span>
+              <span>{{ $t("tiXianDiZhi_0") }}</span>
               <span>{{ row.rece_address }}</span>
             </div>
             <div>
-              <span>出款地址：</span>
+              <span>{{ $t("chuKuanDiZhi") }}</span>
               <span>{{ row.send_address }}</span>
             </div>
             <div>
-              <span>提款IP：</span>
+              <span>{{ $t("tiKuanIp") }}</span>
               <span>{{ row.withdraw_ip }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="审核信息" min-width="180">
+        <el-table-column :label="$t('shenHeXinXi')" min-width="180">
           <template #default="{ row }">
             <div>
-              <span>状态：</span>
+              <span>{{ $t("zhuangTai_0") }}</span>
               <el-tag :type="getStatusTypeHandler(row.status)">{{ getStatusTextHandler(row.status) }}</el-tag>
             </div>
             <div>
-              <span>备注：</span>
+              <span>{{ $t("beiZhu_0") }}</span>
               <span>{{ row.audit_remark }}</span>
             </div>
             <div>
-              <span>操作员：</span>
+              <span>{{ $t("caoZuoYuan") }}</span>
               <span>{{ row.audit_operator }}</span>
             </div>
             <div>
-              <span>操作时间：</span>
+              <span>{{ $t("caoZuoShiJian") }}</span>
               <span>{{ row.audit_time }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="出款信息" min-width="200" show-overflow-tooltip>
+        <el-table-column :label="$t('chuKuanXinXi')" min-width="200" show-overflow-tooltip>
           <template #default="{ row }">
             <div>
-              <span>出款状态：</span>
+              <span>{{ $t("chuKuanZhuangTai") }}</span>
               <el-tag :type="getOrderResultType(row.payment_status)">
                 {{ getOrderResultText(row.payment_status) }}
               </el-tag>
             </div>
             <div>
-              <span>出款金额：</span>
+              <span>{{ $t("chuKuanJine") }}</span>
               <span>{{ row.payment_amount }}</span>
             </div>
             <div>
-              <span>打款tx:</span>
+              <span>{{ $t("daKuanTx") }}</span>
               <span>{{ row.tx_id }}</span>
             </div>
             <div>
-              <span>平台单号：</span>
+              <span>{{ $t("pingTaiDanHao") }}</span>
               <span>{{ row.platform_order_no }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column prop="transfer_result" label="转账结果" min-width="160" show-overflow-tooltip />
+        <el-table-column prop="transfer_result" :label="$t('zhuanZhangJieGuo')" min-width="160" show-overflow-tooltip />
 
-        <el-table-column prop="updated_at" label="操作" min-width="160" fixed="right">
+        <el-table-column prop="updated_at" :label="$t('caoZuo')" min-width="160" fixed="right">
           <template #default="{ row }">
             <div class="grid grid-cols-2 gap-2">
-              <el-button type="primary" size="small" @click="queryHandler(row.order_sn)" :disabled="row.payment_status != 2" v-hasPerm="['withdrawOrder:query']">查询</el-button>
-              <el-button type="danger" size="small" @click="table.editHandler(row, 2)" :disabled="![0, 4].includes(row.status)" v-hasPerm="['withdrawOrder:audit']">审核</el-button>
-              <el-button type="info" size="small" @click="ignoreHandler(row.id)" :disabled="row.status != 0" v-hasPerm="['withdrawOrder:ignore']">忽略</el-button>
-              <el-button type="danger" size="small" @click="payHandler(row.id)" :disabled="row.status != 1" v-hasPerm="['withdrawOrder:paymentOut']">出款</el-button>
+              <el-button type="primary" size="small" @click="queryHandler(row.order_sn)" :disabled="row.payment_status != 2" v-hasPerm="['withdrawOrder:query']">
+                {{ $t("chaXun") }}
+              </el-button>
+              <el-button type="danger" size="small" @click="table.editHandler(row, 2)" :disabled="![0, 4].includes(row.status)" v-hasPerm="['withdrawOrder:audit']">
+                {{ $t("shenHe_0") }}
+              </el-button>
+              <el-button type="info" size="small" @click="ignoreHandler(row.id)" :disabled="row.status != 0" v-hasPerm="['withdrawOrder:ignore']">{{ $t("huLve") }}</el-button>
+              <el-button type="danger" size="small" @click="payHandler(row.id)" :disabled="row.status != 1" v-hasPerm="['withdrawOrder:paymentOut']">{{ $t("chuKuan") }}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -169,18 +175,18 @@ const loading = ref(false);
 const props = defineProps<{ uid: number }>();
 /** 订单状态列表 */
 const statusList = [
-  { label: "审核中", value: 0 },
-  { label: "处理中", value: 1 },
-  { label: "提现成功", value: 2 },
-  { label: "提现拒绝", value: 3 },
-  { label: "提现忽略", value: 4 },
-  { label: "余额不足", value: 5 },
-  { label: "队列中", value: 6 },
+  { label: $t("shenHeZhong"), value: 0 },
+  { label: $t("chuLiZhong_0"), value: 1 },
+  { label: $t("tiXianChengGong"), value: 2 },
+  { label: $t("tiXianJuJue"), value: 3 },
+  { label: $t("tiXianHuLve"), value: 4 },
+  { label: $t("yuebuZu"), value: 5 },
+  { label: $t("duiLieZhong"), value: 6 },
 ];
 const order_result = [
-  { label: "未出款", value: 0 },
-  { label: "出款成功", value: 1 },
-  { label: "出款失败", value: 2 },
+  { label: $t("weiChuKuan"), value: 0 },
+  { label: $t("chuKuanChengGong"), value: 1 },
+  { label: $t("chuKuanShiBai"), value: 2 },
 ];
 /** 查询配置 */
 const config: QueryConfig = {
@@ -189,10 +195,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -209,9 +215,9 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "order_sn",
-      label: "订单号",
+      label: $t("dingDanHao_0"),
       props: {
-        placeholder: "请输入订单号",
+        placeholder: $t("qingShuRuDingDanHao"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -219,9 +225,9 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "tx_id",
-      label: "打款txID",
+      label: $t("daKuanTxid"),
       props: {
-        placeholder: "请输入打款txID",
+        placeholder: $t("qingShuRuDaKuanTxid"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -229,10 +235,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "订单状态",
+      label: $t("dingDanZhuangTai"),
       options: statusList,
       props: {
-        placeholder: "请选择订单状态",
+        placeholder: $t("qingXuanZeDingDanZh"),
         style: { width: "150px" },
         clearable: true,
       },
@@ -240,10 +246,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "order_result",
-      label: "转账状态",
+      label: $t("zhuanZhangZhuangTai"),
       options: order_result,
       props: {
-        placeholder: "请选择转账状态",
+        placeholder: $t("qingXuanZeZhuanZhang"),
         style: { width: "150px" },
         clearable: true,
       },
@@ -251,7 +257,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "datetime",
-      label: "申请时间",
+      label: $t("shenQingShiJian_0"),
       props: {
         style: { width: "400px" },
       },
@@ -259,7 +265,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "operate_time",
-      label: "操作时间",
+      label: $t("caoZuoShiJian_0"),
       props: {
         style: { width: "400px" },
       },
@@ -298,7 +304,7 @@ watch(
 );
 //对失败的订单重新出款
 async function rePayHandler() {
-  await ElMessageBox.confirm("该操作将对转账失败状态的提现记录自动打款，需要一定执行时间，请勿短时间内重复操作，是否确认？", "提示", {
+  await ElMessageBox.confirm($t("gaiCaoZuoJiangDuiZh"), $t("tiShi"), {
     beforeClose: async (action, instance, done) => {
       if (action == "confirm") {
         instance.confirmButtonLoading = true;
@@ -316,7 +322,7 @@ async function rePayHandler() {
   });
 }
 async function changePayStatusHandler(ids: any[]) {
-  ElMessageBox.confirm("该操作将该订单改为成功出款，是否确认?", "提示", {
+  ElMessageBox.confirm($t("gaiCaoZuoJiangGaiDi"), $t("tiShi"), {
     beforeClose: async (action, instance, done) => {
       if (action == "confirm") {
         instance.confirmButtonLoading = true;
@@ -334,7 +340,7 @@ async function changePayStatusHandler(ids: any[]) {
   });
 }
 async function payHandler(id: number) {
-  ElMessageBox.confirm("是否确认打款？打款前请先查询确认该笔订单未成功打款！否则可能将造成资金损失！一旦打款无法退回！", "提示", {
+  ElMessageBox.confirm($t("shiFouQueRenDaKuan"), $t("tiShi"), {
     beforeClose: async (action, instance, done) => {
       if (action == "confirm") {
         instance.confirmButtonLoading = true;
@@ -352,7 +358,7 @@ async function payHandler(id: number) {
   });
 }
 async function ignoreHandler(id: number) {
-  ElMessageBox.confirm("是否确认忽略此订单？", "提示", {
+  ElMessageBox.confirm($t("shiFouQueRenHuLveC"), $t("tiShi"), {
     beforeClose: async (action, instance, done) => {
       if (action == "confirm") {
         instance.confirmButtonLoading = true;
@@ -373,7 +379,7 @@ async function queryHandler(order_sn: string) {
   const res = await api.query(order_sn);
 }
 async function returnHandler(ids: any[]) {
-  ElMessageBox.confirm("该操作将对余额不足状态的退回到余额，需要一定执行时间，请勿短时间内重复操作，是否确认?", "提示", {
+  ElMessageBox.confirm($t("gaiCaoZuoJiangDuiYu"), $t("tiShi"), {
     beforeClose: async (action, instance, done) => {
       if (action == "confirm") {
         instance.confirmButtonLoading = true;
@@ -401,7 +407,7 @@ function getStatusTypeHandler(status: number) {
 /** 获取订单状态文本 */
 function getStatusTextHandler(status: number) {
   const statusTextArr = statusList.map((item) => item.label);
-  return statusTextArr[status] ?? "未知";
+  return statusTextArr[status] ?? $t("weiZhi");
 }
 
 // 转账状态处理函数
@@ -412,7 +418,7 @@ const getOrderResultType = (result: number) => {
 
 const getOrderResultText = (result: number) => {
   const resultMap: Record<number, string> = order_result.map((item) => item.label);
-  return resultMap[result] || "未知";
+  return resultMap[result] || $t("weiZhi");
 };
 </script>
 

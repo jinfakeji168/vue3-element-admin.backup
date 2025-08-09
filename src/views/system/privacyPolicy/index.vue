@@ -1,12 +1,12 @@
 <template>
   <el-card class="el_card" v-loading="loading[0]">
     <template #header>
-      <h4 style="margin: 0">用户协议</h4>
+      <h4 style="margin: 0">{{ $t("yongHuXieYi") }}</h4>
     </template>
     <content v-model="formData" :keys="['original', 'translation']" @init-before="initBefore" :disabled="!hasEditAuth" />
     <template #footer>
-      <el-button class="button" type="primary" @click="submitHandler" v-hasPerm="['privacyPolicy:editExplain']" :loading="loading[1]">保存</el-button>
-      <el-button class="button" type="primary" @click="resertHandler" :disabled="!hasChange">重置</el-button>
+      <el-button class="button" type="primary" @click="submitHandler" v-hasPerm="['privacyPolicy:editExplain']" :loading="loading[1]">{{ $t("baoCun") }}</el-button>
+      <el-button class="button" type="primary" @click="resertHandler" :disabled="!hasChange">{{ $t("zhongZhi") }}</el-button>
     </template>
   </el-card>
 </template>
@@ -49,7 +49,7 @@ async function submitHandler() {
   }
 }
 function resertHandler() {
-  ElMessageBox.confirm("确定重置吗？", {
+  ElMessageBox.confirm($t("queDingZhongZhiMa"), {
     type: "warning",
   }).then(() => {
     formData.value = JSON.parse(JSON.stringify(unref(backupData)));

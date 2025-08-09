@@ -1,10 +1,10 @@
 <template>
   <el-form label-width="240px">
-    <el-form-item label="是否显示下载页">
+    <el-form-item :label="$t('shiFouXianShiXiaZai')">
       <el-switch v-model="getI('package_app_download_show_switch').values" :active-value="1" :inactive-value="2" />
     </el-form-item>
-    <el-form-item label="下载地址URL">
-      <el-input v-model="getI('app_download_url').values" placeholder="客户端点击下载跳转的URL" />
+    <el-form-item :label="$t('xiaZaiDiZhiUrl')">
+      <el-input v-model="getI('app_download_url').values" :placeholder="$t('keHuDuanDianJiXiaZ')" />
     </el-form-item>
   </el-form>
 </template>

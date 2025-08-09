@@ -1,62 +1,62 @@
 <template>
   <el-form label-width="240px">
-    <el-form-item label="首页是否需要登录">
+    <el-form-item :label="$t('shouYeShiFouXuYaoD')">
       <el-switch v-model="getI('index_is_login').values" :active-value="1" :inactive-value="2" />
     </el-form-item>
 
-    <el-form-item label="首页强制弹窗公告">
+    <el-form-item :label="$t('shouYeQiangZhiDanCh')">
       <el-switch v-model="getI('index_force_notice').values" :active-value="1" :inactive-value="2" />
     </el-form-item>
-    <el-form-item label="弹窗公告">
-      <el-button type="primary" @click="visible[0] = true">编辑公告</el-button>
+    <el-form-item :label="$t('danChuangGongGao')">
+      <el-button type="primary" @click="visible[0] = true">{{ $t("bianJiGongGao") }}</el-button>
     </el-form-item>
-    <el-form-item label="首页显示假数据">
+    <el-form-item :label="$t('shouYeXianShiJiaShu')">
       <el-switch v-model="getI('is_show_fake_data').values" :active-value="1" :inactive-value="2" />
     </el-form-item>
 
-    <el-form-item label="首页显示行情数据">
+    <el-form-item :label="$t('shouYeXianShiHangQi')">
       <el-switch v-model="getI('index_show_market_data').values" :active-value="1" :inactive-value="2" />
     </el-form-item>
 
-    <el-form-item label="首页是否展示视频">
+    <el-form-item :label="$t('shouYeShiFouZhanShi')">
       <el-switch v-model="getI('index_video_is_show').values" :active-value="1" :inactive-value="2" />
     </el-form-item>
-    <el-form-item label="首页视频地址">
+    <el-form-item :label="$t('shouYeShiPinDiZhi')">
       <el-input v-model="getI('index_video_url').values" />
     </el-form-item>
-    <el-form-item label="首页顶部提示栏名称">
+    <el-form-item :label="$t('shouYeDingBuTiShiL')">
       <el-input v-model="getI('home_top_tips_name').values" />
     </el-form-item>
 
-    <el-form-item label="首页顶部提示栏链接">
+    <el-form-item :label="$t('shouYeDingBuTiShiL_0')">
       <el-input v-model="getI('home_top_tips_url').values" />
     </el-form-item>
 
-    <el-form-item label="白皮书地址">
+    <el-form-item :label="$t('baiPiShuDiZhi')">
       <uploadPart v-model="getI('white_paper_url').values" type="files" />
     </el-form-item>
 
-    <el-form-item label="首页滚动会员收益最小值">
+    <el-form-item :label="$t('shouYeGunDongHuiYua')">
       <el-input-number v-model="getI('index_user_income_min').values" :min="0" />
     </el-form-item>
 
-    <el-form-item label="首页滚动会员收益最大值">
+    <el-form-item :label="$t('shouYeGunDongHuiYua_0')">
       <el-input-number v-model="getI('index_user_income_max').values" :min="0" />
     </el-form-item>
 
-    <el-form-item label="首页累计利润">
+    <el-form-item :label="$t('shouYeLeiJiLiRun')">
       <el-input-number v-model="getI('index_profit_fake_num').values" :min="0" />
     </el-form-item>
 
-    <el-form-item label="累计利润增长下限">
+    <el-form-item :label="$t('leiJiLiRunZengChang')">
       <el-input-number v-model="getI('index_profit_fake_increase_low').values" :min="0" />
     </el-form-item>
 
-    <el-form-item label="累计利润增长上限">
+    <el-form-item :label="$t('leiJiLiRunZengChang_0')">
       <el-input-number v-model="getI('index_profit_fake_increase_up').values" :min="0" />
     </el-form-item>
 
-    <el-form-item label="系统安全运行开始日期">
+    <el-form-item :label="$t('xiTongAnQuanYunHang')">
       <el-date-picker v-model="getI('start_operation_time').values" type="date" />
     </el-form-item>
   </el-form>
@@ -74,12 +74,12 @@ function getI(key: string): Form {
 }
 const visible = ref([false]);
 const groupLevelOptions = [
-  { label: "全部", value: 0 },
-  { label: "二级", value: 2 },
-  { label: "三级", value: 3 },
-  { label: "四级", value: 4 },
-  { label: "五级", value: 5 },
-  { label: "六级", value: 6 },
+  { label: $t("quanBu"), value: 0 },
+  { label: $t("erJi"), value: 2 },
+  { label: $t("sanJi"), value: 3 },
+  { label: $t("siJi"), value: 4 },
+  { label: $t("wuJi"), value: 5 },
+  { label: $t("liuJi"), value: 6 },
 ];
 </script>
 

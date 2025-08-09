@@ -10,64 +10,64 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button v-hasPerm="['shareTask:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu_0") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="icon" label="分享任务图片" min-width="100">
+        <el-table-column prop="icon" :label="$t('fenXiangRenWuTuPian')" min-width="100">
           <template #default="{ row }">
             <el-image :src="row.icon" class="icon" fit="contain" :preview-src-list="[row.icon]" preview-teleported :z-index="9999" />
           </template>
         </el-table-column>
 
-        <el-table-column prop="type" label="奖励类型" min-width="100">
+        <el-table-column prop="type" :label="$t('jiangLiLeiXing')" min-width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.type == 1" type="info">账户佣金</el-tag>
-            <el-tag v-else-if="row.type == 2" type="info">奖励VIP</el-tag>
-            <el-tag v-else type="info">基础账户</el-tag>
+            <el-tag v-if="row.type == 1" type="info">{{ $t("zhangHuYongJin") }}</el-tag>
+            <el-tag v-else-if="row.type == 2" type="info">{{ $t("jiangLiVip") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jiChuZhangHu") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="reward_type" label="奖励次数(类型)" min-width="100">
+        <el-table-column prop="reward_type" :label="$t('jiangLiCiShuLeiXing')" min-width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.reward_type == 1" type="info">总共一次</el-tag>
-            <el-tag v-else-if="row.reward_type == 2" type="info">每日一次</el-tag>
+            <el-tag v-if="row.reward_type == 1" type="info">{{ $t("zongGongYiCi") }}</el-tag>
+            <el-tag v-else-if="row.reward_type == 2" type="info">{{ $t("meiRiYiCi") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="share_amount" label="佣金金额" min-width="120" />
+        <el-table-column prop="share_amount" :label="$t('yongJinJinE')" min-width="120" />
 
-        <el-table-column prop="reward_vip_level" label="奖励VIP等级" min-width="120" />
-        <el-table-column prop="reward_vip_days" label="奖励VIP天数" min-width="120" />
+        <el-table-column prop="reward_vip_level" :label="$t('jiangLiVipDengJi')" min-width="120" />
+        <el-table-column prop="reward_vip_days" :label="$t('jiangLiVipTianShu')" min-width="120" />
 
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="status" :label="$t('zhuangTai')" width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.status == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
+            <el-tag v-if="row.status == StatusEnum.False" type="success">{{ $t("zhengChang") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jinYong") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="sort" label="排序" width="100" />
+        <el-table-column prop="sort" :label="$t('paiXu')" width="100" />
 
-        <el-table-column label="操作" fixed="right" align="left" width="200">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="200">
           <template #default="{ row }">
             <el-button v-hasPerm="['shareTask:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
             <el-button v-hasPerm="['shareTask:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
             <el-button v-hasPerm="['shareTask:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               <template #icon><Switch /></template>
-              {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
+              {{ row.status == StatusEnum.False ? $t("jinYong") : $t("qiYong") }}
             </el-button>
           </template>
         </el-table-column>
@@ -89,21 +89,21 @@ import TableInstance from "@/utils/tableInstance";
 
 /** 奖励类型选项 */
 const reward_types = [
-  { value: 1, label: "佣金账户" },
-  { value: 2, label: "奖励VIP" },
-  { value: 3, label: "基础账户" },
+  { value: 1, label: $t("yongJinZhangHu_1") },
+  { value: 2, label: $t("jiangLiVip") },
+  { value: 3, label: $t("jiChuZhangHu") },
 ];
 
 /** 奖励次数类型选项 */
 const reward_count_types = [
-  { value: 1, label: "总共一次" },
-  { value: 2, label: "每日一次" },
+  { value: 1, label: $t("zongGongYiCi") },
+  { value: 2, label: $t("meiRiYiCi") },
 ];
 
 /** 状态选项 */
 const status_types = [
-  { value: StatusEnum.False, label: "正常" },
-  { value: StatusEnum.True, label: "禁用" },
+  { value: StatusEnum.False, label: $t("zhengChang") },
+  { value: StatusEnum.True, label: $t("jinYong") },
 ];
 
 /** 查询配置 */
@@ -113,7 +113,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "type",
-      label: "奖励类型",
+      label: $t("jiangLiLeiXing"),
       options: reward_types,
       props: {
         clearable: true,
@@ -123,7 +123,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "reward_type",
-      label: "奖励次数(类型)",
+      label: $t("jiangLiCiShuLeiXing"),
       options: reward_count_types,
       props: {
         clearable: true,
@@ -133,7 +133,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: status_types,
       props: {
         clearable: true,

@@ -56,7 +56,8 @@ export default defineConfig(({ mode }: ConfigEnv): UserConfig => {
         [env.VITE_APP_API_URL]: {
           changeOrigin: true,
           // 代理目标真实接口地址：https://api.youlai.tech
-          target: 'http://47.108.251.42:8169',
+          // target: 'https://lianghuaapi.dg7788.com',
+          target: 'http://47.108.251.42:89',
           rewrite: (path) =>
             path.replace(new RegExp("^" + env.VITE_APP_API_URL), ""),
         },

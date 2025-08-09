@@ -1,6 +1,6 @@
 <template>
   <el-dialog v-model="visible" title="图片列表">
-    <el-card shadow="never" v-loading="loading">
+    <el-card shadow="never" v-loading="table.loading.value">
       <template #header>
         <el-upload ref="upload" class="upload-demo" :on-change="upLoadFileHandler" :auto-upload="false" :limit="1" :show-file-list="false">
           <el-button>
@@ -11,12 +11,12 @@
           </el-button>
         </el-upload>
       </template>
-      <el-table :data="dataList" style="height: 50vh" row-key="id" @selection-change="selectionChangeHandler">
+      <el-table :data="table.list.value" style="height: 50vh" row-key="id" @selection-change="selectionChangeHandler">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="name" label="文件名"></el-table-column>
         <el-table-column prop="path" label="图片">
           <template #default="{ row }">
-            <el-image :src="baseUrl + row.path" fit="contain" style="width: 100px; height: 100px" :preview-src-list="[baseUrl + row.path]" preview-teleported :z-index="9999" />
+            <el-image :src="row.url" fit="contain" style="width: 100px; height: 100px" :preview-src-list="[row.url]" preview-teleported :z-index="9999" />
           </template>
         </el-table-column>
         <el-table-column prop="action" label="操作">
@@ -25,36 +25,36 @@
           </template>
         </el-table-column>
       </el-table>
+      <template #footer>
+        <pagination background :total="table.pageTotal.value" v-model:page-size="table.pageInfo.limit" v-model:current-page="table.pageInfo.page" />
+      </template>
     </el-card>
   </el-dialog>
 </template>
 
 <script setup lang="ts">
 import api from "@/api/file/index";
+import TableInstance from "@/utils/tableInstance";
 
 const baseUrl = import.meta.env.VITE_APP_File_API_URL;
 const visible = defineModel<boolean>();
 
 watch(visible, (val) => {
   if (val) {
-    getList();
+    table.queryHandler();
   }
 });
-const dataList = ref([]);
-const loading = ref(false);
-async function getList() {
-  loading.value = true;
-  try {
-    const value = await api.getList("images");
-    dataList.value = value.data;
-  } finally {
-    loading.value = false;
-  }
-}
+
+const queryParams = ref<PageQuery & { type: string }>({
+  type: "images",
+  limit: 20,
+  page: 1,
+});
+const table = new TableInstance<any>(api, queryParams, 20);
 
 const emits = defineEmits(["choose"]);
 function chooseHandler(row: any) {
-  emits("choose", baseUrl + row.path);
+  emits("choose", row.url);
   visible.value = false;
 }
 
@@ -65,7 +65,7 @@ function selectionChangeHandler() {
 async function upLoadFileHandler(data: any) {
   const res = data.raw;
   const result = await api.upload(res);
-  getList();
+  // getList();
 }
 </script>
 

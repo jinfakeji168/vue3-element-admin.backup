@@ -6,58 +6,58 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button v-hasPerm="['activitySetting:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu_0") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" min-width="60" />
-        <el-table-column prop="sort" label="排序" width="60" />
-        <el-table-column prop="type" label="类型" min-width="100">
+        <el-table-column prop="sort" :label="$t('paiXu')" width="60" />
+        <el-table-column prop="type" :label="$t('leiXing_0')" min-width="100">
           <template #default="{ row }">
-            {{ row.type == 1 ? "页面" : row.type == 2 ? "自定义内容" : "未知" }}
+            {{ row.type == 1 ? $t("yeMian") : row.type == 2 ? $t("ziDingYiNeiRong") : $t("weiZhi") }}
           </template>
         </el-table-column>
-        <el-table-column prop="jump_page" label="跳转页面">
+        <el-table-column prop="jump_page" :label="$t('tiaoZhuanYeMian')">
           <template #default="{ row }">
             {{ activityList.find((i) => i.key == row.jump_page)?.val || "--" }}
           </template>
         </el-table-column>
-        <el-table-column prop="bg_icon" label="背景图片" min-width="120">
+        <el-table-column prop="bg_icon" :label="$t('beiJingTuPian')" min-width="120">
           <template #default="{ row }">
             <el-image :src="row.bg_icon" class="icon" fit="contain" :preview-src-list="[row.bg_icon]" preview-teleported :z-index="9999" />
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="status" :label="$t('zhuangTai')" width="100">
           <template #default="{ row }">
-            <el-tag :type="row.status == StatusEnum.False ? 'success' : 'danger'">{{ row.status == StatusEnum.False ? "开启" : "关闭" }}</el-tag>
+            <el-tag :type="row.status == StatusEnum.False ? 'success' : 'danger'">{{ row.status == StatusEnum.False ? $t("kaiQi") : $t("guanBi") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="title_original" label="标题原文" min-width="220" />
-        <el-table-column prop="subtitle_original" label="副标题原文" min-width="220" />
-        <el-table-column prop="created_at" label="添加时间" width="160" />
+        <el-table-column prop="title_original" :label="$t('biaoTiYuanWen')" min-width="220" />
+        <el-table-column prop="subtitle_original" :label="$t('fuBiaoTiYuanWen')" min-width="220" />
+        <el-table-column prop="created_at" :label="$t('tianJiaShiJian')" width="160" />
 
-        <el-table-column label="操作" fixed="right" align="left" width="200">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="200">
           <template #default="{ row }">
             <el-button v-hasPerm="['activitySetting:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
             <el-button v-hasPerm="['activitySetting:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
             <el-button v-hasPerm="['activitySetting:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               <template #icon><Switch /></template>
-              {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
+              {{ row.status == StatusEnum.False ? $t("jinYong") : $t("qiYong") }}
             </el-button>
           </template>
         </el-table-column>

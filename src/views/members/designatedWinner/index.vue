@@ -10,42 +10,42 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button type="danger" :disabled="!table.selectList.value.length" @click="table.deleteHandler()" v-hasPerm="['designatedWinner:delete']">
           <template #icon>
             <Delete />
           </template>
-          批量删除
+          {{ $t("piLiangShanChu") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="uid" label="用户ID" min-width="80" />
-        <el-table-column prop="member.account" label="会员账号" min-width="120" />
-        <el-table-column label="类型" min-width="100">
+        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="80" />
+        <el-table-column prop="member.account" :label="$t('huiYuanZhangHao')" min-width="120" />
+        <el-table-column :label="$t('leiXing_0')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.type === 1 ? 'success' : row.type === 2 ? 'warning' : 'info'">
               {{ type_options.find((t) => t.value === row.type)?.label }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="bonus" label="奖项" min-width="100" />
-        <el-table-column label="状态" min-width="100">
+        <el-table-column prop="bonus" :label="$t('jiangXiang')" min-width="100" />
+        <el-table-column :label="$t('zhuangTai')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.state === 1 ? 'warning' : 'success'">
               {{ state_options.find((t) => t.value === row.state)?.label }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="添加时间" min-width="180" />
-        <el-table-column label="操作" min-width="100">
+        <el-table-column prop="created_at" :label="$t('tianJiaShiJian')" min-width="180" />
+        <el-table-column :label="$t('caoZuo')" min-width="100">
           <template #default="{ row }">
             <el-button type="danger" link size="small" @click="table.deleteHandler(row.id)" v-hasPerm="['designatedWinner:delete']">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
           </template>
         </el-table-column>
@@ -65,15 +65,15 @@ import TableInstance from "@/utils/tableInstance";
 import edit from "./components/edit.vue";
 /** 抽奖状态选项 */
 const state_options = [
-  { value: 1, label: "未抽奖" },
-  { value: 2, label: "已抽奖" },
+  { value: 1, label: $t("weiChouJiang") },
+  { value: 2, label: $t("yiChouJiang") },
 ];
 
 /** 类型选项 */
 const type_options = [
-  { value: 1, label: "充值赠送" },
-  { value: 2, label: "注册赠送" },
-  { value: 3, label: "邀请赠送" },
+  { value: 1, label: $t("chongZhiZengSong") },
+  { value: 2, label: $t("zhuCeZengSong") },
+  { value: 3, label: $t("yaoQingZengSong") },
 ];
 
 const memberList = ref<any>([]);
@@ -86,10 +86,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -105,10 +105,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "state",
-      label: "抽奖状态",
+      label: $t("chouJiangZhuangTai"),
       options: state_options,
       props: {
-        placeholder: "请选择抽奖状态",
+        placeholder: $t("qingXuanZeChouJiang"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -116,10 +116,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "type",
-      label: "类型",
+      label: $t("leiXing_0"),
       options: type_options,
       props: {
-        placeholder: "请选择类型",
+        placeholder: $t("qingXuanZeLeiXing"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -127,7 +127,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "datetime",
-      label: "时间范围",
+      label: $t("shiJianFanWei"),
       props: {
         style: { width: "400px" },
       },

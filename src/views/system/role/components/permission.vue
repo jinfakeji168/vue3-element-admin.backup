@@ -1,8 +1,8 @@
 <template>
   <!-- 分配权限弹窗 -->
-  <el-drawer v-model="visible" title="'权限分配'" size="500">
+  <el-drawer v-model="visible" :title="$t('quanXianFenPei')" size="500">
     <div class="flex-x-between">
-      <el-input v-model="permKeywords" clearable class="w-[150px]" placeholder="菜单权限名称">
+      <el-input v-model="permKeywords" clearable class="w-[150px]" :placeholder="$t('caiDanQuanXianMingC')">
         <template #prefix>
           <Search />
         </template>
@@ -12,12 +12,12 @@
           <template #icon>
             <Switch />
           </template>
-          {{ isExpanded ? "收缩" : "展开" }}
+          {{ isExpanded ? $t("shouSuo") : $t("zhanKai") }}
         </el-button>
-        <el-checkbox v-model="parentChildLinked" class="ml-5" @change="parentChildLinked = $event">父子联动</el-checkbox>
+        <el-checkbox v-model="parentChildLinked" class="ml-5" @change="parentChildLinked = Boolean($event)">{{ $t("fuZiLianDong") }}</el-checkbox>
 
         <el-tooltip placement="bottom">
-          <template #content>如果只需勾选菜单权限，不需要勾选子菜单或者按钮权限，请关闭父子联动</template>
+          <template #content>{{ $t("ruGuoZhiXuGouXuanC") }}</template>
           <el-icon class="ml-1 color-[--el-color-primary] inline-block cursor-pointer">
             <QuestionFilled />
           </el-icon>
@@ -41,8 +41,8 @@
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitHanlder" :loading="loading">确 定</el-button>
-        <el-button @click="visible = false">取 消</el-button>
+        <el-button type="primary" @click="submitHanlder" :loading="loading">{{ $t("queDing_0") }}</el-button>
+        <el-button @click="visible = false">{{ $t("quXiao_0") }}</el-button>
       </div>
     </template>
   </el-drawer>

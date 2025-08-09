@@ -7,54 +7,54 @@
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column label="uid/用户账号" min-width="120">
+        <el-table-column :label="$t('uidYongHuZhangHao')" min-width="120">
           <template #default="{ row }">
-            <span>{{ row.has_member?.id }}/</span>
+            <span>{{ $t("rowHasMemberId", [row.has_member?.id]) }}</span>
             <span>{{ row.has_member?.account }}</span>
           </template>
         </el-table-column>
 
-        <el-table-column prop="level" label="等级" min-width="80">
+        <el-table-column prop="level" :label="$t('dengJi_0')" min-width="80">
           <template #default="{ row }">
             {{ store.vipList.find((item) => item.level == row.level)?.title }}
           </template>
         </el-table-column>
-        <el-table-column prop="income" label="收益" min-width="120">
+        <el-table-column prop="income" :label="$t('shouYi')" min-width="120">
           <template #default="{ row }">
             {{ row.income }}
           </template>
         </el-table-column>
-        <el-table-column prop="fees" label="服务费" min-width="120">
+        <el-table-column prop="fees" :label="$t('fuWuFei')" min-width="120">
           <template #default="{ row }">
             {{ row.fees }}
           </template>
         </el-table-column>
-        <el-table-column prop="currency_id" label="币种" min-width="100">
+        <el-table-column prop="currency_id" :label="$t('biZhong')" min-width="100">
           <template #default="{ row }">
             {{ store.tradeList.find((item) => item.key == row.currency_id)?.val }}
           </template>
         </el-table-column>
-        <el-table-column label="交易价格" min-width="200">
+        <el-table-column :label="$t('jiaoYiJiaGe')" min-width="200">
           <template #default="{ row }">
-            <div>买入：{{ row.buy_price || "--" }}</div>
-            <div>卖出：{{ row.sel_price || "--" }}</div>
+            <div>{{ $t("maiRuRowbuyprice", [row.buy_price || "--"]) }}</div>
+            <div>{{ $t("maiChuRowselprice", [row.sel_price || "--"]) }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="交易平台" min-width="200">
+        <el-table-column :label="$t('jiaoYiPingTai')" min-width="200">
           <template #default="{ row }">
             <div>{{ row.buy_platform || "--" }}</div>
             <div>{{ row.sel_platform || "--" }}</div>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" min-width="100">
+        <el-table-column prop="status" :label="$t('zhuangTai')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="getStatusType(row.status)">
               {{ getStatusText(row.status) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="添加时间" min-width="180" />
-        <el-table-column prop="settlement_time" label="完成时间" min-width="180" />
+        <el-table-column prop="created_at" :label="$t('tianJiaShiJian')" min-width="180" />
+        <el-table-column prop="settlement_time" :label="$t('wanChengShiJian')" min-width="180" />
       </el-table>
 
       <template #footer>
@@ -92,13 +92,13 @@ const getStatusType = (status: number) => {
 const getStatusText = (status: number) => {
   switch (status) {
     case 0:
-      return "进行中";
+      return $t("jinHangZhong_0");
     case 1:
-      return "已完成";
+      return $t("yiWanCheng");
     case 2:
-      return "已取消";
+      return $t("yiQuXiao");
     default:
-      return "未知";
+      return $t("weiZhi");
   }
 };
 
@@ -109,10 +109,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -128,13 +128,13 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "level",
-      label: "等级",
+      label: $t("dengJi_0"),
       options: store.vipList.map((item) => ({
         label: item.title,
         value: item.level,
       })),
       props: {
-        placeholder: "请选择等级",
+        placeholder: $t("qingXuanZeDengJi"),
         style: { width: "200px" },
         min: 0,
       },
@@ -142,10 +142,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "currency_id",
-      label: "币种",
+      label: $t("biZhong_0"),
       options: [], // 需要从后端获取币种列表
       props: {
-        placeholder: "请选择币种",
+        placeholder: $t("qingXuanZeBiZhong"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -153,14 +153,14 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: [
-        { label: "进行中", value: 0 },
-        { label: "已完成", value: 1 },
-        { label: "已取消", value: 2 },
+        { label: $t("jinHangZhong_0"), value: 0 },
+        { label: $t("yiWanCheng_0"), value: 1 },
+        { label: $t("yiQuXiao_0"), value: 2 },
       ],
       props: {
-        placeholder: "请选择状态",
+        placeholder: $t("qingXuanZeZhuangTai"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -168,7 +168,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "add_datetime",
-      label: "添加时间",
+      label: $t("tianJiaShiJian"),
       props: {
         style: { width: "400px" },
       },
@@ -176,7 +176,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "com_datetime",
-      label: "完成时间",
+      label: $t("wanChengShiJian_0"),
       props: {
         style: { width: "400px" },
       },

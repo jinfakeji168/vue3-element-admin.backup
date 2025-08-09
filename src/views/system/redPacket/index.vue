@@ -10,66 +10,66 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button v-hasPerm="['redPacket:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu_0") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event, 'id')">
         <el-table-column type="selection" width="55" />
 
-        <el-table-column prop="type" label="类型" min-width="140">
+        <el-table-column prop="type" :label="$t('leiXing')" min-width="140">
           <template #default="{ row }">
-            <el-tag v-if="row.type == 1" type="info">拼手气红包</el-tag>
-            <el-tag v-else-if="row.type == 2" type="info">普通红包</el-tag>
+            <el-tag v-if="row.type == 1" type="info">{{ $t("pinShouQiHongBao") }}</el-tag>
+            <el-tag v-else-if="row.type == 2" type="info">{{ $t("puTongHongBao") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="state" label="状态" min-width="100">
+        <el-table-column prop="state" :label="$t('zhuangTai')" min-width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.state == 1" type="info">未开始</el-tag>
-            <el-tag v-else-if="row.state == 2" type="success">进行中</el-tag>
-            <el-tag v-else type="warning">已结束</el-tag>
+            <el-tag v-if="row.state == 1" type="info">{{ $t("weiKaiShi") }}</el-tag>
+            <el-tag v-else-if="row.state == 2" type="success">{{ $t("jinHangZhong") }}</el-tag>
+            <el-tag v-else type="warning">{{ $t("yiJieShu") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="red_link" label="红包链接" min-width="120" />
+        <el-table-column prop="red_link" :label="$t('hongBaoLianJie')" min-width="120" />
 
-        <el-table-column prop="red_num" label="红包个数" min-width="120" />
-        <el-table-column prop="red_amount" label="红包金额" min-width="120" />
-        <el-table-column prop="max_win_amount" label="最大中奖金额" min-width="120" />
-        <el-table-column prop="receive_num" label="已领取个数" min-width="120" />
-        <el-table-column prop="receive_amount" label="已领取金额" min-width="120" />
-        <el-table-column prop="start_time" label="开始时间" min-width="120">
+        <el-table-column prop="red_num" :label="$t('hongBaoGeShu')" min-width="120" />
+        <el-table-column prop="red_amount" :label="$t('hongBaoJinE')" min-width="120" />
+        <el-table-column prop="max_win_amount" :label="$t('zuiDaZhongJiangJinE')" min-width="120" />
+        <el-table-column prop="receive_num" :label="$t('yiLingQuGeShu')" min-width="120" />
+        <el-table-column prop="receive_amount" :label="$t('yiLingQuJinE')" min-width="120" />
+        <el-table-column prop="start_time" :label="$t('kaiShiShiJian')" min-width="120">
           <template #default="{ row }">
             {{ parseTime(row.start_time) }}
           </template>
         </el-table-column>
-        <el-table-column prop="end_time" label="结束时间" min-width="120">
+        <el-table-column prop="end_time" :label="$t('jieShuShiJian')" min-width="120">
           <template #default="{ row }">
             {{ parseTime(row.end_time) }}
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="创建时间" min-width="120" />
-        <el-table-column prop="updated_at" label="更新时间" min-width="120" />
+        <el-table-column prop="created_at" :label="$t('chuangJianShiJian')" min-width="120" />
+        <el-table-column prop="updated_at" :label="$t('gengXinShiJian')" min-width="120" />
 
-        <el-table-column prop="sort" label="排序" width="100" />
+        <el-table-column prop="sort" :label="$t('paiXu')" width="100" />
 
-        <el-table-column label="操作" fixed="right" align="left" width="200">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="200">
           <template #default="{ row }">
             <el-button v-hasPerm="['redPacket:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon>
                 <Edit />
               </template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
             <el-button v-hasPerm="['redPacket:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
           </template>
         </el-table-column>
@@ -91,15 +91,15 @@ import TableInstance from "@/utils/tableInstance";
 
 /** 红包类型选项 */
 const packet_types = [
-  { value: 1, label: "拼手气红包" },
-  { value: 2, label: "普通红包" },
+  { value: 1, label: $t("pinShouQiHongBao_0") },
+  { value: 2, label: $t("puTongHongBao_0") },
 ];
 
 /** 状态选项 */
 const state_types = [
-  { value: 1, label: "未开始" },
-  { value: 2, label: "进行中" },
-  { value: 3, label: "已结束" },
+  { value: 1, label: $t("weiKaiShi_0") },
+  { value: 2, label: $t("jinHangZhong_0") },
+  { value: 3, label: $t("yiJieShu_0") },
 ];
 
 /** 查询配置 */
@@ -109,7 +109,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "type",
-      label: "类型",
+      label: $t("leiXing_0"),
       options: packet_types,
       props: {
         clearable: true,
@@ -119,7 +119,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "state",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: state_types,
       props: {
         clearable: true,
@@ -129,31 +129,31 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "start_time",
-      label: "开始时间范围",
+      label: $t("kaiShiShiJianFanWei"),
       props: {
         style: { width: "380px" },
-        startPlaceholder: "开始时间",
-        endPlaceholder: "结束时间",
+        startPlaceholder: $t("kaiShiShiJian_0"),
+        endPlaceholder: $t("jieShuShiJian_0"),
       },
     },
     {
       type: "datetimerange",
       modelKey: "end_time",
-      label: "结束时间范围",
+      label: $t("jieShuShiJianFanWei"),
       props: {
         style: { width: "380px" },
-        startPlaceholder: "开始时间",
-        endPlaceholder: "结束时间",
+        startPlaceholder: $t("kaiShiShiJian_1"),
+        endPlaceholder: $t("jieShuShiJian_1"),
       },
     },
     {
       type: "datetimerange",
       modelKey: "created_at",
-      label: "添加时间范围",
+      label: $t("tianJiaShiJianFanWe"),
       props: {
         style: { width: "380px" },
-        startPlaceholder: "开始时间",
-        endPlaceholder: "结束时间",
+        startPlaceholder: $t("kaiShiShiJian_2"),
+        endPlaceholder: $t("jieShuShiJian_2"),
       },
     },
   ],
@@ -165,7 +165,7 @@ const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 
 /**时间格式化处理器*/
 function parseTime(timeStamp: number) {
-  return dayjs.unix(timeStamp).format("YYYY-MM-DD HH:mm:ss");
+  return dayjs.unix(timeStamp).format($t("yyyyMmDdHhMmSs"));
 }
 
 onMounted(() => {

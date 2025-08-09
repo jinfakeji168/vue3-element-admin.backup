@@ -19,13 +19,11 @@ const FileAPI = {
     });
   },
   /**获取列表 */
-  getList(groupId: 'images' | 'files' | 'videos' | 'audio') {
-    return request({
+  getList(params: PageQuery & { groupId: 'images' | 'files' | 'videos' | 'audio' }) {
+    return request<PageResult<{ path: string; url: string; name: string; size: number }>>({
       url: `${this.uploadUrl}/list`,
       method: "get",
-      params: {
-        groupId
-      }
+      params
     });
   },
 
@@ -68,5 +66,7 @@ export default FileAPI;
 export interface FileInfo {
   ext: string;
   path: string;
+  url: string;
+  src: string;
   size: number;
 }

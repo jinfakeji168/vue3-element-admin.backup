@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" title="详情" width="90%">
+  <el-dialog v-model="visible" :title="$t('xiangQing')" width="90%">
     <el-tabs v-model="activeTab" tab-position="left" type="border-card">
       <el-tab-pane v-for="(tab, index) of tabs" :key="index" :label="tab.name" :name="tab.key"></el-tab-pane>
       <el-card shadow="never" style="height: 65vh; overflow-y: auto">
@@ -8,8 +8,8 @@
     </el-tabs>
     <template #footer>
       <div class="flex flex-row justify-end">
-        <el-button @click="visible = false">取消</el-button>
-        <el-button type="primary" @click="saveHandler" :disabled="activeTab !== 'memberEdit'" v-hasPerm="['memberListDetail:save']">保存</el-button>
+        <el-button @click="visible = false">{{ $t("quXiao_0") }}</el-button>
+        <el-button type="primary" @click="saveHandler" :disabled="activeTab !== 'memberEdit'" v-hasPerm="['memberListDetail:save']">{{ $t("baoCun") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -21,27 +21,27 @@ const visible = defineModel({ type: Boolean, default: false });
 const activeTab = ref("memberEdit");
 const tabs = reactive([
   {
-    name: "会员编辑",
+    name: $t("huiYuanBianJi"),
     key: "memberEdit",
   },
   {
-    name: "会员账单",
+    name: $t("huiYuanZhangDan"),
     key: "memberBill",
   },
   {
-    name: "投资订单",
+    name: $t("touZiDingDan"),
     key: "investmentOrder",
   },
   {
-    name: "提币订单",
+    name: $t("tiBiDingDan"),
     key: "withdrawOrder",
   },
   {
-    name: "充币订单",
+    name: $t("chongBiDingDan"),
     key: "rechargeOrder",
   },
   {
-    name: "会员日志",
+    name: $t("huiYuanRiZhi"),
     key: "memberLog",
   },
 ]);

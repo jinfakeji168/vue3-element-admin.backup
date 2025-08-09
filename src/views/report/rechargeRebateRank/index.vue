@@ -7,9 +7,9 @@
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="uid" label="用户ID" min-width="100" />
-        <el-table-column prop="account" label="账号" min-width="120" />
-        <el-table-column prop="total_rebate" label="充值返利总额(U)" min-width="150">
+        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="100" />
+        <el-table-column prop="account" :label="$t('zhangHao')" min-width="120" />
+        <el-table-column prop="total_rebate" :label="$t('chongZhiFanLiZongeu')" min-width="150">
           <template #default="{ row }">
             {{ row.total_rebate }}
           </template>
@@ -39,7 +39,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "datetime",
-      label: "时间范围",
+      label: $t("shiJianFanWei"),
       props: {
         style: { width: "400px" },
       },

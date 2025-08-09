@@ -7,34 +7,34 @@
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="uid" label="用户ID" min-width="80" />
-        <el-table-column prop="access_type" label="进出类型" min-width="100">
+        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="80" />
+        <el-table-column prop="access_type" :label="$t('jinChuLeiXing_0')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.access_type === 1 ? 'success' : 'danger'">
               {{ access_types.find((t) => t.value === row.access_type)?.label }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="bill_title" label="账单标题" min-width="120" />
-        <el-table-column prop="account_type" label="账户类型" min-width="100">
+        <el-table-column prop="bill_title" :label="$t('zhangDanBiaoTi_0')" min-width="120" />
+        <el-table-column prop="account_type" :label="$t('zhangHuLeiXing')" min-width="100">
           <template #default="{ row }">
             <el-tag>
               {{ account_typeList.find((t) => t.value === row.account_type)?.label }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="business_type" label="业务类型" min-width="100">
+        <el-table-column prop="business_type" :label="$t('yeWuLeiXing')" min-width="100">
           <template #default="{ row }">
             <el-tag>
               {{ business_typeList.find((t) => t.value === row.business_type)?.label }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="before_amount" label="操作前余额" min-width="120" />
-        <el-table-column prop="operation_amount" label="操作金额" min-width="120" />
-        <el-table-column prop="after_amount" label="操作后余额" min-width="120" />
-        <el-table-column prop="operator_name" label="操作人" min-width="100" />
-        <el-table-column prop="updated_at" label="更新时间" min-width="180" />
+        <el-table-column prop="before_amount" :label="$t('caoZuoQianYuE')" min-width="120" />
+        <el-table-column prop="operation_amount" :label="$t('caoZuoJinE')" min-width="120" />
+        <el-table-column prop="after_amount" :label="$t('caoZuoHouYuE')" min-width="120" />
+        <el-table-column prop="operator_name" :label="$t('caoZuoRen')" min-width="100" />
+        <el-table-column prop="updated_at" :label="$t('gengXinShiJian')" min-width="180" />
       </el-table>
 
       <template #footer>
@@ -51,32 +51,32 @@ import TableInstance from "@/utils/tableInstance";
 
 /** 进出类型选项 */
 const access_types = [
-  { value: 1, label: "获取" },
-  { value: 2, label: "支出" },
+  { value: 1, label: $t("huoQu") },
+  { value: 2, label: $t("zhiChu") },
 ];
 
 /** 明细种类选项 */
 const account_typeList = [
-  { value: 1, label: "量化账户" },
-  { value: 2, label: "体验金账户" },
-  { value: 3, label: "佣金账户" },
-  { value: 4, label: "智能账户" },
-  { value: 5, label: "秒合约账户" },
-  { value: 6, label: "充值账户" },
+  { value: 1, label: $t("liangHuaZhangHu_2") },
+  { value: 2, label: $t("tiYanJinZhangHu") },
+  { value: 3, label: $t("yongJinZhangHu_1") },
+  { value: 4, label: $t("zhiNengZhangHu") },
+  { value: 5, label: $t("miaoHeYueZhangHu") },
+  { value: 6, label: $t("chongZhiZhangHu") },
 ];
 
 /** 明细类型选项 */
 const business_typeList = [
-  { value: 1, label: "充值" },
-  { value: 2, label: "提现" },
-  { value: 3, label: "投资" },
-  { value: 4, label: "收益" },
-  { value: 5, label: "转账" },
-  { value: 6, label: "佣金" },
-  { value: 7, label: "系统调整" },
-  { value: 8, label: "其他" },
-  { value: 10, label: "抽奖" },
-  { value: 11, label: "秒合约" },
+  { value: 1, label: $t("chongZhi") },
+  { value: 2, label: $t("tiXian") },
+  { value: 3, label: $t("touZi") },
+  { value: 4, label: $t("shouYi") },
+  { value: 5, label: $t("zhuanZhang") },
+  { value: 6, label: $t("yongJin") },
+  { value: 7, label: $t("xiTongTiaoZheng") },
+  { value: 8, label: $t("qiTa") },
+  { value: 10, label: $t("chouJiang") },
+  { value: 11, label: $t("miaoHeYue") },
 ];
 const props = defineProps<{ uid: number }>();
 const memberList = ref<any>([]);
@@ -89,10 +89,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -109,10 +109,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "access_type",
-      label: "进出类型",
+      label: $t("jinChuLeiXing_0"),
       options: access_types,
       props: {
-        placeholder: "请选择进出类型",
+        placeholder: $t("qingXuanZeJinChuLei"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -120,19 +120,19 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "bill_title",
-      label: "账单标题",
+      label: $t("zhangDanBiaoTi_0"),
       props: {
-        placeholder: "请输入账单标题",
+        placeholder: $t("qingShuRuZhangDanBi"),
         style: { width: "200px" },
       },
     },
     {
       type: "select",
       modelKey: "account_type",
-      label: "账户类型",
+      label: $t("zhangHuLeiXing_0"),
       options: account_typeList,
       props: {
-        placeholder: "请选择账户类型",
+        placeholder: $t("qingXuanZeZhangHuLe"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -140,10 +140,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "business_type",
-      label: "业务类型",
+      label: $t("yeWuLeiXing_0"),
       options: business_typeList,
       props: {
-        placeholder: "请选择业务类型",
+        placeholder: $t("qingXuanZeYeWuLeiX"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -151,7 +151,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "datetime",
-      label: "时间范围",
+      label: $t("shiJianFanWei"),
       props: {
         style: { width: "400px" },
       },

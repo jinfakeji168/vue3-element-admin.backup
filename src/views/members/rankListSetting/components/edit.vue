@@ -1,27 +1,27 @@
 <template>
-  <el-dialog :title="props.data?.id ? '编辑榜单' : '新增榜单'" v-model="visible" @close="closeHandler" width="500px">
+  <el-dialog :title="props.data?.id ? $t('bianJiBangDan') : $t('xinZengBangDan')" v-model="visible" @close="closeHandler" width="500px">
     <el-form ref="formRef" :model="form" :rules="rules" label-width="100px">
-      <el-form-item label="用户名" prop="user_name">
-        <el-input v-model="form.user_name" placeholder="请输入用户名" />
+      <el-form-item :label="$t('login.username')" prop="user_name">
+        <el-input v-model="form.user_name" :placeholder="$t('login.message.username.required')" />
       </el-form-item>
-      <el-form-item label="头像" prop="avatar">
+      <el-form-item :label="$t('touXiang')" prop="avatar">
         <uploadPart v-model="form.avatar" />
       </el-form-item>
-      <el-form-item label="收入" prop="income">
-        <el-input v-model="form.income" placeholder="请输入收入" />
+      <el-form-item :label="$t('shouRu')" prop="income">
+        <el-input v-model="form.income" :placeholder="$t('qingShuRuShouRu')" />
       </el-form-item>
-      <el-form-item label="榜单类型" prop="type">
-        <el-select v-model="form.type" placeholder="请选择类型">
+      <el-form-item :label="$t('bangDanLeiXing')" prop="type">
+        <el-select v-model="form.type" :placeholder="$t('qingXuanZeLeiXing')">
           <el-option v-for="item in type_options" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item label="排名" prop="ranking">
-        <el-input-number v-model="form.ranking" :min="1" placeholder="请输入排名" />
+      <el-form-item :label="$t('paiMing')" prop="ranking">
+        <el-input-number v-model="form.ranking" :min="1" :placeholder="$t('qingShuRuPaiMing')" />
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="closeHandler">取消</el-button>
-      <el-button type="primary" :loading="submitLoading" @click="submitHandler">确定</el-button>
+      <el-button @click="closeHandler">{{ $t("quXiao_0") }}</el-button>
+      <el-button type="primary" :loading="submitLoading" @click="submitHandler">{{ $t("queDing_0") }}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -32,9 +32,9 @@ import type { FormInstance } from "element-plus";
 
 /** 类型选项 */
 const type_options = [
-  { value: 1, label: "周榜" },
-  { value: 2, label: "月榜" },
-  { value: 3, label: "年榜" },
+  { value: 1, label: $t("zhouBang") },
+  { value: 2, label: $t("yueBang") },
+  { value: 3, label: $t("nianBang") },
 ];
 
 const props = defineProps<{
@@ -62,9 +62,9 @@ const form = reactive<Form>({
 
 /** 表单校验规则 */
 const rules = {
-  user_name: [{ required: true, message: "请输入用户名", trigger: "blur" }],
-  type: [{ required: true, message: "请选择类型", trigger: "change" }],
-  ranking: [{ required: true, message: "请输入排名", trigger: "blur" }],
+  user_name: [{ required: true, message: $t("login.message.username.required"), trigger: "blur" }],
+  type: [{ required: true, message: $t("qingXuanZeLeiXing"), trigger: "change" }],
+  ranking: [{ required: true, message: $t("qingShuRuPaiMing_0"), trigger: "blur" }],
 };
 
 /** 关闭处理 */

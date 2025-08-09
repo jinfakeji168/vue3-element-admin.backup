@@ -10,35 +10,35 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button v-hasPerm="['currency:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu_0") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column prop="id" label="ID" min-width="100" />
-        <el-table-column prop="display_name" label="前端显示名称" min-width="200" />
-        <el-table-column prop="name" label="名称" min-width="200" />
-        <el-table-column prop="mark" label="标识" min-width="200" />
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="display_name" :label="$t('qianDuanXianShiMing')" min-width="200" />
+        <el-table-column prop="name" :label="$t('mingCheng')" min-width="200" />
+        <el-table-column prop="mark" :label="$t('biaoShi')" min-width="200" />
+        <el-table-column prop="status" :label="$t('zhuangTai')" width="100">
           <template #default="scope">
-            <el-tag v-if="scope.row.status == 1" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
+            <el-tag v-if="scope.row.status == 1" type="success">{{ $t("zhengChang") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jinYong") }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column prop="sort" label="排序" width="100" />
+        <el-table-column prop="sort" :label="$t('paiXu')" width="100" />
 
-        <el-table-column label="操作" fixed="right" align="left" width="100">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="100">
           <template #default="{ row }">
             <el-button v-hasPerm="['lang:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
             <el-button v-hasPerm="['lang:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               <template #icon><Switch /></template>
@@ -48,7 +48,7 @@
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
           </template>
         </el-table-column>
@@ -65,7 +65,7 @@
 import editPart from "./components/edit.vue";
 
 defineOptions({
-  name: "Dept",
+  name: $t("dept"),
   inheritAttrs: false,
 });
 
@@ -75,8 +75,8 @@ import TableInstance from "@/utils/tableInstance";
 
 /** 状态选项 */
 const status_types = [
-  { value: StatusEnum.False, label: "正常" },
-  { value: StatusEnum.True, label: "禁用" },
+  { value: StatusEnum.False, label: $t("zhengChang") },
+  { value: StatusEnum.True, label: $t("jinYong") },
 ];
 
 /** 查询配置 */
@@ -86,7 +86,7 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "name",
-      label: "名称",
+      label: $t("mingCheng"),
       props: {
         clearable: true,
         style: { width: "200px" },
@@ -95,7 +95,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: status_types,
       props: {
         clearable: true,

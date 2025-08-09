@@ -1,42 +1,42 @@
 <template>
-  <el-dialog v-model="visible" title="首充金额阶梯设置" width="70vw">
+  <el-dialog v-model="visible" :title="$t('shouChongJinejieTiSh')" width="70vw">
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
         <el-button v-hasPerm="['inviteAward:chargeList:add']" type="success" @click="table.editHandler()">
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button v-hasPerm="['inviteAward:chargeList:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu_0") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
 
-        <el-table-column prop="deposit_amount" label="首存金额" min-width="120" />
-        <el-table-column prop="gift_amount" label="赠送金额" min-width="120" />
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="deposit_amount" :label="$t('shouCunJinE')" min-width="120" />
+        <el-table-column prop="gift_amount" :label="$t('zengSongJinE_0')" min-width="120" />
+        <el-table-column prop="status" :label="$t('zhuangTai')" width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.status == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
+            <el-tag v-if="row.status == StatusEnum.False" type="success">{{ $t("zhengChang") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jinYong") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right" align="left" width="200">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="200">
           <template #default="{ row }">
             <el-button v-hasPerm="['inviteAward:chargeList:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
             <el-button v-hasPerm="['inviteAward:chargeList:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
             <el-button
               v-hasPerm="['inviteAward:chargeList:status']"
@@ -58,19 +58,19 @@
   </el-dialog>
   <el-dialog v-model="table.visible.value[0]" :title="dialogTitle" width="50vw">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
-      <el-form-item label="首存金额" prop="deposit_amount">
-        <el-input-number v-model="formData.deposit_amount" placeholder="请输入首存金额" :min="0" />
+      <el-form-item :label="$t('shouCunJinE_0')" prop="deposit_amount">
+        <el-input-number v-model="formData.deposit_amount" :placeholder="$t('qingShuRuShouCunJin')" :min="0" />
       </el-form-item>
-      <el-form-item label="赠送金额" prop="gift_amount">
-        <el-input-number v-model="formData.gift_amount" placeholder="请输入充值赠送金额" :min="0" />
+      <el-form-item :label="$t('zengSongJinE_0')" prop="gift_amount">
+        <el-input-number v-model="formData.gift_amount" :placeholder="$t('qingShuRuChongZhiZe_0')" :min="0" />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item :label="$t('zhuangTai')" prop="status">
         <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item>
     </el-form>
     <template #footer>
-      <el-button @click="table.visible.value[0] = false">取消</el-button>
-      <el-button type="primary" @click="submithandler" :loading="loading">确定</el-button>
+      <el-button @click="table.visible.value[0] = false">{{ $t("quXiao_0") }}</el-button>
+      <el-button type="primary" @click="submithandler" :loading="loading">{{ $t("queDing_0") }}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -94,9 +94,9 @@ watch(
       nextTick(() => {
         if (unref(table.currentData)) {
           Object.assign(formData, unref(table.currentData));
-          dialogTitle.value = "编辑";
+          dialogTitle.value = $t("bianJi");
         } else {
-          dialogTitle.value = "新增";
+          dialogTitle.value = $t("xinZeng");
           Object.assign(formData, { id: undefined, status: 1 });
         }
       });
@@ -107,8 +107,8 @@ watch(
   }
 );
 const rules = {
-  deposit_amount: [{ required: true, message: "请输入首存金额", trigger: "blur" }],
-  gift_amount: [{ required: true, message: "请输入充值赠送金额", trigger: "blur" }],
+  deposit_amount: [{ required: true, message: $t("qingShuRuShouCunJin_0"), trigger: "blur" }],
+  gift_amount: [{ required: true, message: $t("qingShuRuChongZhiZe_1"), trigger: "blur" }],
 };
 const loading = ref(false);
 async function submithandler() {

@@ -74,16 +74,9 @@ function getCurrentTabChangeData() {
   return hasChange;
 }
 
-const googleStatus = ref<GoogleAuthStatus>({
-  enabled: true,
-});
-async function getGoogleStatus() {
-  const res = await systemConfig.getGoogleAuthStatus();
-  googleStatus.value.enabled = Boolean(res?.enabled);
-}
 import { useStore } from "@/store/modules/common";
 const commonStore = useStore();
-getGoogleStatus();
+
 const configRef = useTemplateRef<InstanceType<(typeof componentMap.value)["securityConfig"]>>("configRef");
 const loading = ref(false);
 async function saveHandler() {
@@ -91,21 +84,25 @@ async function saveHandler() {
   console.log("🚀 ~ saveHandler ~ hasChange:", hasChange);
 
   if (hasChange?.length) {
+    const googleStatus = await commonStore.getGoogleStatus();
     const enableGoogleVerify = await commonStore.keyByConfigValue("edit_address_is_google");
-
+    const enableLogoGoogle = await commonStore.keyByConfigValue("update_logo_is_google");
     //判断是否是需要谷歌验证的字段
-    const needGoogleverify = hasChange.some((i) => ["update_money_google_secret", "edit_address_is_google", "extract_check_is_google_code"].includes(i.name || ""));
+    const needGoogleverify = hasChange.some((i) => keyMap.securityConfig.includes(i.name || ""));
     const needGoogleverify1 = hasChange.some((i) => ["bep20_payment_wallet", "payment_wallet", "auto_payment_safety_value"].includes(i.name || ""));
-    console.log("🚀 ~ saveHandler ~ needGoogleverify1:", needGoogleverify1, enableGoogleVerify);
-    if ((needGoogleverify && googleStatus.value.enabled) || (needGoogleverify1 && enableGoogleVerify == 1)) {
+    const needGoogleverify2 = hasChange.some((i) => ["website_logo"].includes(i.name || ""));
+    if ((needGoogleverify && googleStatus) || (needGoogleverify1 && enableGoogleVerify == 1) || (needGoogleverify2 && enableLogoGoogle == 1)) {
       // await configRef.value.saveGoogleVerifyHandler();
-      const res = await ElMessageBox.prompt("输入谷歌验证码进行修改", {});
+      const res = await ElMessageBox.prompt($t("shuRuGuGeYanZhengM"), {});
       console.log("🚀 ~ saveHandler ~ res:", res);
       if (res.action == "confirm" && res.value) {
         await systemConfig.verifyGoogleAuth(res.value);
       } else {
         return;
       }
+    } else if (needGoogleverify && !googleStatus) {
+      ElMessage.error($t("qingXianBangDingGuG"));
+      return;
     }
     try {
       loading.value = true;

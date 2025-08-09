@@ -10,54 +10,54 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button type="danger" :disabled="!table.selectList.value.length" @click="table.deleteHandler()" v-hasPerm="['proxyList:delete']">
           <template #icon>
             <Delete />
           </template>
-          批量删除
+          {{ $t("piLiangShanChu") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="uid" label="用户ID" min-width="80" />
-        <el-table-column prop="account" label="用户账号" min-width="120" />
-        <el-table-column prop="agent_name" label="代理名称" min-width="120" />
-        <el-table-column label="代理类型" min-width="100">
+        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="80" />
+        <el-table-column prop="account" :label="$t('yongHuZhangHao')" min-width="120" />
+        <el-table-column prop="agent_name" :label="$t('daiLiMingCheng')" min-width="120" />
+        <el-table-column :label="$t('daiLiLeiXing')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.agent_type === 1 ? 'success' : 'warning'">
               {{ row.agent_type === 1 ? "普通代理" : "总代理" }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="register_count" label="注册人数" min-width="100" />
-        <el-table-column prop="total_recharge_amount" label="总充值金额" min-width="120" />
-        <el-table-column prop="total_withdrawal_amount" label="提现金额" min-width="120" />
-        <el-table-column prop="recharge_withdrawal_diff" label="充提差" min-width="100" />
-        <el-table-column prop="quant_balance" label="量化余额" min-width="120" />
-        <el-table-column prop="brokerage_balance" label="佣金余额" min-width="120" />
-        <el-table-column label="状态" min-width="100">
+        <el-table-column prop="register_count" :label="$t('zhuCeRenShu')" min-width="100" />
+        <el-table-column prop="total_recharge_amount" :label="$t('zongChongZhiJinE')" min-width="120" />
+        <el-table-column prop="total_withdrawal_amount" :label="$t('tiXianJinE')" min-width="120" />
+        <el-table-column prop="recharge_withdrawal_diff" :label="$t('chongTiCha')" min-width="100" />
+        <el-table-column prop="quant_balance" :label="$t('liangHuaYuE')" min-width="120" />
+        <el-table-column prop="brokerage_balance" :label="$t('yongJinYuE')" min-width="120" />
+        <el-table-column :label="$t('zhuangTai')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'danger'">
               {{ row.status === 1 ? "正常" : "禁用" }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="创建时间" min-width="180" />
-        <el-table-column label="操作" min-width="100">
+        <el-table-column prop="created_at" :label="$t('chuangJianShiJian')" min-width="180" />
+        <el-table-column :label="$t('caoZuo')" min-width="100">
           <template #default="{ row }">
             <el-button type="primary" link size="small" @click="table.editHandler(row, 1)" v-hasPerm="['proxyList:view']">
               <template #icon>
                 <Edit />
               </template>
-              查看
+              {{ $t("chaKan") }}
             </el-button>
             <el-button type="danger" link size="small" @click="table.deleteHandler(row.uid)" v-hasPerm="['proxyList:delete']">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
           </template>
         </el-table-column>
@@ -81,15 +81,15 @@ import TableInstance from "@/utils/tableInstance";
 import edit from "./components/edit.vue";
 /** 抽奖状态选项 */
 const state_options = [
-  { value: 1, label: "未抽奖" },
-  { value: 2, label: "已抽奖" },
+  { value: 1, label: $t("weiChouJiang") },
+  { value: 2, label: $t("yiChouJiang") },
 ];
 
 /** 类型选项 */
 const type_options = [
-  { value: 1, label: "充值赠送" },
-  { value: 2, label: "注册赠送" },
-  { value: 3, label: "邀请赠送" },
+  { value: 1, label: $t("chongZhiZengSong") },
+  { value: 2, label: $t("zhuCeZengSong") },
+  { value: 3, label: $t("yaoQingZengSong") },
 ];
 
 const memberList = ref<any>([]);
@@ -103,9 +103,9 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "agent_name",
-      label: "代理名称",
+      label: $t("daiLiMingCheng_0"),
       props: {
-        placeholder: "请输入代理名称",
+        placeholder: $t("qingShuRuDaiLiMing"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -113,9 +113,9 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "account",
-      label: "用户账户",
+      label: $t("yongHuZhangHu"),
       props: {
-        placeholder: "请输入用户账户",
+        placeholder: $t("qingShuRuYongHuZhan_0"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -123,13 +123,13 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "agent_type",
-      label: "代理类型",
+      label: $t("daiLiLeiXing_0"),
       options: [
-        { value: 1, label: "普通代理" },
-        { value: 2, label: "总代理" },
+        { value: 1, label: $t("puTongDaiLi") },
+        { value: 2, label: $t("zongDaiLi") },
       ],
       props: {
-        placeholder: "请选择代理类型",
+        placeholder: $t("qingXuanZeDaiLiLei"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -137,14 +137,14 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "type",
-      label: "统计类型",
+      label: $t("tongJiLeiXing"),
       options: [
-        { value: "direct", label: "下一级" },
-        { value: "all_line", label: "整条线" },
-        { value: "three_levels", label: "到下三级" },
+        { value: "direct", label: $t("xiaYiJi") },
+        { value: "all_line", label: $t("zhengTiaoXian") },
+        { value: "three_levels", label: $t("daoXiaSanJi") },
       ],
       props: {
-        placeholder: "请选择统计类型",
+        placeholder: $t("qingXuanZeTongJiLei"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -152,13 +152,13 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: [
-        { value: 1, label: "正常" },
-        { value: 2, label: "禁用" },
+        { value: 1, label: $t("zhengChang") },
+        { value: 2, label: $t("jinYong") },
       ],
       props: {
-        placeholder: "请选择状态",
+        placeholder: $t("qingXuanZeZhuangTai"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -166,7 +166,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "created_at",
-      label: "创建时间",
+      label: $t("chuangJianShiJian"),
       props: {
         style: { width: "400px" },
       },

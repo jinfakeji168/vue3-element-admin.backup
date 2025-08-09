@@ -52,8 +52,8 @@
 
         <el-table-column prop="status" :label="$t('zhuangTai')" width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.status == StatusEnum.False" type="success">{{ $t("zhengChang_0") }}</el-tag>
-            <el-tag v-else type="info">{{ $t("jinYong_0") }}</el-tag>
+            <el-tag v-if="row.status == StatusEnum.False" type="success">{{ $t("zhengChang") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jinYong") }}</el-tag>
           </template>
         </el-table-column>
 
@@ -99,8 +99,8 @@ import TableInstance from "@/utils/tableInstance";
 
 /** 状态选项 */
 const status_types = [
-  { value: StatusEnum.False, label: $t("zhengChang_1") },
-  { value: StatusEnum.True, label: $t("jinYong_1") },
+  { value: StatusEnum.False, label: $t("zhengChang") },
+  { value: StatusEnum.True, label: $t("jinYong") },
 ];
 
 /** 查询配置 */

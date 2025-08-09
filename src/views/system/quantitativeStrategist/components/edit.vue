@@ -4,18 +4,18 @@
       <!-- <el-form-item label="启用状态" prop="status">
         <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item> -->
-      <el-form-item label="显示排序" prop="sort">
+      <el-form-item :label="$t('xianShiPaiXu')" prop="sort">
         <el-input-number v-model="formData.sort" :min="1" />
       </el-form-item>
-      <el-form-item label="等级" prop="level">
+      <el-form-item :label="$t('dengJi_0')" prop="level">
         <el-input-number v-model="formData.level" :min="1" v-if="data" />
-        <el-select v-model="formData.level" multiple placeholder="请选择" v-else-if="!data && store.vipList">
+        <el-select v-model="formData.level" multiple :placeholder="$t('qingXuanZe')" v-else-if="!data && store.vipList">
           <el-option v-for="item of store.vipList" :label="item?.title" :value="item?.level" />
         </el-select>
       </el-form-item>
     </el-form>
     <el-tabs v-model="currentIndex">
-      <el-tab-pane label="标题" :name="0">
+      <el-tab-pane :label="$t('biaoTi')" :name="0">
         <Content
           class="content"
           :ref="
@@ -29,7 +29,7 @@
           style="height: 50vh"
         ></Content>
       </el-tab-pane>
-      <el-tab-pane label="副标题" :name="1">
+      <el-tab-pane :label="$t('fuBiaoTi')" :name="1">
         <Content
           class="content"
           :ref="
@@ -43,7 +43,7 @@
           style="height: 50vh"
         ></Content>
       </el-tab-pane>
-      <el-tab-pane label="内容" :name="2">
+      <el-tab-pane :label="$t('neiRong')" :name="2">
         <Content
           class="content"
           :ref="
@@ -59,8 +59,8 @@
     </el-tabs>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -84,10 +84,10 @@ watch(
   () => {
     if (!visible.value) return;
     if (props.data) {
-      title.value = "编辑";
+      title.value = $t("bianJi");
       formData.value = { ...props.data };
     } else {
-      title.value = "新增";
+      title.value = $t("xinZeng");
       formData.value = { sort: 1, status: StatusEnum.False };
     }
   },
@@ -99,7 +99,7 @@ const loading = ref(false);
 const formData = ref<Form>({});
 
 const rules = {
-  push_time: { required: true, message: "请选择发布时间", trigger: "blur" },
+  push_time: { required: true, message: $t("qingXuanZeFaBuShiJ"), trigger: "blur" },
 };
 const formRef = ref<FormInstance>();
 const contentRef = ref<InstanceType<typeof Content>[]>([]);

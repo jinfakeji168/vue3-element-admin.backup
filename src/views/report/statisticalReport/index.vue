@@ -1,17 +1,17 @@
 <template>
   <div class="app-container">
     <el-card>
-      <el-date-picker v-model="time_range" type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
-      <el-button class="ml-8" type="primary" @click="getData">查询</el-button>
+      <el-date-picker v-model="time_range" type="daterange" :range-separator="$t('zhi')" :start-placeholder="$t('kaiShiRiQi')" :end-placeholder="$t('jieShuRiQi')" />
+      <el-button class="ml-8" type="primary" @click="getData">{{ $t("chaXun") }}</el-button>
     </el-card>
     <el-card>
-      <template #header>注册国家分布</template>
+      <template #header>{{ $t("zhuCeGuoJiaFenBu") }}</template>
       <template #default>
         <div id="chart1" style="width: 100%; height: 400px"></div>
       </template>
     </el-card>
     <el-card>
-      <template #header>注册设备分布</template>
+      <template #header>{{ $t("zhuCeSheBeiFenBu") }}</template>
       <template #default>
         <div id="chart2" style="width: 100%; height: 400px"></div>
       </template>

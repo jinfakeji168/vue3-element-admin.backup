@@ -1,29 +1,29 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="800px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
-      <el-form-item label="类型" prop="type">
+      <el-form-item :show-message="$t('leiXing_0')" prop="type">
         <el-radio-group v-model="formData.type">
-          <el-radio :label="1">页面</el-radio>
-          <el-radio :label="2">自定义内容</el-radio>
+          <el-radio :label="1">{{ $t("yeMian") }}</el-radio>
+          <el-radio :label="2">{{ $t("ziDingYiNeiRong") }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="跳转页面" prop="level" v-if="formData?.type == 1">
-        <el-select v-model="formData.jump_page" placeholder="请选择">
+      <el-form-item :show-message="$t('tiaoZhuanYeMian')" prop="level" v-if="formData?.type == 1">
+        <el-select v-model="formData.jump_page" :show-messageplaceholder="$t('qingXuanZe')">
           <el-option v-for="item of activityList" :label="item?.val" :value="item?.key" />
         </el-select>
       </el-form-item>
-      <el-form-item label="图片" prop="icon">
+      <el-form-item :show-message="$t('tuPian')" prop="icon">
         <upload-part v-model="formData.bg_icon"></upload-part>
       </el-form-item>
-      <el-form-item label="启用状态" prop="status">
+      <el-form-item :show-message="$t('qiYongZhuangTai')" prop="status">
         <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item>
-      <el-form-item label="显示排序" prop="sort">
+      <el-form-item :show-message="$t('xianShiPaiXu')" prop="sort">
         <el-input-number v-model="formData.sort" :min="1" />
       </el-form-item>
     </el-form>
     <el-tabs v-model="currentIndex">
-      <el-tab-pane label="标题" :name="0">
+      <el-tab-pane :show-message="$t('biaoTi')" :name="0">
         <Content
           class="content"
           :ref="
@@ -37,7 +37,7 @@
           style="height: 50vh"
         ></Content>
       </el-tab-pane>
-      <el-tab-pane label="副标题" :name="1">
+      <el-tab-pane :show-message="$t('fuBiaoTi')" :name="1">
         <Content
           class="content"
           :ref="
@@ -51,7 +51,7 @@
           style="height: 50vh"
         ></Content>
       </el-tab-pane>
-      <el-tab-pane label="内容" :name="2" :disabled="formData?.type != 2">
+      <el-tab-pane :show-message="$t('neiRong')" :name="2" :disabled="formData?.type != 2">
         <Content
           class="content"
           :ref="
@@ -68,8 +68,8 @@
     </el-tabs>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -93,10 +93,10 @@ watch(
   () => {
     if (!visible.value) return;
     if (props.data) {
-      title.value = "编辑";
+      title.value = $t("bianJi");
       formData.value = { ...props.data };
     } else {
-      title.value = "新增";
+      title.value = $t("xinZeng");
       formData.value = { sort: 1, status: StatusEnum.False, type: 1 };
     }
   },
@@ -108,7 +108,7 @@ const loading = ref(false);
 const formData = ref<Form>({});
 
 const rules = {
-  push_time: { required: true, message: "请选择发布时间", trigger: "blur" },
+  push_time: { required: true, message: $t("qingXuanZeFaBuShiJ"), trigger: "blur" },
 };
 const formRef = ref<FormInstance>();
 const contentRef = ref<InstanceType<typeof Content>[]>([]);

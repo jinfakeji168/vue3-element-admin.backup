@@ -1,17 +1,17 @@
 <template>
-  <el-dialog v-model="visible" title="介绍" width="90%" @closed="closeHandler">
+  <el-dialog v-model="visible" title="$t('jieShao')" width="90%" @closed="closeHandler">
     <el-tabs type="border-card">
-      <el-tab-pane label="标题">
+      <el-tab-pane label="$t('biaoTi')">
         <content v-model="formData" :keys="['title_original', 'title_translation']" type="public" style="height: 60vh" />
       </el-tab-pane>
-      <el-tab-pane label="说明">
+      <el-tab-pane label="$t('shuoMing')">
         <content v-model="formData" :keys="['remark_original', 'remark_translation']" style="height: 60vh" />
       </el-tab-pane>
     </el-tabs>
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitHandler">确 定</el-button>
-        <el-button @click="closeHandler">取 消</el-button>
+        <el-button type="primary" @click="submitHandler">{{ $t("queDing") }}</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
       </div>
     </template>
   </el-dialog>

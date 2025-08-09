@@ -2,41 +2,41 @@
   <el-dialog v-model="visible" :title="title" width="800px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
       <!-- 新增表单项 -->
-      <el-form-item label="发送方式" prop="send_type">
+      <el-form-item :label="$t('faSongFangShi')" prop="send_type">
         <el-radio-group v-model="formData.send_type">
-          <el-radio :label="1">按等级</el-radio>
-          <el-radio :label="2">指定会员下级</el-radio>
-          <el-radio :label="3">按分组</el-radio>
+          <el-radio :label="1">{{ $t("anDengJi") }}</el-radio>
+          <el-radio :label="2">{{ $t("zhiDingHuiYuanXiaJi") }}</el-radio>
+          <el-radio :label="3">{{ $t("anFenZu") }}</el-radio>
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item v-if="formData.send_type === 1" label="VIP等级" prop="vip_level">
-        <el-select v-model="formData.vip_level" multiple placeholder="请选择VIP等级">
+      <el-form-item v-if="formData.send_type === 1" :label="$t('vipDengJi')" prop="vip_level">
+        <el-select v-model="formData.vip_level" multiple :placeholder="$t('qingXuanZeVipDengJi_0')">
           <el-option v-for="i of store.vipList" :key="i.id" :label="i.title" :value="i.level" />
         </el-select>
       </el-form-item>
-      <el-form-item v-if="formData.send_type === 1" label="指定会员账号" prop="account">
-        <el-input type="textarea" v-model="formData.account" placeholder="请输入会员账号,用英文逗号分隔" />
+      <el-form-item v-if="formData.send_type === 1" :label="$t('zhiDingHuiYuanZhang')" prop="account">
+        <el-input type="textarea" v-model="formData.account" :placeholder="$t('qingShuRuHuiYuanZha_2')" />
       </el-form-item>
-      <el-form-item v-if="formData.send_type === 2" label="指定会员所有下级" prop="spe_account">
-        <el-select v-model="formData.spe_account" :remote-method="remoteHandler" :loading="loading[1]" filterable remote placeholder="请输入会员账号">
+      <el-form-item v-if="formData.send_type === 2" :label="$t('zhiDingHuiYuanSuoYo')" prop="spe_account">
+        <el-select v-model="formData.spe_account" :remote-method="remoteHandler" :loading="loading[1]" filterable remote :placeholder="$t('qingShuRuHuiYuanZha_0')">
           <el-option v-for="item in memberList" :key="item.value" :label="item.label" :value="item.label" />
         </el-select>
         {{ subordinateNumStr }}
       </el-form-item>
 
-      <el-form-item v-if="formData.send_type === 3" label="会员分组" prop="group_ids">
-        <el-select v-model="formData.group_ids" multiple placeholder="请选择会员分组">
+      <el-form-item v-if="formData.send_type === 3" :label="$t('huiYuanFenZu')" prop="group_ids">
+        <el-select v-model="formData.group_ids" multiple :placeholder="$t('qingXuanZeHuiYuanFe')">
           <el-option v-for="group in store.groupList" :key="group.id" :label="group.title" :value="group.id" />
         </el-select>
       </el-form-item>
 
-      <el-form-item label="是否弹窗" prop="is_window">
+      <el-form-item :label="$t('shiFouDanChuang')" prop="is_window">
         <el-switch v-model="formData.is_window" :active-value="1" :inactive-value="2" />
       </el-form-item>
     </el-form>
     <el-tabs v-model="currentIndex">
-      <el-tab-pane label="标题" :name="0">
+      <el-tab-pane :label="$t('biaoTi')" :name="0">
         <Content
           class="content"
           style="height: 40vh"
@@ -51,7 +51,7 @@
         ></Content>
       </el-tab-pane>
 
-      <el-tab-pane label="内容" :name="2">
+      <el-tab-pane :label="$t('neiRong')" :name="2">
         <Content
           class="content"
           :ref="
@@ -67,8 +67,8 @@
     </el-tabs>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading[0]" :disabled="formData.send_type == 2 && !enabled">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading[0]" :disabled="formData.send_type == 2 && !enabled">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -94,14 +94,14 @@ watch(
   () => {
     if (!visible.value) return;
 
-    title.value = "新增";
+    title.value = $t("xinZeng");
     formData.value = { send_type: 1, is_window: 2 };
   },
   {
     flush: "post",
   }
 );
-const formData = ref<FormData>({});
+const formData = ref<Partial<FormData>>({});
 
 /** 会员分组列表类型 */
 interface GroupItem {
@@ -111,11 +111,11 @@ interface GroupItem {
 
 // 添加表单验证规则
 const rules = {
-  send_type: [{ required: true, message: "请选择发送方式", trigger: "change" }],
+  send_type: [{ required: true, message: $t("qingXuanZeFaSongFan"), trigger: "change" }],
   // vip_level: [{ required: true, message: "请选择VIP等级", trigger: "change" }],
-  spe_account: [{ required: true, message: "请输入会员账号", trigger: "blur" }],
-  group_ids: [{ required: true, message: "请选择会员分组", trigger: "change" }],
-  share_amount: [{ required: true, message: "填写佣金金额", trigger: "blur" }],
+  spe_account: [{ required: true, message: $t("qingShuRuHuiYuanZha_0"), trigger: "blur" }],
+  group_ids: [{ required: true, message: $t("qingXuanZeHuiYuanFe_0"), trigger: "change" }],
+  share_amount: [{ required: true, message: $t("tianXieYongJinJinE"), trigger: "blur" }],
 };
 
 const formRef = ref<FormInstance>();
@@ -157,7 +157,7 @@ const debouncedGetSubordinate = useDebounceFn(async (val: string) => {
   if (val) {
     try {
       const res = await Lapi.getSubordinate(val);
-      subordinateNumStr.value = `共${res.number}个下级`;
+      subordinateNumStr.value = $t("gongResnumberGeXiaJi_0", [res.number]);
       enabled.value = res.number > 0;
     } catch (err: any) {
       subordinateNumStr.value = err;

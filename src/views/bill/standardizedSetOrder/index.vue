@@ -8,34 +8,34 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" min-width="100" />
-        <el-table-column prop="uid" label="uID/用户" min-width="120">
+        <el-table-column prop="uid" :label="$t('uidYongHu')" min-width="120">
           <template #default="{ row }">
             <span>{{ row?.has_member?.id }}</span>
             /
             <span>{{ row?.has_member?.account }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="order_sn" label="订单号" min-width="150" />
-        <el-table-column prop="collected_amount" label="归集金额" min-width="120" />
-        <el-table-column prop="send_address" label="发送地址" min-width="200" show-overflow-tooltip />
-        <el-table-column prop="rece_address" label="接收地址" min-width="200" show-overflow-tooltip />
-        <el-table-column prop="tx_id" label="交易ID" min-width="150" show-overflow-tooltip />
-        <el-table-column prop="amount_type" label="金额类型" min-width="120">
+        <el-table-column prop="order_sn" :label="$t('dingDanHao_0')" min-width="150" />
+        <el-table-column prop="collected_amount" :label="$t('guiJiJinE')" min-width="120" />
+        <el-table-column prop="send_address" :label="$t('faSongDiZhi')" min-width="200" show-overflow-tooltip />
+        <el-table-column prop="rece_address" :label="$t('jieShouDiZhi')" min-width="200" show-overflow-tooltip />
+        <el-table-column prop="tx_id" :label="$t('jiaoYiId')" min-width="150" show-overflow-tooltip />
+        <el-table-column prop="amount_type" :label="$t('jineleiXing')" min-width="120">
           <template #default="{ row }">
             <el-tag>
               {{ getAmountTypeLabel(row.amount_type) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" min-width="100">
+        <el-table-column prop="status" :label="$t('zhuangTai')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="getStatusType(row.status)">
               {{ getStatusLabel(row.status) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="tx_time" label="交易时间" min-width="180" />
-        <el-table-column prop="created_at" label="添加时间" min-width="180" />
+        <el-table-column prop="tx_time" :label="$t('jiaoYiShiJian')" min-width="180" />
+        <el-table-column prop="created_at" :label="$t('tianJiaShiJian')" min-width="180" />
       </el-table>
 
       <template #footer>
@@ -60,10 +60,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -79,9 +79,9 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "order_sn",
-      label: "订单号",
+      label: $t("dingDanHao_0"),
       props: {
-        placeholder: "请输入订单号",
+        placeholder: $t("qingShuRuDingDanHao"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -89,9 +89,9 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "tx_id",
-      label: "交易ID",
+      label: $t("jiaoYiId_0"),
       props: {
-        placeholder: "请输入交易ID",
+        placeholder: $t("qingShuRuJiaoYiId"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -99,14 +99,14 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: [
-        { label: "处理中", value: 0 },
-        { label: "完成", value: 1 },
-        { label: "失败", value: 2 },
+        { label: $t("chuLiZhong"), value: 0 },
+        { label: $t("wanCheng"), value: 1 },
+        { label: $t("shiBai"), value: 2 },
       ],
       props: {
-        placeholder: "请选择状态",
+        placeholder: $t("qingXuanZeZhuangTai"),
         style: { width: "150px" },
         clearable: true,
       },
@@ -114,7 +114,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "amount_type",
-      label: "金额类型",
+      label: $t("jineleiXing_0"),
       options: [
         { label: "TRC20-USTD", value: 1 },
         { label: "TRX", value: 2 },
@@ -123,7 +123,7 @@ const config: QueryConfig = {
         { label: "BEP20-USTD", value: 5 },
       ],
       props: {
-        placeholder: "请选择金额类型",
+        placeholder: $t("qingXuanZeJineleiXin"),
         style: { width: "150px" },
         clearable: true,
       },
@@ -131,7 +131,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "tx_time",
-      label: "交易时间",
+      label: $t("jiaoYiShiJian_0"),
       props: {
         style: { width: "400px" },
       },
@@ -139,7 +139,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "created_at",
-      label: "添加时间",
+      label: $t("tianJiaShiJian"),
       props: {
         style: { width: "400px" },
       },
@@ -172,8 +172,8 @@ onMounted(() => {
 
 // 获取状态标签
 const getStatusLabel = (status: number) => {
-  const statusMap: any = { 0: "处理中", 1: "完成", 2: "失败" };
-  return statusMap[status] || "未知";
+  const statusMap: any = { 0: $t("chuLiZhong_0"), 1: $t("wanCheng_0"), 2: $t("shiBai_0") };
+  return statusMap[status] || $t("weiZhi");
 };
 
 // 获取状态类型
@@ -191,7 +191,7 @@ const getAmountTypeLabel = (type: number) => {
     4: "BNB",
     5: "BEP20-USTD",
   };
-  return typeMap[type] || "未知";
+  return typeMap[type] || $t("weiZhi");
 };
 </script>
 

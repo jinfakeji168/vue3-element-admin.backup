@@ -1,19 +1,19 @@
 <template>
   <div class="app-container">
     <el-card shadow="never" v-loading="loading[0]">
-      <template #header>邀请奖励</template>
+      <template #header>{{ $t("yaoQingJiangLi") }}</template>
       <el-form :model="formData" label-width="200px">
-        <el-form-item label="邀请下级首存人数阶梯奖励" prop="invite_first_recharge_user">
+        <el-form-item :label="$t('yaoQingXiaJiShouCun')" prop="invite_first_recharge_user">
           <el-radio-group v-model="formData.invite_first_recharge_user" fill="#67C23A" text-color="#fff">
-            <el-radio-button :value="StatusEnum.False">开启</el-radio-button>
-            <el-radio-button :value="StatusEnum.True">关闭</el-radio-button>
+            <el-radio-button :value="StatusEnum.False">{{ $t("kaiQi") }}</el-radio-button>
+            <el-radio-button :value="StatusEnum.True">{{ $t("guanBi") }}</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item prop="invite_first_recharge_money">
           <template #label>
             <div class="flex-center">
-              <span>邀请一级会员首存超过多少</span>
-              <el-tooltip content="邀请一级会员首存超过多少可赠送金额，设置0不赠送" placement="top">
+              <span>{{ $t("yaoQingYiJiHuiYuan") }}</span>
+              <el-tooltip :content="$t('yaoQingYiJiHuiYuan_0')" placement="top">
                 <el-icon class="el-icon--right"><el-icon-question-filled /></el-icon>
               </el-tooltip>
             </div>
@@ -23,8 +23,8 @@
         <el-form-item prop="invite_first_give_money">
           <template #label>
             <div class="flex-center">
-              <span>邀请一级会员首存赠送金额</span>
-              <el-tooltip content="邀请一级会员首存满足条件后赠送多少金额" placement="top">
+              <span>{{ $t("yaoQingYiJiHuiYuan_1") }}</span>
+              <el-tooltip :content="$t('yaoQingYiJiHuiYuan_2')" placement="top">
                 <el-icon class="el-icon--right"><el-icon-question-filled /></el-icon>
               </el-tooltip>
             </div>
@@ -32,22 +32,22 @@
           <el-input-number v-model="formData.invite_first_give_money" :min="0" />
         </el-form-item>
 
-        <el-form-item label="邀请阶梯设置">
-          <el-button type="primary" @click="visible[0] = true">查看/编辑</el-button>
+        <el-form-item :label="$t('yaoQingJieTiSheZhi')">
+          <el-button type="primary" @click="visible[0] = true">{{ $t("chaKanBianJi_0") }}</el-button>
         </el-form-item>
         <hr />
-        <el-form-item label="邀请下级首存金额阶梯奖励" prop="invite_first_recharge_invite_money">
+        <el-form-item :label="$t('yaoQingXiaJiShouCun_0')" prop="invite_first_recharge_invite_money">
           <el-radio-group v-model="formData.invite_first_recharge_invite_money" fill="#67C23A" text-color="#fff">
-            <el-radio-button :value="StatusEnum.False">开启</el-radio-button>
-            <el-radio-button :value="StatusEnum.True">关闭</el-radio-button>
+            <el-radio-button :value="StatusEnum.False">{{ $t("kaiQi") }}</el-radio-button>
+            <el-radio-button :value="StatusEnum.True">{{ $t("guanBi") }}</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="首充金额阶梯设置">
-          <el-button type="primary" @click="visible[1] = true">查看/编辑</el-button>
+        <el-form-item :label="$t('shouChongJinejieTiSh')">
+          <el-button type="primary" @click="visible[1] = true">{{ $t("chaKanBianJi_0") }}</el-button>
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button type="primary" :disabled="!hasAuth('inviteAward:save')" @click="submitHandler" :loading="loading[1]">保存</el-button>
+        <el-button type="primary" :disabled="!hasAuth('inviteAward:save')" @click="submitHandler" :loading="loading[1]">{{ $t("baoCun") }}</el-button>
       </template>
     </el-card>
     <ladderList v-model="visible[0]" />

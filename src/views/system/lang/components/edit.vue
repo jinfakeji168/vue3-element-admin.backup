@@ -1,28 +1,28 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="600px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
-      <el-form-item label="前端显示名称" prop="display_name">
-        <el-input v-model="formData.display_name" placeholder="请输入名称" />
+      <el-form-item :label="$t('qianDuanXianShiMing')" prop="display_name">
+        <el-input v-model="formData.display_name" :placeholder="$t('qingShuRuMingCheng')" />
       </el-form-item>
-      <el-form-item label="语言名称" prop="name">
-        <el-input v-model="formData.name" placeholder="请输入名称" />
+      <el-form-item :label="$t('yuYanMingCheng')" prop="name">
+        <el-input v-model="formData.name" :placeholder="$t('qingShuRuMingCheng')" />
       </el-form-item>
-      <el-form-item label="语言编码" prop="mark">
-        <el-input v-model="formData.mark" placeholder="请输入编码" />
+      <el-form-item :label="$t('yuYanBianMa')" prop="mark">
+        <el-input v-model="formData.mark" :placeholder="$t('qingShuRuBianMa')" />
       </el-form-item>
 
-      <el-form-item label="启用状态" prop="status">
+      <el-form-item :label="$t('qiYongZhuangTai')" prop="status">
         <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item>
-      <el-form-item label="排序" prop="sort">
+      <el-form-item :label="$t('paiXu')" prop="sort">
         <el-input-number v-model="formData.sort" controls-position="right" :min="0" style="width: 100px" />
       </el-form-item>
     </el-form>
 
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -42,10 +42,10 @@ watch(
   () => {
     if (!visible.value) return;
     if (props.data) {
-      title.value = "编辑";
+      title.value = $t("bianJi");
       formData.value = { ...props.data };
     } else {
-      title.value = "新增";
+      title.value = $t("xinZeng");
       formData.value = { status: StatusEnum.False, sort: 1 };
     }
   },
@@ -56,10 +56,10 @@ watch(
 const formData = ref<Form>({});
 
 const rules = {
-  display_name: [{ required: true, message: "请输入前端显示名称", trigger: "blur" }],
-  name: [{ required: true, message: "请输入语言名称", trigger: "blur" }],
-  mark: [{ required: true, message: "请输入语言编码", trigger: "blur" }],
-  status: [{ required: true, message: "请选择状态", trigger: "blur" }],
+  display_name: [{ required: true, message: $t("qingShuRuQianDuanXi"), trigger: "blur" }],
+  name: [{ required: true, message: $t("qingShuRuYuYanMing"), trigger: "blur" }],
+  mark: [{ required: true, message: $t("qingShuRuYuYanBian"), trigger: "blur" }],
+  status: [{ required: true, message: $t("qingXuanZeZhuangTai"), trigger: "blur" }],
 };
 
 const formRef = ref<FormInstance>();

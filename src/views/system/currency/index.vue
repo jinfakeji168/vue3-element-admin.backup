@@ -10,79 +10,79 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button v-hasPerm="['currency:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu_0") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="show_name" label="名称" min-width="120" />
+        <el-table-column prop="show_name" :label="$t('mingCheng')" min-width="120" />
         <el-table-column prop="icon" label="" min-width="100">
           <template #default="{ row }">
             <el-image :src="row.icon" class="icon" fit="contain" :preview-src-list="[row.icon]" preview-teleported :z-index="9999" />
           </template>
         </el-table-column>
 
-        <el-table-column prop="min_withdraw" label="最小提现金额" min-width="120" />
-        <el-table-column prop="max_withdraw" label="最小提现金额" min-width="120" />
-        <el-table-column prop="withdraw_fee_ratio" label="提现手续费(%)" min-width="120" />
-        <el-table-column prop="max_withdraw_fee" label="最大手续费(按当前币种单位)" min-width="120" />
-        <el-table-column prop="min_withdraw_fee" label="最小手续费(按当前币种单位)" min-width="120" />
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="min_withdraw" :label="$t('zuiXiaoTiXianJinE')" min-width="120" />
+        <el-table-column prop="max_withdraw" :label="$t('zuiXiaoTiXianJinE_0')" min-width="120" />
+        <el-table-column prop="withdraw_fee_ratio" :label="$t('tiXianShouXuFei')" min-width="120" />
+        <el-table-column prop="max_withdraw_fee" :label="$t('zuiDaShouXuFeiAnDa')" min-width="120" />
+        <el-table-column prop="min_withdraw_fee" :label="$t('zuiXiaoShouXuFeiAn')" min-width="120" />
+        <el-table-column prop="status" :label="$t('zhuangTai')" width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.status == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
+            <el-tag v-if="row.status == StatusEnum.False" type="success">{{ $t("zhengChang") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jinYong") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="充值" width="100">
+        <el-table-column prop="status" :label="$t('chongZhi')" width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.open_recharge == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
+            <el-tag v-if="row.open_recharge == StatusEnum.False" type="success">{{ $t("zhengChang") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jinYong") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="提现" width="100">
+        <el-table-column prop="status" :label="$t('tiXian')" width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.open_withdraw == StatusEnum.False" type="success">正常</el-tag>
-            <el-tag v-else type="info">禁用</el-tag>
+            <el-tag v-if="row.open_withdraw == StatusEnum.False" type="success">{{ $t("zhengChang") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("jinYong") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="withdraw_type" label="提款金额类型" min-width="120">
+        <el-table-column prop="withdraw_type" :label="$t('tiKuanJineleiXing')" min-width="120">
           <template #default="{ row }">
-            {{ row.withdraw_type == 1 ? "用户输入" : "固定金额" }}
+            {{ row.withdraw_type == 1 ? $t("yongHuShuRu") : $t("guDingJinE") }}
           </template>
         </el-table-column>
-        <el-table-column prop="withdraw_config" label="提款金额配置" min-width="120" />
-        <el-table-column prop="exchange_rate" label="汇率  " min-width="120" />
-        <el-table-column prop="exchange_rate_update_time" label="汇率更新时间" min-width="120" />
-        <el-table-column prop="merchant_num" label="商户号" min-width="120" />
-        <el-table-column prop="merchant_key" label="商户key " min-width="120" />
+        <el-table-column prop="withdraw_config" :label="$t('tiKuanJinepeiZhi')" min-width="120" />
+        <el-table-column prop="exchange_rate" :label="$t('huiShuai')" min-width="120" />
+        <el-table-column prop="exchange_rate_update_time" :label="$t('huiShuaiGengXinShiJ')" min-width="120" />
+        <el-table-column prop="merchant_num" :label="$t('shangHuHao')" min-width="120" />
+        <el-table-column prop="merchant_key" :label="$t('shangHuKey')" min-width="120" />
         <!-- <el-table-column prop="remark_original" label="说明原文  " min-width="120" /> -->
-        <el-table-column prop="sort" label="排序" width="100" />
+        <el-table-column prop="sort" :label="$t('paiXu')" width="100" />
 
-        <el-table-column label="操作" fixed="right" align="left" width="200">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="200">
           <template #default="{ row }">
             <el-button v-hasPerm="['currency:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
             <el-button v-hasPerm="['currency:editExplain']" type="primary" link size="small" @click.stop="table.editHandler(row, 1)">
               <template #icon><EditPen /></template>
-              充值说明
+              {{ $t("chongZhiShuoMing") }}
             </el-button>
             <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
             <el-button v-hasPerm="['currency:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               <template #icon><Switch /></template>
-              {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
+              {{ row.status == StatusEnum.False ? $t("jinYong") : $t("qiYong") }}
             </el-button>
           </template>
         </el-table-column>
@@ -106,8 +106,8 @@ import TableInstance from "@/utils/tableInstance";
 
 /** 状态选项 */
 const status_types = [
-  { value: StatusEnum.False, label: "正常" },
-  { value: StatusEnum.True, label: "禁用" },
+  { value: StatusEnum.False, label: $t("zhengChang") },
+  { value: StatusEnum.True, label: $t("jinYong") },
 ];
 
 /** 查询配置 */
@@ -117,7 +117,7 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "name",
-      label: "名称",
+      label: $t("mingCheng"),
       props: {
         clearable: true,
         style: { width: "200px" },
@@ -126,7 +126,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: status_types,
       props: {
         clearable: true,

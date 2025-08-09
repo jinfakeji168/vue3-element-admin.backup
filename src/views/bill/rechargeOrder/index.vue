@@ -8,26 +8,26 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" min-width="100" />
-        <el-table-column prop="uid" label="用户ID" min-width="100" />
-        <el-table-column prop="order_sn" label="订单号" min-width="160" />
-        <el-table-column prop="recharge_amount" label="充值金额(U)" min-width="120" />
-        <el-table-column prop="recharge_type" label="充值类型" min-width="140">
+        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="100" />
+        <el-table-column prop="order_sn" :label="$t('dingDanHao_0')" min-width="160" />
+        <el-table-column prop="recharge_amount" :label="$t('chongZhiJineu')" min-width="120" />
+        <el-table-column prop="recharge_type" :label="$t('chongZhiLeiXing_0')" min-width="140">
           <template #default="{ row }">
             <el-tag :type="getRechargeTypeColor(row.recharge_type)">
               {{ getRechargeTypeText(row.recharge_type) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" min-width="120">
+        <el-table-column prop="status" :label="$t('zhuangTai')" min-width="120">
           <template #default="{ row }">
             <el-tag :type="getStatusColor(row.status)">
               {{ getStatusText(row.status) }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="tx_id" label="区块txID" min-width="200" show-overflow-tooltip />
-        <el-table-column prop="tx_time" label="区块时间" min-width="160" />
-        <el-table-column prop="created_at" label="创建时间" min-width="160" />
+        <el-table-column prop="tx_id" :label="$t('quKuaiTxid')" min-width="200" show-overflow-tooltip />
+        <el-table-column prop="tx_time" :label="$t('quKuaiShiJian')" min-width="160" />
+        <el-table-column prop="created_at" :label="$t('chuangJianShiJian')" min-width="160" />
       </el-table>
 
       <template #footer>
@@ -54,10 +54,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -74,9 +74,9 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "order_sn",
-      label: "订单号",
+      label: $t("dingDanHao_0"),
       props: {
-        placeholder: "请输入订单号",
+        placeholder: $t("qingShuRuDingDanHao"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -84,9 +84,9 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "tx_id",
-      label: "充值txID",
+      label: $t("chongZhiTxid"),
       props: {
-        placeholder: "请输入充值txID",
+        placeholder: $t("qingShuRuChongZhiTx"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -94,13 +94,13 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "is_first_charge",
-      label: "是否首充",
+      label: $t("shiFouShouChong"),
       options: [
-        { label: "是", value: 1 },
-        { label: "否", value: 2 },
+        { label: $t("shi"), value: 1 },
+        { label: $t("fou"), value: 2 },
       ],
       props: {
-        placeholder: "请选择是否首充",
+        placeholder: $t("qingXuanZeShiFouSho"),
         style: { width: "150px" },
         clearable: true,
       },
@@ -108,7 +108,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "recharge_type",
-      label: "充值类型",
+      label: $t("chongZhiLeiXing_0"),
       options: [
         { label: "TRC20-USDT", value: 1 },
         { label: "TRX", value: 2 },
@@ -117,7 +117,7 @@ const config: QueryConfig = {
         { label: "BEP20-USDT", value: 5 },
       ],
       props: {
-        placeholder: "请选择充值类型",
+        placeholder: $t("qingXuanZeChongZhiL"),
         style: { width: "150px" },
         clearable: true,
       },
@@ -125,17 +125,17 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: [
-        { label: "充值入账", value: 1 },
-        { label: "入队归集", value: 2 },
-        { label: "购买能量", value: 3 },
-        { label: "发起转账", value: 4 },
-        { label: "归集成功", value: 5 },
-        { label: "归集失败", value: 6 },
+        { label: $t("chongZhiRuZhang"), value: 1 },
+        { label: $t("ruDuiGuiJi"), value: 2 },
+        { label: $t("gouMaiNengLiang"), value: 3 },
+        { label: $t("faQiZhuanZhang"), value: 4 },
+        { label: $t("guiJiChengGong"), value: 5 },
+        { label: $t("guiJiShiBai"), value: 6 },
       ],
       props: {
-        placeholder: "请选择状态",
+        placeholder: $t("qingXuanZeZhuangTai"),
         style: { width: "150px" },
         clearable: true,
       },
@@ -143,7 +143,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "datetime",
-      label: "申请时间",
+      label: $t("shenQingShiJian_0"),
       props: {
         style: { width: "400px" },
       },
@@ -151,7 +151,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "tx_time",
-      label: "tx时间",
+      label: $t("txShiJian"),
       props: {
         style: { width: "400px" },
       },
@@ -198,7 +198,7 @@ const getRechargeTypeText = (type: number) => {
     4: "BNB",
     5: "BEP20-USDT",
   };
-  return typeMap[type] || "未知类型";
+  return typeMap[type] || $t("weiZhiLeiXing");
 };
 
 const getRechargeTypeColor = (type: number) => {
@@ -215,14 +215,14 @@ const getRechargeTypeColor = (type: number) => {
 // 状态处理函数
 const getStatusText = (status: number) => {
   const statusMap: Record<string, string> = {
-    1: "充值入账",
-    2: "入队归集",
-    3: "购买能量",
-    4: "发起转账",
-    5: "归集成功",
-    6: "归集失败",
+    1: $t("chongZhiRuZhang_0"),
+    2: $t("ruDuiGuiJi_0"),
+    3: $t("gouMaiNengLiang_0"),
+    4: $t("faQiZhuanZhang_0"),
+    5: $t("guiJiChengGong_0"),
+    6: $t("guiJiShiBai_0"),
   };
-  return statusMap[status] || "未知状态";
+  return statusMap[status] || $t("weiZhiZhuangTai");
 };
 
 const getStatusColor = (status: number) => {

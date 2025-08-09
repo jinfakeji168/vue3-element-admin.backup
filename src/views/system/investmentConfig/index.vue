@@ -10,69 +10,75 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button v-hasPerm="['investmentConfig:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu_0") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="sort" label="排序" min-width="80" />
-        <el-table-column prop="type" label="产品类型" min-width="100">
+        <el-table-column prop="sort" :label="$t('paiXu')" min-width="80" />
+        <el-table-column prop="type" :label="$t('chanPinLeiXing')" min-width="100">
           <template #default="{ row }">
             {{ getProductTypeLabel(row.type) }}
           </template>
         </el-table-column>
-        <el-table-column prop="title" label="名称" min-width="120" />
-        <el-table-column prop="icon" label="图片" min-width="100">
+        <el-table-column prop="title" :label="$t('mingCheng')" min-width="120" />
+        <el-table-column prop="icon" :label="$t('tuPian')" min-width="100">
           <template #default="{ row }">
             <el-image :src="row.icon" class="icon" fit="contain" :preview-src-list="[row.icon]" preview-teleported :z-index="9999" />
           </template>
         </el-table-column>
-        <el-table-column prop="purchase_price" label="购买价格" min-width="100" />
-        <el-table-column prop="invest_cycle" label="投资周期" min-width="80" />
-        <el-table-column prop="daily_yield" label="每日收益率" min-width="100" />
-        <el-table-column prop="yield_type" label="收益类型" min-width="150">
+        <el-table-column prop="purchase_price" :label="$t('gouMaiJiaGe')" min-width="100" />
+        <el-table-column prop="invest_cycle" :label="$t('touZiZhouQi')" min-width="80" />
+        <el-table-column prop="daily_yield" :label="$t('meiRiShouYiShuai')" min-width="100" />
+        <el-table-column prop="yield_type" :label="$t('shouYiLeiXing')" min-width="150">
           <template #default="{ row }">
             {{ getYieldTypeLabel(row.yield_type) }}
           </template>
         </el-table-column>
-        <el-table-column prop="sales_quota" label="限购数量" min-width="80" />
-        <el-table-column prop="residual_num" label="剩余数量" min-width="80" />
-        <el-table-column prop="sales_status" label="销售状态" min-width="100">
+        <el-table-column prop="sales_quota" :label="$t('xianGouShuLiang')" min-width="80" />
+        <el-table-column prop="residual_num" :label="$t('shengYuShuLiang')" min-width="80" />
+        <el-table-column prop="sales_status" :label="$t('xiaoShouZhuangTai')" min-width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.sales_status == StatusEnum.False" type="success">开启</el-tag>
-            <el-tag v-else type="info">关闭</el-tag>
+            <el-tag v-if="row.sales_status == StatusEnum.False" type="success">{{ $t("kaiQi") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("guanBi") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" width="100">
+        <el-table-column prop="status" :label="$t('zhuangTai')" width="100">
           <template #default="{ row }">
-            <el-tag v-if="row.status == StatusEnum.False" type="success">开启</el-tag>
-            <el-tag v-else type="info">关闭</el-tag>
+            <el-tag v-if="row.status == StatusEnum.False" type="success">{{ $t("kaiQi") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("guanBi") }}</el-tag>
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" fixed="right" align="left" width="200">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="200">
           <template #default="{ row }">
             <el-button v-hasPerm="['investmentConfig:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
             <el-button v-hasPerm="['investmentConfig:editExplain']" type="primary" link size="small" @click.stop="table.editHandler(row, 1)">
               <template #icon><EditPen /></template>
-              充值说明
+              {{ $t("chongZhiShuoMing") }}
             </el-button>
             <el-button v-hasPerm="['investmentConfig:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
-            <el-button v-hasPerm="['investmentConfig:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
+            <el-button
+              v-hasPerm="['investmentConfig:status']"
+              :type="row.status == StatusEnum.False ? 'danger' : 'success'"
+              link
+              size="small"
+              @click.stop="table.changeStatus(row)"
+            >
               <template #icon><Switch /></template>
               {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>
@@ -99,8 +105,8 @@ import { ref, reactive, onMounted, computed } from "vue";
 import { ElForm } from "element-plus";
 
 const sales_status_types = [
-  { value: 1, label: "开启" },
-  { value: 2, label: "关闭" },
+  { value: 1, label: $t("kaiQi") },
+  { value: 2, label: $t("guanBi") },
 ];
 
 /** 查询配置 */
@@ -110,7 +116,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "type",
-      label: "产品类型",
+      label: $t("chanPinLeiXing_0"),
       options: productTypeOptions,
       props: {
         clearable: true,
@@ -120,7 +126,7 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "title",
-      label: "名称",
+      label: $t("mingCheng"),
       props: {
         clearable: true,
         style: { width: "200px" },
@@ -129,7 +135,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "yield_type",
-      label: "收益类型",
+      label: $t("shouYiLeiXing_0"),
       options: yieldTypeOptions,
       props: {
         clearable: true,
@@ -139,7 +145,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "sales_status",
-      label: "销售状态",
+      label: $t("xiaoShouZhuangTai_0"),
       options: sales_status_types,
       props: {
         clearable: true,

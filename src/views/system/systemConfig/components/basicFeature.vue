@@ -1,121 +1,121 @@
 <template>
   <el-form label-width="300px">
     <el-collapse v-model="activeNames">
-      <el-collapse-item title="网站信息" name="1">
-        <el-form-item label="主题样式">
+      <el-collapse-item :title="$t('wangZhanXinXi')" name="1">
+        <el-form-item :label="$t('zhuTiYangShi')">
           <el-select v-model="getI('website_skin_style').values">
             <el-option v-for="item of themeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="网站logo">
+        <el-form-item :label="$t('wangZhanLogo')">
           <uploadPart v-model="getI('website_logo').values" />
         </el-form-item>
-        <el-form-item label="客服logo">
+        <el-form-item :label="$t('keFuLogo')">
           <uploadPart v-model="getI('website_operator_icon').values" />
         </el-form-item>
-        <el-form-item label="网站名称">
+        <el-form-item :label="$t('wangZhanMingCheng')">
           <el-input v-model="getI('website_name').values" />
         </el-form-item>
       </el-collapse-item>
-      <el-collapse-item title="用户端配置" name="2">
-        <el-form-item label="用户端团队-用户显示下级层级">
+      <el-collapse-item :title="$t('yongHuDuanPeiZhi')" name="2">
+        <el-form-item :label="$t('yongHuDuanTuanDuiYo')">
           <el-select v-model="getI('client_show_spread_level').values">
             <el-option v-for="item of groupLevelOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="用户端团队-代理显示下级层级">
+        <el-form-item :label="$t('yongHuDuanTuanDuiDa')">
           <el-select v-model="getI('client_proxy_team_show_level').values">
             <el-option v-for="item of groupLevelOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
-        <el-form-item label="用户端团队-统计时区">
+        <el-form-item :label="$t('yongHuDuanTuanDuiTo')">
           <el-radio-group v-model="getI('client_user_team_count_time').values">
-            <el-radio :label="1">按系统时区</el-radio>
-            <el-radio :label="2">按用户时区</el-radio>
+            <el-radio :label="1">{{ $t("anXiTongShiQu") }}</el-radio>
+            <el-radio :label="2">{{ $t("anYongHuShiQu") }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="用户端是否开启谷歌验证器">
+        <el-form-item :label="$t('yongHuDuanShiFouKai')">
           <el-switch v-model="getI('client_google_secret_status').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="用户协议和隐私协议是否显示">
+        <el-form-item :label="$t('yongHuXieYiHeYinSi')">
           <el-switch v-model="getI('client_is_show_user_protocol').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="投资功能是否显示">
+        <el-form-item :label="$t('touZiGongNengShiFou')">
           <el-switch v-model="getI('client_invest_status').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="前端默认语言类型">
+        <el-form-item :label="$t('qianDuanMoRenYuYan')">
           <el-radio-group v-model="getI('client_system_default_lang_type').values">
-            <el-radio :label="1">根据用户设备自动识别</el-radio>
-            <el-radio :label="2">根据系统默认设置</el-radio>
+            <el-radio :label="1">{{ $t("genJuYongHuSheBeiZ") }}</el-radio>
+            <el-radio :label="2">{{ $t("genJuXiTongMoRenSh") }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="前端默认语言">
+        <el-form-item :label="$t('qianDuanMoRenYuYan_0')">
           <el-select v-model="getI('client_system_default_lang').values">
             <el-option v-for="item of store.langList" :key="item.mark" :label="item.name" :value="item.mark" />
           </el-select>
         </el-form-item>
-        <el-form-item label="前端手机号默认区号">
+        <el-form-item :label="$t('qianDuanShouJiHaoMo')">
           <el-select v-model="getI('client_system_default_phone_code').values">
             <el-option v-for="item of photoCodeAreaOptions" :key="item.val" :label="item.val" :value="item.key" />
           </el-select>
         </el-form-item>
-        <el-form-item label="salesmartly聊天插件src链接">
+        <el-form-item :label="$t('salesmartlyLiaoTianCh')">
           <el-input v-model="getI('client_salesmartly').values" />
         </el-form-item>
       </el-collapse-item>
-      <el-collapse-item title="转账配置" name="3">
-        <el-form-item label="智能账户是否可转到量化账户">
+      <el-collapse-item :title="$t('zhuanZhangPeiZhi')" name="3">
+        <el-form-item :label="$t('zhiNengZhangHuShiFo')">
           <el-switch v-model="getI('transfer_is_financial_to_basic').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="量化账户是否可转到利润账户">
+        <el-form-item :label="$t('liangHuaZhangHuShiF')">
           <el-switch v-model="getI('transfer_is_basic_to_brokerage').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="合约账户是否可转到量化账户">
+        <el-form-item :label="$t('heYueZhangHuShiFou')">
           <el-switch v-model="getI('transfer_is_contract_to_basic').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="合约账户是否可转到利润账户">
+        <el-form-item :label="$t('heYueZhangHuShiFou_0')">
           <el-switch v-model="getI('transfer_is_contract_to_brokerage').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="利润账户是否可转到量化账户">
+        <el-form-item :label="$t('liRunZhangHuShiFou')">
           <el-switch v-model="getI('transfer_is_brokerage_to_basic').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="利润账户是否可转到智能账户">
+        <el-form-item :label="$t('liRunZhangHuShiFou_0')">
           <el-switch v-model="getI('transfer_is_brokerage_to_financial').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="利润账户是否可转到合约账户">
+        <el-form-item :label="$t('liRunZhangHuShiFou_1')">
           <el-switch v-model="getI('transfer_is_brokerage_to_contract').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
 
-        <el-form-item label="利润账户转出手续费百分比">
+        <el-form-item :label="$t('liRunZhangHuZhuanCh')">
           <el-input v-model="getI('transfer_transfer_out_ratio').values" type="number" />
         </el-form-item>
-        <el-form-item label="利润账户转出最小手续费">
+        <el-form-item :label="$t('liRunZhangHuZhuanCh_0')">
           <el-input v-model="getI('transfer_transfer_out_min').values" type="number" />
         </el-form-item>
-        <el-form-item label="利润账户转出最大手续费">
+        <el-form-item :label="$t('liRunZhangHuZhuanCh_1')">
           <el-input v-model="getI('transfer_transfer_out_max').values" type="number" />
         </el-form-item>
-        <el-form-item label="其他账户转出手续费百分比">
+        <el-form-item :label="$t('qiTaZhangHuZhuanChu')">
           <el-input v-model="getI('transfer_other_transfer_out_ratio').values" type="number" />
         </el-form-item>
-        <el-form-item label="其他账户转出最小手续费">
+        <el-form-item :label="$t('qiTaZhangHuZhuanChu_0')">
           <el-input v-model="getI('transfer_other_transfer_out_min').values" type="number" />
         </el-form-item>
-        <el-form-item label="其他账户转出最大手续费">
+        <el-form-item :label="$t('qiTaZhangHuZhuanChu_1')">
           <el-input v-model="getI('transfer_other_transfer_out_max').values" type="number" />
         </el-form-item>
       </el-collapse-item>
-      <el-collapse-item title="语音配置" name="4">
-        <el-form-item label="语音提醒开关">
+      <el-collapse-item :title="$t('yuYinPeiZhi')" name="4">
+        <el-form-item :label="$t('yuYinTiXingKaiGuan')">
           <el-switch v-model="getI('voice_reminder_switch').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="提币订单是否重复提醒">
+        <el-form-item :label="$t('tiBiDingDanShiFouZ')">
           <el-switch v-model="getI('voice_is_repeat_extract_voice').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="充值语音文件">
+        <el-form-item :label="$t('chongZhiYuYinWenJia')">
           <uploadPart v-model="getI('voice_recharge_voice_file').values" type="files" />
         </el-form-item>
-        <el-form-item label="提现语音文件">
+        <el-form-item :label="$t('tiXianYuYinWenJian')">
           <uploadPart v-model="getI('voice_withdraw_voice_file').values" type="files" />
         </el-form-item>
       </el-collapse-item>
@@ -133,15 +133,15 @@ function getI(key: string): Form {
 }
 const activeNames = ["1", "2", "3", "4"];
 const groupLevelOptions = [
-  { label: "二级", value: 2 },
-  { label: "三级", value: 3 },
-  { label: "四级", value: 4 },
-  { label: "五级", value: 5 },
-  { label: "六级", value: 6 },
+  { label: $t("erJi"), value: 2 },
+  { label: $t("sanJi"), value: 3 },
+  { label: $t("siJi"), value: 4 },
+  { label: $t("wuJi"), value: 5 },
+  { label: $t("liuJi"), value: 6 },
 ];
 const themeOptions = [
-  { label: "默认", value: 1 },
-  { label: "白色", value: 2 },
+  { label: $t("sizeSelect.default"), value: 1 },
+  { label: $t("baiSe"), value: 2 },
 ];
 const photoCodeAreaOptions = ref<{ key: string; val: string }[]>([]);
 async function getPhotoCodeArea() {

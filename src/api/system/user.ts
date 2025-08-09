@@ -12,6 +12,9 @@ const UserAPI = {
     return request<any, UserInfo>({
       url: `/admin/auth/user`,
       method: "get",
+      headers: {
+        resultMsg: false
+      }
     });
   },
 

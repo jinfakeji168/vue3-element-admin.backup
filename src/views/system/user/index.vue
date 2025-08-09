@@ -38,7 +38,7 @@
             <el-table-column :label="$t('zhuangTai')" align="center" prop="status" width="100">
               <template #default="scope">
                 <el-tag :type="scope.row.status == 1 ? 'success' : 'info'">
-                  {{ scope.row.status == StatusEnum.False ? "正常" : "禁用" }}
+                  {{ scope.row.status == StatusEnum.False ? $t("zhengChang") : $t("jinYong") }}
                 </el-tag>
               </template>
             </el-table-column>
@@ -66,7 +66,7 @@
                     @click.stop="status_change_handler(scope.row)"
                   >
                     <template #icon><Switch /></template>
-                    {{ scope.row.status == StatusEnum.False ? "禁用" : "启用" }}
+                    {{ scope.row.status == StatusEnum.False ? $t("jinYong") : $t("qiYong") }}
                   </el-button>
                 </template>
               </template>
@@ -135,8 +135,8 @@ const queryConfig = {
       modelKey: "status",
       label: $t("zhuangTai"),
       options: [
-        { value: StatusEnum.False, label: $t("zhengChang_1") },
-        { value: StatusEnum.True, label: $t("jinYong_1") },
+        { value: StatusEnum.False, label: $t("zhengChang") },
+        { value: StatusEnum.True, label: $t("jinYong") },
       ],
       props: { placeholder: $t("quanBu"), style: { width: "100px" }, clearable: true },
     },

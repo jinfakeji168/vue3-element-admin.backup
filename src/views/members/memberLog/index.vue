@@ -9,21 +9,21 @@
 
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="uid" label="用户ID" min-width="80" />
-        <el-table-column prop="account" label="用户账号" min-width="120" />
-        <el-table-column prop="log_type" label="日志类型" min-width="100">
+        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="80" />
+        <el-table-column prop="account" :label="$t('yongHuZhangHao')" min-width="120" />
+        <el-table-column prop="log_type" :label="$t('riZhiLeiXing')" min-width="100">
           <template #default="{ row }">
             {{ log_types.find((t) => t.value === row.log_type)?.label }}
           </template>
         </el-table-column>
-        <el-table-column prop="log_ip" label="IP地址" min-width="120" />
-        <el-table-column prop="log_region" label="地区" min-width="120" />
-        <el-table-column prop="device_type" label="设备类型" min-width="100">
+        <el-table-column prop="log_ip" :label="$t('ipDiZhi')" min-width="120" />
+        <el-table-column prop="log_region" :label="$t('diQu')" min-width="120" />
+        <el-table-column prop="device_type" :label="$t('sheBeiLeiXing')" min-width="100">
           <template #default="{ row }">
             {{ device_types.find((t) => t.value === row.device_type)?.label }}
           </template>
         </el-table-column>
-        <el-table-column prop="updated_at" label="更新时间" min-width="180" />
+        <el-table-column prop="updated_at" :label="$t('gengXinShiJian')" min-width="180" />
       </el-table>
 
       <template #footer>
@@ -39,16 +39,16 @@ import { searchMember } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
 /** 日志类型选项 */
 const log_types = [
-  { value: 1, label: "登录" },
-  { value: 2, label: "注册" },
+  { value: 1, label: $t("dengLu") },
+  { value: 2, label: $t("zhuCe") },
 ];
 
 /** 设备类型选项 */
 const device_types = [
   { value: 1, label: "PC" },
   { value: 2, label: "WEB" },
-  { value: 3, label: "安卓" },
-  { value: 4, label: "苹果" },
+  { value: 3, label: $t("anZhuo") },
+  { value: 4, label: $t("pingGuo") },
 ];
 const memberList = ref<any>([]);
 const loading = ref(false);
@@ -60,10 +60,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -80,47 +80,47 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "log_type",
-      label: "日志类型",
+      label: $t("riZhiLeiXing_0"),
       options: log_types,
       props: {
-        placeholder: "请输入用户ID",
+        placeholder: $t("qingShuRuYongHuId"),
         style: { width: "200px" },
       },
     },
     {
       type: "input",
       modelKey: "log_ip",
-      label: "IP地址",
+      label: $t("ipDiZhi_0"),
       props: {
-        placeholder: "请输入用户ID",
+        placeholder: $t("qingShuRuYongHuId_0"),
         style: { width: "200px" },
       },
     },
     {
       type: "input",
       modelKey: "log_region",
-      label: "地区",
+      label: $t("diQu_0"),
       props: {
-        placeholder: "请输入用户ID",
+        placeholder: $t("qingShuRuYongHuId_1"),
         style: { width: "200px" },
       },
     },
     {
       type: "select",
       modelKey: "device_type",
-      label: "设备类型",
+      label: $t("sheBeiLeiXing_0"),
       options: device_types,
       props: {
-        placeholder: "请输入用户ID",
+        placeholder: $t("qingShuRuYongHuId_2"),
         style: { width: "200px" },
       },
     },
     {
       type: "datetimerange",
       modelKey: "datetime",
-      label: "时间范围",
+      label: $t("shiJianFanWei"),
       props: {
-        placeholder: "请输入用户ID",
+        placeholder: $t("qingShuRuYongHuId_3"),
         style: { width: "400px" },
       },
     },

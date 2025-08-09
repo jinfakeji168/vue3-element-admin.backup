@@ -20,7 +20,7 @@ export default {
       data,
     });
   },
-  setLotteryConfigTranslation(data: Form) {
+  setLotteryConfigTranslation(data: Partial<Form>) {
     return request<Form>({
       url: `${BasePath}/setLotteryRemark`,
       method: "put",

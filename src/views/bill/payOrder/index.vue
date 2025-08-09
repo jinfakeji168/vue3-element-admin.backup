@@ -8,25 +8,25 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" min-width="100" />
-        <el-table-column label="uid/账号" prop="uid" min-width="120">
+        <el-table-column :align="$t('uidZhangHao')" prop="uid" min-width="120">
           <template #default="{ row }">
-            <span>{{ row.uid }}/</span>
+            <span>{{ $t("rowUid_0", [row.uid]) }}</span>
             <span>{{ row.member?.account }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="order_sn" label="订单号" min-width="160" />
-        <el-table-column prop="recharge_amount" label="充值金额(U)" min-width="120" />
-        <el-table-column prop="channel" label="渠道" min-width="100" />
-        <el-table-column prop="status" label="状态" min-width="100">
+        <el-table-column prop="order_sn" :align="$t('dingDanHao_0')" min-width="160" />
+        <el-table-column prop="recharge_amount" :align="$t('chongZhiJineu')" min-width="120" />
+        <el-table-column prop="channel" :align="$t('quDao')" min-width="100" />
+        <el-table-column prop="status" :align="$t('zhuangTai')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : row.status === 2 ? 'danger' : 'warning'">
-              {{ row.status === 1 ? "已支付" : row.status === 2 ? "支付失败" : "未支付" }}
+              {{ row.status === 1 ? $t("yiZhiFu") : row.status === 2 ? $t("zhiFuShiBai") : $t("weiZhiFu") }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="created_at" label="申请时间" min-width="180" />
-        <el-table-column prop="order_result" label="下单结果" min-width="100" />
-        <el-table-column prop="recharge_order_id" label="充值订单ID" min-width="140" />
+        <el-table-column prop="created_at" :align="$t('shenQingShiJian')" min-width="180" />
+        <el-table-column prop="order_result" :align="$t('xiaDanJieGuo')" min-width="100" />
+        <el-table-column prop="recharge_order_id" :align="$t('chongZhiDingDanId')" min-width="140" />
       </el-table>
 
       <template #footer>
@@ -52,10 +52,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -71,10 +71,10 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "channel",
-      label: "渠道",
+      label: $t("quDao_0"),
       options: [],
       props: {
-        placeholder: "请输入渠道",
+        placeholder: $t("qingShuRuQuDao"),
         style: { width: "150px" },
         clearable: true,
       },
@@ -82,14 +82,14 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: [
-        { label: "未支付", value: 0 },
-        { label: "已支付", value: 1 },
-        { label: "支付失败", value: 2 },
+        { label: $t("weiZhiFu"), value: 0 },
+        { label: $t("yiZhiFu"), value: 1 },
+        { label: $t("zhiFuShiBai"), value: 2 },
       ],
       props: {
-        placeholder: "请选择状态",
+        placeholder: $t("qingXuanZeZhuangTai"),
         style: { width: "150px" },
         clearable: true,
       },
@@ -97,7 +97,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "datetime",
-      label: "申请时间",
+      label: $t("shenQingShiJian_0"),
       props: {
         style: { width: "400px" },
       },

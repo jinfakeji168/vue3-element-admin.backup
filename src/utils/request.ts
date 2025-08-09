@@ -20,13 +20,12 @@ utc = utc < 0 ? String(utc) : String('+' + utc)
 service.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     const accessToken = getToken();
-    if (accessToken || config.url?.match(/(?<=\/)login/)) {
+    if (accessToken) {
       config.headers.Authorization = accessToken;
       config.headers["X-UTC"] = utc
-      return config;
-    } else {
-      return Promise.reject("未登录");
     }
+    return config;
+
   },
   (error: any) => {
     return Promise.reject(error);
@@ -45,13 +44,15 @@ service.interceptors.response.use(
   (response: AxiosResponse) => {
     const { data, code, message } = response.data;
     const method = response.config.method;
+    const showMsg = response.config.headers['resultMsg'] ?? true;
 
     if (code === ResultEnum.SUCCESS) {
-      if (method !== "get") {
+      if (method !== "get" && showMsg) {
         ElMessage.success(successMsg[method as keyof typeof successMsg]);
       }
       return data;
     } else {
+      if (!showMsg) return;
       if (code === ResultEnum.TOKEN_INVALID) {
         //没有权限错误 跳去登录页
         ElMessage.error(ResultMsg[code as ResultEnum]);
@@ -69,7 +70,7 @@ service.interceptors.response.use(
   },
   (error: any) => {
     console.log("🚀 ~ error:", error);
-    ElMessage.error(error.message);
+    ElMessage.error(error);
     return Promise.reject(error.message);
   }
 );

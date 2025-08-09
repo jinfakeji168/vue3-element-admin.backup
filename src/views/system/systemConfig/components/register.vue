@@ -1,157 +1,159 @@
 <template>
   <el-form label-width="240px">
     <el-collapse v-model="activeNames">
-      <el-collapse-item title="基本注册设置" name="1">
-        <el-form-item label="用户uid自增设置">
+      <el-collapse-item :title="$t('jiBenZhuCeSheZhi')" name="1">
+        <el-form-item :label="$t('yongHuUidZiZengShe')">
           <div class="flex flex-row">
             <el-input-number v-model="current_autoIncrementId" style="margin-right: 14px" :min="originId" :disabled="!current_autoIncrementId" />
-            <el-button @click="getAutoIncrementId" :loading="loading">查询</el-button>
-            <el-button type="primary" @click="setAutoIncrementId" :loading="loading" :disabled="!current_autoIncrementId || current_autoIncrementId == originId">修改</el-button>
+            <el-button @click="getAutoIncrementId" :loading="loading">{{ $t("chaXun") }}</el-button>
+            <el-button type="primary" @click="setAutoIncrementId" :loading="loading" :disabled="!current_autoIncrementId || current_autoIncrementId == originId">
+              {{ $t("xiuGai") }}
+            </el-button>
           </div>
         </el-form-item>
-        <el-form-item label="注册发送站内信">
+        <el-form-item :label="$t('zhuCeFaSongZhanNei')">
           <el-switch v-model="getI('is_register_message').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="注册是否开启验证码">
+        <el-form-item :label="$t('zhuCeShiFouKaiQiYa')">
           <el-switch v-model="getI('register_is_captcha').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item label="重复密码">
-          <el-tooltip content="注册时是否开启重复一遍密码（登陆密码及安全密码）" placement="top">
+        <el-form-item :label="$t('zhongFuMiMa')">
+          <el-tooltip :content="$t('zhuCeShiShiFouKaiQ')" placement="top">
             <el-switch v-model="getI('is_repeat_password').values" :active-value="1" :inactive-value="2" />
           </el-tooltip>
         </el-form-item>
-        <el-form-item label="安全密码">
+        <el-form-item :label="$t('anQuanMiMa')">
           <el-radio-group v-model="getI('security_password_type').values">
-            <el-radio :label="1">注册时填写</el-radio>
-            <el-radio :label="2">提现时填写</el-radio>
+            <el-radio :label="1">{{ $t("zhuCeShiTianXie") }}</el-radio>
+            <el-radio :label="2">{{ $t("tiXianShiTianXie") }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="启用的注册方式">
+        <el-form-item :label="$t('qiYongDeZhuCeFangS')">
           <el-checkbox-group v-model="getI('register_account_status').values" :min="1">
-            <el-checkbox :label="1">用户名注册</el-checkbox>
-            <el-checkbox :label="2">邮箱注册</el-checkbox>
-            <el-checkbox :label="3">手机号注册</el-checkbox>
-            <el-checkbox :label="4">telegram注册</el-checkbox>
+            <el-checkbox :label="1">{{ $t("yongHuMingZhuCe") }}</el-checkbox>
+            <el-checkbox :label="2">{{ $t("youXiangZhuCe") }}</el-checkbox>
+            <el-checkbox :label="3">{{ $t("shouJiHaoZhuCe") }}</el-checkbox>
+            <el-checkbox :label="4">{{ $t("telegramZhuCe") }}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <!-- <el-form-item label="用户名注册是否开启">
           <el-switch v-model="getI('username_register_status').values" :active-value="1" :inactive-value="2" />
         </el-form-item> -->
         <template v-if="getI('register_account_status').values.includes(1)">
-          <el-form-item label="用户名注册时是否需填邮箱">
+          <el-form-item :label="$t('yongHuMingZhuCeShi')">
             <el-switch v-model="getI('username_register_email').values" :active-value="1" :inactive-value="2" />
           </el-form-item>
-          <el-form-item label="用户名注册时是否需填手机号">
+          <el-form-item :label="$t('yongHuMingZhuCeShi_0')">
             <el-switch v-model="getI('username_register_phone').values" :active-value="1" :inactive-value="2" />
           </el-form-item>
         </template>
         <!-- <el-form-item label="telegram注册">
           <el-switch v-model="getI('telegram_register_status').values" :active-value="1" :inactive-value="2" />
         </el-form-item> -->
-        <el-form-item label="telegram小程序自动注册登录" v-if="getI('register_account_status').values.includes(4)">
+        <el-form-item :label="$t('telegramXiaoChengXuZ')" v-if="getI('register_account_status').values.includes(4)">
           <el-switch v-model="getI('tg_auto_login').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
 
         <template v-if="getI('register_account_status').values.includes(3)">
-          <el-form-item label="手机号注册时是否需填写邮箱">
+          <el-form-item :label="$t('shouJiHaoZhuCeShiS')">
             <el-switch v-model="getI('phone_register_email_status').values" :active-value="1" :inactive-value="2" />
           </el-form-item>
-          <el-form-item label="手机号最低长度">
-            <el-input-number v-model="getI('register_phone_length').values" :min="0" placeholder="手机号最低长度" />
+          <el-form-item :label="$t('shouJiHaoZuiDiChang')">
+            <el-input-number v-model="getI('register_phone_length').values" :min="0" :placeholder="$t('shouJiHaoZuiDiChang_0')" />
           </el-form-item>
         </template>
-        <el-form-item label="同IP个数限制">
+        <el-form-item :label="$t('tongIpGeShuXianZhi')">
           <template #label>
             <div class="flex-center">
-              同IP个数限制
-              <el-tooltip content="同IP可注册账号个数限制，限制时间根据类型决定" placement="top">
+              {{ $t("tongIpGeShuXianZhi_0") }}
+              <el-tooltip :content="$t('tongIpKeZhuCeZhang')" placement="top">
                 <el-icon><QuestionFilled /></el-icon>
               </el-tooltip>
             </div>
           </template>
           <el-input-number v-model="getI('ip_register_limit').values" :min="0" placeholder="" />
         </el-form-item>
-        <el-form-item label="同IP个数限制类型">
+        <el-form-item :label="$t('tongIpGeShuXianZhi_1')">
           <template #label>
             <div class="flex-center">
-              同IP个数限制类型
-              <el-tooltip content="总次数代表该IP永久只能注册几次" placement="top">
+              {{ $t("tongIpGeShuXianZhi_2") }}
+              <el-tooltip :content="$t('zongCiShuDaiBiaoGai')" placement="top">
                 <el-icon><QuestionFilled /></el-icon>
               </el-tooltip>
             </div>
           </template>
           <el-radio-group v-model="getI('ip_register_limit_type').values">
-            <el-radio :label="1">每日次数</el-radio>
-            <el-radio :label="2">总次数</el-radio>
+            <el-radio :label="1">{{ $t("meiRiCiShu") }}</el-radio>
+            <el-radio :label="2">{{ $t("zongCiShu") }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <template v-if="getI('register_account_status').values.includes(2)">
-          <el-form-item label="邮箱注册时是否需要验证邮箱">
+          <el-form-item :label="$t('youXiangZhuCeShiShi')">
             <el-switch v-model="getI('is_verify_email_code').values" :active-value="1" :inactive-value="2" />
           </el-form-item>
           <template v-if="getI('is_verify_email_code').values == 1">
-            <el-form-item label="注册邮箱验证码有效期(分钟)">
-              <el-input-number v-model="getI('register_code_valid_time').values" :min="0" placeholder="注册邮箱验证码有效期(分钟)" />
+            <el-form-item :label="$t('zhuCeYouXiangYanZhe')">
+              <el-input-number v-model="getI('register_code_valid_time').values" :min="0" :placeholder="$t('zhuCeYouXiangYanZhe_0')" />
             </el-form-item>
-            <el-form-item label="单个ip注册邮箱验证码次数(24h)">
-              <el-input-number v-model="getI('register_email_code_num').values" :min="0" placeholder="单个ip注册邮箱验证码次数(24h)" />
+            <el-form-item :label="$t('danGeIpZhuCeYouXia')">
+              <el-input-number v-model="getI('register_email_code_num').values" :min="0" :placeholder="$t('danGeIpZhuCeYouXia_0')" />
             </el-form-item>
           </template>
         </template>
       </el-collapse-item>
 
-      <el-collapse-item title="注册赠送配置" name="2">
-        <el-form-item label="注册赠送量化金额">
-          <el-input-number v-model="getI('register_give_money').values" :min="0" placeholder="注册赠送量化金额" />
+      <el-collapse-item :title="$t('zhuCeZengSongPeiZhi')" name="2">
+        <el-form-item :label="$t('zhuCeZengSongLiangH')">
+          <el-input-number v-model="getI('register_give_money').values" :min="0" :placeholder="$t('zhuCeZengSongLiangH_0')" />
         </el-form-item>
-        <el-form-item label="注册赠送合约金额">
-          <el-input-number v-model="getI('register_send_contract_money').values" :min="0" placeholder="注册赠送合约金额" />
+        <el-form-item :label="$t('zhuCeZengSongHeYue')">
+          <el-input-number v-model="getI('register_send_contract_money').values" :min="0" :placeholder="$t('zhuCeZengSongHeYue_0')" />
         </el-form-item>
-        <el-form-item label="注册赠送虚拟金额">
-          <el-input-number v-model="getI('register_virtual_money').values" :min="0" placeholder="注册赠送虚拟金额，只显示不参与量化" />
+        <el-form-item :label="$t('zhuCeZengSongXuNiJ')">
+          <el-input-number v-model="getI('register_virtual_money').values" :min="0" :placeholder="$t('zhuCeZengSongXuNiJ_0')" />
         </el-form-item>
       </el-collapse-item>
 
-      <el-collapse-item title="推荐配置" name="3">
-        <el-form-item label="推荐人">
+      <el-collapse-item :title="$t('tuiJianPeiZhi')" name="3">
+        <el-form-item :label="$t('tuiJianRen')">
           <el-radio-group v-model="getI('is_need_spreader').values">
-            <el-radio :label="1">必填</el-radio>
-            <el-radio :label="2">选填</el-radio>
-            <el-radio :label="3">不需要</el-radio>
+            <el-radio :label="1">{{ $t("biTian") }}</el-radio>
+            <el-radio :label="2">{{ $t("xuanTian") }}</el-radio>
+            <el-radio :label="3">{{ $t("buXuYao") }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="邀请码类型">
+        <el-form-item :label="$t('yaoQingMaLeiXing')">
           <el-radio-group v-model="getI('invite_link_type').values">
-            <el-radio :label="1">纯数字</el-radio>
-            <el-radio :label="2">纯字母</el-radio>
-            <el-radio :label="3">数字字母组合</el-radio>
+            <el-radio :label="1">{{ $t("chunShuZi") }}</el-radio>
+            <el-radio :label="2">{{ $t("chunZiMu") }}</el-radio>
+            <el-radio :label="3">{{ $t("shuZiZiMuZuHe") }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="有效用户充值金额">
-          <el-input-number v-model="getI('recharge_num_valid_user').values" :min="0" placeholder="用户充值多少金额为有效用户" />
+        <el-form-item :label="$t('youXiaoYongHuChongZ')">
+          <el-input-number v-model="getI('recharge_num_valid_user').values" :min="0" :placeholder="$t('yongHuChongZhiDuoSh')" />
         </el-form-item>
       </el-collapse-item>
 
-      <el-collapse-item title="登录配置" name="4">
-        <el-form-item label="启用图形验证码错误次数">
-          <el-input-number v-model="getI('error_to_show_pic').values" :min="0" placeholder="登录密码输入错误几次后启用图形验证码" />
+      <el-collapse-item :title="$t('dengLuPeiZhi')" name="4">
+        <el-form-item :label="$t('qiYongTuXingYanZhen')">
+          <el-input-number v-model="getI('error_to_show_pic').values" :min="0" :placeholder="$t('dengLuMiMaShuRuCuo')" />
         </el-form-item>
-        <el-form-item label="封停账号错误次数">
+        <el-form-item :label="$t('fengTingZhangHaoCuo')">
           <template #label>
             <div class="flex-center">
-              封停账号错误次数
-              <el-tooltip content="连续输入几次错误的密码封停账号登录权限" placement="top">
+              {{ $t("fengTingZhangHaoCuo_0") }}
+              <el-tooltip :content="$t('lianXuShuRuJiCiCuo')" placement="top">
                 <el-icon><QuestionFilled /></el-icon>
               </el-tooltip>
             </div>
           </template>
           <el-input-number v-model="getI('error_to_ban').values" :min="0" placeholder="" />
         </el-form-item>
-        <el-form-item label="封停账号时长（分钟）">
+        <el-form-item :label="$t('fengTingZhangHaoShi')">
           <template #label>
             <div class="flex-center">
-              封停账号时长（分钟）
-              <el-tooltip content="封停账号登录多长时间，单位分钟" placement="top">
+              {{ $t("fengTingZhangHaoShi_0") }}
+              <el-tooltip :content="$t('fengTingZhangHaoDeng')" placement="top">
                 <el-icon><QuestionFilled /></el-icon>
               </el-tooltip>
             </div>
@@ -160,20 +162,20 @@
         </el-form-item>
       </el-collapse-item>
 
-      <el-collapse-item title="找回密码配置" name="5">
-        <el-form-item label="邮箱验证码有效期（分钟）">
-          <el-input-number v-model="getI('code_valid_time').values" :min="0" placeholder="邮箱验证码有效期（分钟）" />
+      <el-collapse-item :title="$t('zhaoHuiMiMaPeiZhi')" name="5">
+        <el-form-item :label="$t('youXiangYanZhengMaY')">
+          <el-input-number v-model="getI('code_valid_time').values" :min="0" :placeholder="$t('youXiangYanZhengMaY_0')" />
         </el-form-item>
         <el-form-item>
           <template #label>
             <div class="flex-center">
-              邮箱验证码次数
-              <el-tooltip content="24小时内同一个ip找回密码邮箱验证码次数限制" placement="top">
+              {{ $t("youXiangYanZhengMaC") }}
+              <el-tooltip :content="$t('24XiaoShiNeiTongYi')" placement="top">
                 <el-icon><QuestionFilled /></el-icon>
               </el-tooltip>
             </div>
           </template>
-          <el-input-number v-model="getI('pwd_email_code_num').values" :min="0" placeholder="邮箱验证码次数" />
+          <el-input-number v-model="getI('pwd_email_code_num').values" :min="0" :placeholder="$t('youXiangYanZhengMaC_0')" />
         </el-form-item>
       </el-collapse-item>
     </el-collapse>
@@ -206,7 +208,7 @@ async function getAutoIncrementId() {
 
 const loading = ref(false);
 async function setAutoIncrementId() {
-  await ElMessageBox.confirm("是否确认修改用户自增ID", "提示", {});
+  await ElMessageBox.confirm($t("shiFouQueRenXiuGai"), $t("tiShi"), {});
   if (current_autoIncrementId.value != originId.value) {
     loading.value = true;
     try {

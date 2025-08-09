@@ -126,8 +126,7 @@ temp = JSON.parse(temp);
 const loginData = ref<LoginData>({
   username: temp?.username || "",
   password: temp?.password || "",
-  captchaKey: "",
-  captchaCode: "",
+  google2fa_code: "",
 });
 
 const loginRules = computed(() => {
@@ -151,50 +150,52 @@ const loginRules = computed(() => {
         trigger: "blur",
       },
     ],
-    captchaCode: [
-      {
-        required: true,
-        trigger: "blur",
-        message: t("login.message.captchaCode.required"),
-      },
-    ],
   };
 });
 
-/** 获取验证码 */
-function getCaptcha() {
-  AuthAPI.getCaptcha().then((data) => {
-    loginData.value.captchaKey = data.captchaKey;
-    captchaBase64.value = data.captchaBase64;
-  });
+const needGoogleVerify = ref(false);
+async function getNeedGoogleVerify(account: string) {
+  try {
+    const res = await AuthAPI.checkGoogleAuth(account);
+    needGoogleVerify.value = res.need_google2fa;
+  } catch (error) {
+    needGoogleVerify.value = false;
+  }
 }
+watch(
+  () => loginData.value.username,
+  (val) => {
+    if (val) getNeedGoogleVerify(val);
+  },
+  {
+    immediate: true,
+  }
+);
+
 const rememberMe = ref(true);
 /** 登录表单提交 */
 async function handleLoginSubmit() {
-  loginFormRef.value?.validate((valid: boolean) => {
-    if (valid) {
-      loading.value = true;
-      userStore
-        .login(loginData.value)
-        .then(async () => {
-          await userStore.getUserInfo();
-          // 跳转到登录前的页面
-          console.log("----------------");
-
-          if (rememberMe.value) {
-            localStorage.setItem("Account", JSON.stringify(loginData.value));
-          }
-          const { path, queryParams } = parseRedirect();
-          router.push({ path: path, query: queryParams });
-        })
-        .catch(() => {
-          // getCaptcha();
-        })
-        .finally(() => {
-          loading.value = false;
-        });
+  await loginFormRef.value?.validate();
+  loading.value = true;
+  try {
+    if (needGoogleVerify.value) {
+      const res = await ElMessageBox.prompt($t("qingShuRuGoogleYanZ"));
+      if (res.action == "confirm" && res.value) {
+        console.log(res);
+        loginData.value.google2fa_code = res.value;
+      }
     }
-  });
+    await userStore.login(loginData.value);
+    await userStore.getUserInfo();
+    // 跳转到登录前的页面
+    if (rememberMe.value) {
+      localStorage.setItem("Account", JSON.stringify(loginData.value));
+    }
+    const { path, queryParams } = parseRedirect();
+    router.push({ path: path, query: queryParams });
+  } finally {
+    loading.value = false;
+  }
 }
 
 /**

@@ -3,12 +3,7 @@
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
         <el-form-item label="通知标题" prop="title">
-          <el-input
-            v-model="queryParams.title"
-            placeholder="关键字"
-            clearable
-            @keyup.enter="handleQuery()"
-          />
+          <el-input v-model="queryParams.title" placeholder="关键字" clearable @keyup.enter="handleQuery()" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery()">
@@ -28,12 +23,7 @@
     </div>
 
     <el-card shadow="never" class="table-wrapper">
-      <el-table
-        ref="dataTableRef"
-        v-loading="loading"
-        :data="pageData"
-        highlight-current-row
-      >
+      <el-table ref="dataTableRef" v-loading="loading" :data="pageData" highlight-current-row>
         <el-table-column type="index" label="序号" width="60" />
         <el-table-column label="通知标题" prop="title" min-width="200" />
         <el-table-column align="center" label="通知类型" width="150">
@@ -41,31 +31,15 @@
             <DictLabel v-model="scope.row.type" code="notice_type" />
           </template>
         </el-table-column>
-        <el-table-column
-          align="center"
-          label="发布人"
-          prop="publisherName"
-          width="100"
-        />
+        <el-table-column align="center" label="发布人" prop="publisherName" width="100" />
         <el-table-column align="center" label="通知等级" width="100">
           <template #default="scope">
             <DictLabel v-model="scope.row.level" code="notice_level" />
           </template>
         </el-table-column>
-        <el-table-column
-          key="releaseTime"
-          align="center"
-          label="发布时间"
-          prop="publishTime"
-          width="150"
-        />
+        <el-table-column key="releaseTime" align="center" label="发布时间" prop="publishTime" width="150" />
 
-        <el-table-column
-          align="center"
-          label="发布人"
-          prop="publisherName"
-          width="150"
-        />
+        <el-table-column align="center" label="发布人" prop="publisherName" width="150" />
         <el-table-column align="center" label="状态" width="100">
           <template #default="scope">
             <el-tag v-if="scope.row.isRead == 1" type="success">已读</el-tag>
@@ -74,25 +48,12 @@
         </el-table-column>
         <el-table-column align="center" fixed="right" label="操作" width="80">
           <template #default="scope">
-            <el-button
-              type="primary"
-              size="small"
-              link
-              @click="viewNoticeDetail(scope.row.id)"
-            >
-              查看
-            </el-button>
+            <el-button type="primary" size="small" link @click="viewNoticeDetail(scope.row.id)">查看</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <pagination
-        v-if="total > 0"
-        v-model:total="total"
-        v-model:page="queryParams.pageNum"
-        v-model:limit="queryParams.pageSize"
-        @pagination="handleQuery()"
-      />
+      <pagination v-if="total > 0" v-model:total="total" v-model:page="queryParams.pageNum" v-model:limit="queryParams.pageSize" @pagination="handleQuery()" />
     </el-card>
 
     <NoticeDetail ref="noticeDetailRef" />

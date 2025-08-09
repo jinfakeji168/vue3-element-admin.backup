@@ -128,7 +128,7 @@ export default {
   /**通过会员账户获取会员下级 */
   getSubordinate(account: string) {
     return request<any, { number: number }>({
-      url: `${BasePath}/getMemberSubordinate`,
+      url: `/admin/global/getMemberSubordinate`,
       method: "get",
       params: { account },
     });
@@ -289,6 +289,14 @@ export default {
       url: `${BasePath}/subordinateRechargeStats`,
       method: "get",
       params,
+    })
+  },
+  /**下级统计 粗略 */
+  getSubordinateStatistics(account: string) {
+    return request<any>({
+      url: `${BasePath}/getMemberSubordinate`,
+      method: "get",
+      params: { account },
     })
   }
 };

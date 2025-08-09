@@ -10,38 +10,38 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
         <el-button v-hasPerm="['message:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu_0") }}
         </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="uid" label="ID" width="80" />
-        <el-table-column prop="member.account" label="用户信息" min-width="120" />
-        <el-table-column prop="operator_name" label="发送人" min-width="100" />
-        <el-table-column prop="title_original" label="标题信息" min-width="150" />
-        <el-table-column prop="type" label="类型" min-width="100">
+        <el-table-column prop="member.account" :label="$t('yongHuXinXi')" min-width="120" />
+        <el-table-column prop="operator_name" :label="$t('faSongRen')" min-width="100" />
+        <el-table-column prop="title_original" :label="$t('biaoTiXinXi')" min-width="150" />
+        <el-table-column prop="type" :label="$t('leiXing_0')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.type === 1 ? 'info' : row.type === 2 ? 'success' : 'warning'">
               {{ message_types.find((t) => t.value === row.type)?.label }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="send_time" label="发送时间" min-width="160" />
-        <el-table-column prop="is_read" label="是否已读" width="100">
+        <el-table-column prop="send_time" :label="$t('faSongShiJian')" min-width="160" />
+        <el-table-column prop="is_read" :label="$t('shiFouYiDu')" width="100">
           <template #default="{ row }">
             <el-tag :type="row.is_read === 1 ? 'success' : 'info'">
               {{ row.is_read === 1 ? "已读" : "未读" }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="updated_at" label="已读时间" min-width="160" />
-        <el-table-column prop="is_window" label="是否弹窗" width="100">
+        <el-table-column prop="updated_at" :label="$t('yiDuShiJian')" min-width="160" />
+        <el-table-column prop="is_window" :label="$t('shiFouDanChuang')" width="100">
           <template #default="{ row }">
             <el-tag :type="row.is_window === 1 ? 'success' : 'info'">
               {{ row.is_window === 1 ? "是" : "否" }}
@@ -49,13 +49,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="操作" fixed="right" align="left" width="180">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="180">
           <template #default="{ row }">
             <el-button v-hasPerm="['message:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
           </template>
         </el-table-column>
@@ -76,15 +76,15 @@ import TableInstance from "@/utils/tableInstance";
 import { searchMember } from "@/utils";
 /** 消息类型选项 */
 const message_types = [
-  { value: 1, label: "自定义" },
-  { value: 2, label: "充值到账" },
-  { value: 3, label: "提现到账" },
+  { value: 1, label: $t("ziDingYi") },
+  { value: 2, label: $t("chongZhiDaoZhang") },
+  { value: 3, label: $t("tiXianDaoZhang") },
 ];
 
 /** 阅读状态选项 */
 const read_status = [
-  { value: 1, label: "已读" },
-  { value: 2, label: "未读" },
+  { value: 1, label: $t("yiDu") },
+  { value: 2, label: $t("weiDu") },
 ];
 const memberList = ref<any>([]);
 const loading = ref(false);
@@ -96,10 +96,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -115,7 +115,7 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "operator_name",
-      label: "发送人",
+      label: $t("faSongRen_0"),
       props: {
         clearable: true,
       },
@@ -123,7 +123,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "type",
-      label: "消息类型",
+      label: $t("xiaoXiLeiXing"),
       options: message_types,
       props: {
         clearable: true,
@@ -133,7 +133,7 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "is_read",
-      label: "阅读状态",
+      label: $t("yueDuZhuangTai"),
       options: read_status,
       props: {
         clearable: true,
@@ -143,12 +143,12 @@ const config: QueryConfig = {
     {
       type: "daterange",
       modelKey: "send_time",
-      label: "发送时间",
+      label: $t("faSongShiJian_0"),
       props: {
         type: "datetimerange",
-        valueFormat: "YYYY-MM-DD HH:mm:ss",
-        startPlaceholder: "开始时间",
-        endPlaceholder: "结束时间",
+        valueFormat: $t("yyyyMmDdHhMmSs"),
+        startPlaceholder: $t("kaiShiShiJian_2"),
+        endPlaceholder: $t("jieShuShiJian_2"),
       },
     },
   ],

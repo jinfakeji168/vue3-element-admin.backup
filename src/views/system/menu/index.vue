@@ -2,24 +2,24 @@
   <div class="app-container">
     <div class="search-bar">
       <el-form ref="queryFormRef" :model="queryParams" :inline="true">
-        <el-form-item label="权限标识" prop="name">
-          <el-input v-model="queryParams.name" placeholder="权限标识" clearable @keyup.enter="handleQuery" />
+        <el-form-item :label="$t('quanXianBiaoShi')" prop="name">
+          <el-input v-model="queryParams.name" :placeholder="$t('quanXianBiaoShi_0')" clearable @keyup.enter="handleQuery" />
         </el-form-item>
-        <el-form-item label="菜单名字" prop="title">
-          <el-input v-model="queryParams.title" placeholder="菜单名字" clearable @keyup.enter="handleQuery" />
+        <el-form-item :label="$t('caiDanMingZi')" prop="title">
+          <el-input v-model="queryParams.title" :placeholder="$t('caiDanMingZi_0')" clearable @keyup.enter="handleQuery" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleQuery">
             <template #icon>
               <Search />
             </template>
-            搜索
+            {{ $t("souSuo") }}
           </el-button>
           <el-button @click="handleResetQuery">
             <template #icon>
               <Refresh />
             </template>
-            重置
+            {{ $t("zhongZhi") }}
           </el-button>
         </el-form-item>
       </el-form>
@@ -31,7 +31,7 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
       </template>
 
@@ -45,7 +45,7 @@
         }"
         @row-click="handleRowClick"
       >
-        <el-table-column label="菜单名称" min-width="200">
+        <el-table-column :label="$t('caiDanMingCheng')" min-width="200">
           <template #default="scope">
             <template v-if="scope.row.icon && scope.row.icon.startsWith('el-icon')">
               <el-icon style="vertical-align: -0.15em">
@@ -61,48 +61,48 @@
             {{ scope.row.title }}
           </template>
         </el-table-column>
-        <el-table-column label="排序" align="center" width="80" prop="sort" />
+        <el-table-column :label="$t('paiXu')" align="center" width="80" prop="sort" />
 
-        <el-table-column label="类型" align="center">
+        <el-table-column :label="$t('leiXing_0')" align="center">
           <template #default="scope">
-            <el-tag v-if="scope.row.component === 'Layout'" type="warning">目录</el-tag>
-            <el-tag v-else-if="scope.row.type === MenuTypeEnum.MENU" type="success">菜单</el-tag>
-            <el-tag v-else-if="scope.row.type === MenuTypeEnum.BUTTON" type="danger">按钮</el-tag>
-            <el-tag v-else-if="scope.row.type === MenuTypeEnum.EXTLINK" type="info">外链</el-tag>
+            <el-tag v-if="scope.row.component === 'Layout'" type="warning">{{ $t("muLu") }}</el-tag>
+            <el-tag v-else-if="scope.row.type === MenuTypeEnum.MENU" type="success">{{ $t("caiDan") }}</el-tag>
+            <el-tag v-else-if="scope.row.type === MenuTypeEnum.BUTTON" type="danger">{{ $t("anNiu") }}</el-tag>
+            <el-tag v-else-if="scope.row.type === MenuTypeEnum.EXTLINK" type="info">{{ $t("waiLian") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center">
+        <el-table-column :label="$t('zhuangTai')" align="center">
           <template #default="scope">
-            <el-tag v-if="scope.row.hidden === StatusEnum.False" type="success">显示</el-tag>
-            <el-tag v-else type="info">隐藏</el-tag>
+            <el-tag v-if="scope.row.hidden === StatusEnum.False" type="success">{{ $t("xianShi") }}</el-tag>
+            <el-tag v-else type="info">{{ $t("yinCang") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="权限标识" align="left" width="150" prop="name" />
+        <el-table-column :label="$t('quanXianBiaoShi_1')" align="left" width="150" prop="name" />
 
-        <el-table-column label="路由路径" align="left" width="150" prop="path" />
+        <el-table-column :label="$t('luYouLuJing')" align="left" width="150" prop="path" />
 
-        <el-table-column label="组件路径" align="left" width="250" prop="component" />
+        <el-table-column :label="$t('zuJianLuJing')" align="left" width="250" prop="component" />
 
-        <el-table-column fixed="right" align="center" label="操作" width="220">
+        <el-table-column fixed="right" align="center" :label="$t('caoZuo')" width="220">
           <template #default="scope">
             <el-button v-if="scope.row.type == MenuTypeEnum.MENU" v-hasPerm="['menu:add']" type="primary" link size="small" @click.stop="handleOpenDialog(scope.row)">
               <template #icon>
                 <Plus />
               </template>
-              新增
+              {{ $t("xinZeng") }}
             </el-button>
 
             <el-button v-hasPerm="['menu:edit']" type="primary" link size="small" @click.stop="handleOpenDialog(undefined, scope.row)">
               <template #icon>
                 <Edit />
               </template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
             <el-button v-hasPerm="['menu:delete']" type="danger" link size="small" @click.stop="handleDelete(scope.row.id)">
               <template #icon>
                 <Delete />
               </template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
           </template>
         </el-table-column>
@@ -111,47 +111,47 @@
 
     <el-drawer v-model="dialog.visible" :title="dialog.title" size="50%" @close="handleCloseDialog">
       <el-form ref="menuFormRef" :model="formData" :rules="rules" label-width="100px">
-        <el-form-item label="父级菜单" prop="parent_id">
-          <el-tree-select v-model="formData.parent_id" placeholder="选择上级菜单" :data="menuOptions" filterable check-strictly :render-after-expand="false" />
+        <el-form-item :label="$t('fuJiCaiDan')" prop="parent_id">
+          <el-tree-select v-model="formData.parent_id" :placeholder="$t('xuanZeShangJiCaiDan')" :data="menuOptions" filterable check-strictly :render-after-expand="false" />
         </el-form-item>
 
-        <el-form-item label="名称" prop="title">
-          <el-input v-model="formData.title" placeholder="请输入名称" />
+        <el-form-item :label="$t('mingCheng')" prop="title">
+          <el-input v-model="formData.title" :placeholder="$t('qingShuRuMingCheng')" />
         </el-form-item>
-        <el-form-item label="权限标识" prop="name">
+        <el-form-item :label="$t('quanXianBiaoShi_2')" prop="name">
           <template #label>
             <div class="flex-y-center">
-              权限标识
+              {{ $t("quanXianBiaoShi_3") }}
               <el-tooltip placement="bottom" effect="light">
-                <template #content>和路由名称共用，禁止重复</template>
+                <template #content>{{ $t("heLuYouMingChengGon") }}</template>
                 <el-icon class="ml-1 cursor-pointer">
                   <QuestionFilled />
                 </el-icon>
               </el-tooltip>
             </div>
           </template>
-          <el-input v-model="formData.name" placeholder="请输入权限标识" />
+          <el-input v-model="formData.name" :placeholder="$t('qingShuRuQuanXianBi')" />
         </el-form-item>
-        <el-form-item label="菜单类型" prop="type">
+        <el-form-item :label="$t('caiDanLeiXing')" prop="type">
           <el-radio-group v-model="formData.type" @change="handleMenuTypeChange">
             <!-- <el-radio value="CATALOG">目录</el-radio> -->
-            <el-radio value="menu">菜单</el-radio>
-            <el-radio value="button">按钮</el-radio>
-            <el-radio value="link">外链</el-radio>
+            <el-radio value="menu">{{ $t("caiDan_0") }}</el-radio>
+            <el-radio value="button">{{ $t("anNiu_0") }}</el-radio>
+            <el-radio value="link">{{ $t("waiLian_0") }}</el-radio>
             <el-radio value="iframe">iframe</el-radio>
           </el-radio-group>
         </el-form-item>
 
-        <el-form-item v-if="formData.type == MenuTypeEnum.EXTLINK" label="外链地址" prop="path">
-          <el-input v-model="formData.path" placeholder="请输入外链完整路径" />
+        <el-form-item v-if="formData.type == MenuTypeEnum.EXTLINK" :label="$t('waiLianDiZhi')" prop="path">
+          <el-input v-model="formData.path" :placeholder="$t('qingShuRuWaiLianWan')" />
         </el-form-item>
 
         <el-form-item v-if="formData.type == MenuTypeEnum.MENU" prop="path">
           <template #label>
             <div class="flex-y-center">
-              路由路径
+              {{ $t("luYouLuJing_0") }}
               <el-tooltip placement="bottom" effect="light">
-                <template #content>定义应用中不同页面对应的 URL 路径，目录需以 / 开头，菜单项不用。例如：系统管理目录 /system，系统管理下的用户管理菜单 user。</template>
+                <template #content>{{ $t("dingYiYingYongZhong") }}</template>
                 <el-icon class="ml-1 cursor-pointer">
                   <QuestionFilled />
                 </el-icon>
@@ -165,9 +165,9 @@
         <el-form-item v-if="formData.type == MenuTypeEnum.MENU" prop="component">
           <template #label>
             <div class="flex-y-center">
-              组件路径
+              {{ $t("zuJianLuJing_0") }}
               <el-tooltip placement="bottom" effect="light">
-                <template #content>目录设置为Layout</template>
+                <template #content>{{ $t("muLuSheZhiWeiLayout") }}</template>
                 <el-icon class="ml-1 cursor-pointer">
                   <QuestionFilled />
                 </el-icon>
@@ -221,10 +221,10 @@
           </div>
         </el-form-item> -->
 
-        <el-form-item v-if="formData.type !== MenuTypeEnum.BUTTON" prop="hidden" label="显示状态">
+        <el-form-item v-if="formData.type !== MenuTypeEnum.BUTTON" prop="hidden" :label="$t('xianShiZhuangTai')">
           <el-radio-group v-model="formData.hidden">
-            <el-radio :value="1">显示</el-radio>
-            <el-radio :value="2">隐藏</el-radio>
+            <el-radio :value="1">{{ $t("xianShi_0") }}</el-radio>
+            <el-radio :value="2">{{ $t("yinCang_0") }}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -268,24 +268,24 @@
           </el-radio-group>
         </el-form-item> -->
 
-        <el-form-item label="排序" prop="sort">
+        <el-form-item :label="$t('paiXu')" prop="sort">
           <el-input-number v-model="formData.sort" style="width: 100px" controls-position="right" :min="0" />
         </el-form-item>
 
-        <el-form-item v-if="formData.type !== MenuTypeEnum.BUTTON" label="图标" prop="icon">
+        <el-form-item v-if="formData.type !== MenuTypeEnum.BUTTON" :label="$t('tuBiao')" prop="icon">
           <!-- 图标选择器 -->
           <icon-select v-model="formData.icon" />
         </el-form-item>
 
-        <el-form-item v-if="formData.type == MenuTypeEnum.CATALOG" label="跳转路由">
-          <el-input v-model="formData.redirect" placeholder="跳转路由" />
+        <el-form-item v-if="formData.type == MenuTypeEnum.CATALOG" :label="$t('tiaoZhuanLuYou')">
+          <el-input v-model="formData.redirect" :placeholder="$t('tiaoZhuanLuYou_0')" />
         </el-form-item>
       </el-form>
 
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
-          <el-button @click="handleCloseDialog">取 消</el-button>
+          <el-button type="primary" @click="submitForm">{{ $t("queDing") }}</el-button>
+          <el-button @click="handleCloseDialog">{{ $t("quXiao") }}</el-button>
         </div>
       </template>
     </el-drawer>
@@ -306,7 +306,7 @@ const menuFormRef = ref(ElForm);
 
 const loading = ref(false);
 const dialog = reactive({
-  title: "新增菜单",
+  title: $t("xinZengCaiDan"),
   visible: false,
 });
 
@@ -335,13 +335,13 @@ const formData = ref({ ...initialMenuFormData.value });
 
 // 表单验证规则
 const rules = reactive({
-  parent_id: [{ required: true, message: "请选择顶级菜单", trigger: "blur" }],
-  title: [{ required: true, message: "请输入菜单名称", trigger: "blur" }],
-  name: [{ required: true, message: "请输入菜单权限标识", trigger: "blur" }],
-  type: [{ required: true, message: "请选择菜单类型", trigger: "blur" }],
-  path: [{ required: true, message: "请输入路由路径", trigger: "blur" }],
-  component: [{ required: true, message: "请输入组件路径", trigger: "blur" }],
-  hidden: [{ required: true, message: "请选择显示状态", trigger: "blur" }],
+  parent_id: [{ required: true, message: $t("qingXuanZeDingJiCai"), trigger: "blur" }],
+  title: [{ required: true, message: $t("qingShuRuCaiDanMing"), trigger: "blur" }],
+  name: [{ required: true, message: $t("qingShuRuCaiDanQuan"), trigger: "blur" }],
+  type: [{ required: true, message: $t("qingXuanZeCaiDanLei"), trigger: "blur" }],
+  path: [{ required: true, message: $t("qingShuRuLuYouLuJi"), trigger: "blur" }],
+  component: [{ required: true, message: $t("qingShuRuZuJianLuJ"), trigger: "blur" }],
+  hidden: [{ required: true, message: $t("qingXuanZeXianShiZh"), trigger: "blur" }],
 });
 
 // 选择表格的行菜单ID
@@ -403,19 +403,19 @@ async function handleOpenDialog(row?: MenuVO, menu?: MenuVO) {
   menuOptions.value = [
     {
       value: 0,
-      label: "顶级菜单",
+      label: $t("dingJiCaiDan"),
       children: getMenuOptions(menuTableData.value),
     },
   ];
   dialog.visible = true;
   if (menu) {
-    dialog.title = "编辑菜单";
+    dialog.title = $t("bianJiCaiDan");
     // initialMenuFormData.value = { ...menu };
     nextTick(() => {
       formData.value = { ...menu };
     });
   } else {
-    dialog.title = "新增菜单";
+    dialog.title = $t("xinZengCaiDan_0");
     formData.value.parent_id = row?.id as number;
     formData.value.sort = (row?.children?.length || 0) + 1;
   }
@@ -461,11 +461,11 @@ function submitForm() {
 // 删除菜单
 function handleDelete(menuId: number) {
   if (!menuId) {
-    ElMessage.warning("请勾选删除项");
+    ElMessage.warning($t("qingGouXuanShanChuX"));
     return false;
   }
 
-  ElMessageBox.confirm("确认删除已选中的数据项?", "警告", {
+  ElMessageBox.confirm($t("queRenShanChuYiXuan"), $t("jingGao"), {
     type: "warning",
   }).then(() => {
     loading.value = true;

@@ -1,31 +1,31 @@
 <template>
-  <el-dialog v-model="visible" title="投资记录详情" width="80%" :close-on-click-modal="false">
+  <el-dialog v-model="visible" :title="$t('touZiJiLuXiangQing')" width="80%" :close-on-click-modal="false">
     <div class="search-bar">
       <QueryPart ref="queryFormRef" v-model="queryParams" :config="config" @search="table.queryHandler()" @reset="table.handleResetQuery()"></QueryPart>
     </div>
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <el-table :data="table.list.value" row-key="id" style="height: 50vh">
-        <el-table-column prop="record_id" label="记录ID" min-width="100" />
-        <el-table-column prop="uid" label="用户ID" min-width="100" />
-        <el-table-column prop="product_id" label="产品ID" min-width="100" />
-        <el-table-column prop="refund_amount" label="退款金额(U)" min-width="120" />
-        <el-table-column prop="issue" label="期数" min-width="100" />
-        <el-table-column prop="last_issue" label="最后一期" min-width="100">
+        <el-table-column prop="record_id" :label="$t('jiLuId')" min-width="100" />
+        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="100" />
+        <el-table-column prop="product_id" :label="$t('chanPinId')" min-width="100" />
+        <el-table-column prop="refund_amount" :label="$t('tuiKuanJineu')" min-width="120" />
+        <el-table-column prop="issue" :label="$t('qiShu')" min-width="100" />
+        <el-table-column prop="last_issue" :label="$t('zuiHouYiQi')" min-width="100">
           <template #default="{ row }">
-            <el-tag>{{ row.last_issue === 1 ? "是" : "否" }}</el-tag>
+            <el-tag>{{ row.last_issue === 1 ? $t("shi") : $t("fou") }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" min-width="100">
+        <el-table-column prop="status" :label="$t('zhuangTai')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'warning'">
-              {{ row.status === 1 ? "已兑换" : "未兑换" }}
+              {{ row.status === 1 ? $t("yiDuiHuan") : $t("weiDuiHuan") }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="expiration_time" label="到期时间" min-width="180" />
-        <el-table-column prop="settlement_time" label="结算时间" min-width="180" />
-        <el-table-column prop="created_at" label="创建时间" min-width="180" />
+        <el-table-column prop="expiration_time" :label="$t('daoQiShiJian')" min-width="180" />
+        <el-table-column prop="settlement_time" :label="$t('jieSuanShiJian_0')" min-width="180" />
+        <el-table-column prop="created_at" :label="$t('chuangJianShiJian')" min-width="180" />
       </el-table>
 
       <template #footer>
@@ -49,7 +49,7 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "issue",
-      label: "期数",
+      label: $t("qiShu_0"),
       props: {
         clearable: true,
         style: { width: "200px" },
@@ -58,10 +58,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "last_issue",
-      label: "最后一期",
+      label: $t("zuiHouYiQi_0"),
       options: [
-        { label: "是", value: 1 },
-        { label: "否", value: 2 },
+        { label: $t("shi"), value: 1 },
+        { label: $t("fou"), value: 2 },
       ],
       props: {
         clearable: true,
@@ -71,10 +71,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: [
-        { label: "已兑换", value: 1 },
-        { label: "未兑换", value: 2 },
+        { label: $t("yiDuiHuan"), value: 1 },
+        { label: $t("weiDuiHuan"), value: 2 },
       ],
       props: {
         clearable: true,
@@ -84,7 +84,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "exp_datetime",
-      label: "到期时间",
+      label: $t("daoQiShiJian_0"),
       props: {
         style: { width: "400px" },
       },
@@ -92,7 +92,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "set_datetime",
-      label: "结算时间",
+      label: $t("jieSuanShiJian_0"),
       props: {
         style: { width: "400px" },
       },
@@ -100,7 +100,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "cre_datetime",
-      label: "创建时间",
+      label: $t("chuangJianShiJian"),
       props: {
         style: { width: "400px" },
       },

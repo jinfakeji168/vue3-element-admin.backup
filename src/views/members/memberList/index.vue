@@ -18,7 +18,7 @@
             <template #icon>
               <Plus />
             </template>
-            新增
+            {{ $t("xinZeng") }}
           </el-button>
           <el-button
             v-hasPerm="['memberList:batch']"
@@ -31,7 +31,7 @@
             <template #icon>
               <Plus />
             </template>
-            批量操作
+            {{ $t("piLiangCaoZuo") }}
           </el-button>
           <!-- <el-button v-hasPerm="['memberList:export']" type="info">
             <template #icon>
@@ -51,7 +51,7 @@
             <template #icon>
               <Plus />
             </template>
-            批量封禁
+            {{ $t("piLiangFengJin") }}
           </el-button>
           <el-button
             v-hasPerm="['memberList:batch']"
@@ -65,38 +65,38 @@
             <template #icon>
               <Plus />
             </template>
-            设置分组
+            {{ $t("sheZhiFenZu") }}
           </el-button>
         </div>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event, ['id', 'account'])">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="show_name" label="用户信息" min-width="200px">
+        <el-table-column prop="show_name" :label="$t('yongHuXinXi')" min-width="200px">
           <template #default="{ row }">
             <div>
               <span class="text-gray-500">ID:</span>
               <span class="text-gray-700">{{ row.id }}</span>
-              <el-button class="ml-4" type="primary" size="small" @click="table.editHandler(row, 4)">查看下级</el-button>
+              <el-button class="ml-4" type="primary" size="small" @click="table.editHandler(row, 4)">{{ $t("chaKanXiaJi") }}</el-button>
             </div>
             <div>
-              <span class="text-gray-500">账号:</span>
-              <span class="text-gray-700">{{ row.account }}</span>
+              <span class="text-gray-500">{{ $t("zhangHao_0") }}</span>
+              <span class="text-gray-700">{{ row?.account }}</span>
             </div>
             <div>
-              <span class="text-gray-500">等级:</span>
-              <span class="text-gray-700">Level:{{ row.vip_level }}({{ row.is_online == 1 ? "在线" : "离线" }})</span>
+              <span class="text-gray-500">{{ $t("dengJi_1") }}</span>
+              <span class="text-gray-700">{{ $t("levelRowviplevelRowiso_0", [row.vip_level, row.is_online == 1 ? $t("zaiXian") : $t("liXian")]) }}</span>
             </div>
             <div>
-              <span class="text-gray-500">语言:</span>
+              <span class="text-gray-500">{{ $t("yuYan") }}</span>
               <span class="text-gray-700">{{ commonStore.langList.find((i) => i.id == row.lang_id)?.name }}</span>
             </div>
             <div>
-              <span class="text-gray-500">体验金:</span>
+              <span class="text-gray-500">{{ $t("tiYanJin") }}</span>
               <span class="text-gray-700">{{ row.experience_account }}</span>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="状态设置" min-width="200px">
+        <el-table-column :label="$t('zhuangTaiSheZhi')" min-width="200px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <el-switch
@@ -104,8 +104,8 @@
                 inline-prompt
                 :active-value="StatusEnum.False"
                 :inactive-value="StatusEnum.True"
-                active-text="允许登录"
-                inactive-text="禁止登录"
+                :active-text="$t('yunXuDengLu')"
+                :inactive-text="$t('jinZhiDengLu')"
                 @change="statusChangeHandler(row, 'status')"
               />
               <el-switch
@@ -113,8 +113,8 @@
                 inline-prompt
                 :active-value="StatusEnum.False"
                 :inactive-value="StatusEnum.True"
-                active-text="允许提现"
-                inactive-text="禁止提现"
+                :active-text="$t('yunXuTiXian')"
+                :inactive-text="$t('jinZhiTiXian')"
                 @change="statusChangeHandler(row, 'withdrawal_status')"
               />
 
@@ -123,8 +123,8 @@
                 inline-prompt
                 :active-value="StatusEnum.False"
                 :inactive-value="StatusEnum.True"
-                active-text="开启量化"
-                inactive-text="关闭量化"
+                :active-text="$t('kaiQiLiangHua')"
+                :inactive-text="$t('guanBiLiangHua')"
                 @change="statusChangeHandler(row, 'is_quant')"
               />
               <el-switch
@@ -132,8 +132,8 @@
                 inline-prompt
                 :active-value="StatusEnum.False"
                 :inactive-value="StatusEnum.True"
-                active-text="允许升级提现"
-                inactive-text="禁止升级提现"
+                :active-text="$t('yunXuShengJiTiXian')"
+                :inactive-text="$t('jinZhiShengJiTiXian')"
                 @change="statusChangeHandler(row, 'is_upgrade_withdrawal')"
               />
 
@@ -142,45 +142,45 @@
                 inline-prompt
                 :active-value="StatusEnum.False"
                 :inactive-value="StatusEnum.True"
-                active-text="启用邀请码"
-                inactive-text="禁用邀请码"
+                :active-text="$t('qiYongYaoQingMa')"
+                :inactive-text="$t('jinYongYaoQingMa')"
                 @change="statusChangeHandler(row, 'is_enabled_invite_code')"
               />
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="余额" min-width="200px">
+        <el-table-column :label="$t('yuE')" min-width="200px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
-                <span class="text-gray-500">佣金账户:</span>
+                <span class="text-gray-500">{{ $t("yongJinZhangHu_2") }}</span>
                 <span class="text-gray-700">{{ row.brokerage_account || "0.00" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">智能账户:</span>
+                <span class="text-gray-500">{{ $t("zhiNengZhangHu_0") }}</span>
                 <span class="text-gray-700">{{ row.smart_account || "0.00" }}</span>
               </div>
 
               <div>
-                <span class="text-gray-500">合约账户:</span>
+                <span class="text-gray-500">{{ $t("heYueZhangHu_0") }}</span>
                 <span class="text-gray-700">{{ row.second_contract_account || "0.00" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">量化账户:</span>
+                <span class="text-gray-500">{{ $t("liangHuaZhangHu_3") }}</span>
                 <span class="text-gray-700">{{ row.quant_account || "0.00" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">体验金:</span>
+                <span class="text-gray-500">{{ $t("tiYanJin") }}</span>
                 <span class="text-gray-700">{{ row.experience_account || "0.00" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">量化收益:</span>
+                <span class="text-gray-500">{{ $t("liangHuaShouYi") }}</span>
                 <span class="text-gray-700">{{ row.quant_profit || "0.00" }}</span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="钱包信息" min-width="200px">
+        <el-table-column :label="$t('qianBaoXinXi')" min-width="200px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
@@ -200,116 +200,116 @@
                 <span class="text-gray-700">{{ row.bep20_recharge_wallet || "--" }}/{{ row.bep20_withdrawal_wallet || "--" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">投资总额:</span>
+                <span class="text-gray-500">{{ $t("touZiZonge") }}</span>
                 <span class="text-gray-700">{{ row.invest_total || "0.00" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">投资未结算:</span>
+                <span class="text-gray-500">{{ $t("touZiWeiJieSuan") }}</span>
                 <span class="text-gray-700">{{ row.invest_unsettled || "0.00" }}</span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="注册/登录" min-width="250px">
+        <el-table-column :label="$t('zhuCeDengLu')" min-width="250px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
-                <span class="text-gray-500">注册方式:</span>
+                <span class="text-gray-500">{{ $t("zhuCeFangShi") }}</span>
                 <span class="text-gray-700">{{ getRegisterType(row.type) || "--" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">注册:</span>
+                <span class="text-gray-500">{{ $t("zhuCe_0") }}</span>
                 <span class="text-gray-700">{{ row.created_at || "--" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">注册IP:</span>
-                <span class="text-gray-700">{{ row.register_ip || "后台" }}({{ row.register_area }})</span>
+                <span class="text-gray-500">{{ $t("zhuCeIp_0") }}</span>
+                <span class="text-gray-700">{{ $t("rowregisteripHouTaiRo", [row.register_ip || "后台", row.register_area]) }}</span>
               </div>
               <div>
-                <span class="text-gray-500">最后:</span>
+                <span class="text-gray-500">{{ $t("zuiHou") }}</span>
                 <span class="text-gray-700">{{ row.last_login_time || "--" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">最后IP:</span>
-                <span class="text-gray-700">{{ row.last_login_ip || "" }}({{ row.last_login_area }})</span>
+                <span class="text-gray-500">{{ $t("zuiHouIp") }}</span>
+                <span class="text-gray-700">{{ $t("rowLastLoginIpOrOr_0", [row.last_login_ip || "", row.last_login_area]) }}</span>
               </div>
               <div>
-                <span class="text-gray-500">所在层级:</span>
+                <span class="text-gray-500">{{ $t("suoZaiCengJi") }}</span>
                 <span class="text-gray-700">{{ row.group_id }}</span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="推广员" min-width="200px">
+        <el-table-column :label="$t('tuiGuangYuan')" min-width="200px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
-                <span class="text-gray-500">顶级:</span>
+                <span class="text-gray-500">{{ $t("dingJi") }}</span>
                 <span class="text-gray-700">{{ row.top_id }}/{{ row.top_account }}</span>
               </div>
               <div>
-                <span class="text-gray-500">一级:</span>
+                <span class="text-gray-500">{{ $t("yiJi") }}</span>
                 <span class="text-gray-700">{{ row.parent_id }}/{{ row.parent_account }}</span>
               </div>
               <div>
-                <span class="text-gray-500">二级:</span>
+                <span class="text-gray-500">{{ $t("erJi_0") }}</span>
                 <span class="text-gray-700">{{ row.grandpa_id }}/{{ row.grandpa_account }}</span>
               </div>
               <div>
-                <span class="text-gray-500">三级:</span>
+                <span class="text-gray-500">{{ $t("sanJi_0") }}</span>
                 <span class="text-gray-700">{{ row.great_grandpa_id }}/{{ row.great_grandpa_account }}</span>
               </div>
               <div>
-                <span class="text-gray-500">邀请码:</span>
+                <span class="text-gray-500">{{ $t("yaoQingMa") }}</span>
                 <span class="text-gray-700">{{ row.invita_code || "--" }}</span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="充提/VIP" min-width="250px">
+        <el-table-column :label="$t('chongTiVip')" min-width="250px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
-                <span class="text-gray-500">充值:</span>
+                <span class="text-gray-500">{{ $t("chongZhi_0") }}</span>
                 <span class="text-gray-700">{{ row.total_recharge_amount || "0.000000" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">提现:</span>
+                <span class="text-gray-500">{{ $t("tiXian_0") }}</span>
                 <span class="text-gray-700">{{ row.total_withdrawal_amount || "0.000000" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">开始时间:</span>
+                <span class="text-gray-500">{{ $t("kaiShiShiJian_3") }}</span>
                 <span class="text-gray-700">{{ row.created_at || "2025-05-20 23:13:58" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">结束时间:</span>
+                <span class="text-gray-500">{{ $t("jieShuShiJian_3") }}</span>
                 <span class="text-gray-700">{{ row.end_time || "2026-05-20 23:13:58" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">直推下级:</span>
+                <span class="text-gray-500">{{ $t("zhiTuiXiaJi") }}</span>
                 <span class="text-gray-700">{{ row.withdrawal_invite_user_number }}</span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="其他信息" min-width="200px">
+        <el-table-column :label="$t('qiTaXinXi')" min-width="200px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
-                <span class="text-gray-500">邮箱:</span>
+                <span class="text-gray-500">{{ $t("youXiang_0") }}</span>
                 <span class="text-gray-700">{{ row.email || "--" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">联系方式:</span>
+                <span class="text-gray-500">{{ $t("lianXiFangShi_0") }}</span>
                 <span class="text-gray-700">{{ row.telephone || "" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">备注:</span>
+                <span class="text-gray-500">{{ $t("beiZhu_1") }}</span>
                 <span class="text-gray-700">{{ row.remark || "--" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">量化概率:</span>
-                <span class="text-gray-700">{{ row.quant_final_earnings_discount }}%</span>
+                <span class="text-gray-500">{{ $t("liangHuaGaiShuai") }}</span>
+                <span class="text-gray-700">{{ $t("rowQuantFinalEarnings_0", [row.quant_final_earnings_discount]) }}</span>
               </div>
               <div>
                 <span class="text-gray-500">ws/tg:</span>
@@ -318,16 +318,16 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right" width="200px">
+        <el-table-column :label="$t('caoZuo')" fixed="right" width="200px">
           <template #default="{ row }">
             <div class="grid grid-cols-2 gap-2">
-              <el-button type="primary" size="small" @click="table.editHandler(row, 3)">详情</el-button>
-              <el-button type="success" size="small" v-hasPerm="['memberList:supplement']" @click="replenishmentHandler(row)">补单</el-button>
-              <el-button type="warning" size="small" v-hasPerm="['memberList:checkMoney']" :loading="loading[0]" @click="checkMoney(row)">查钱</el-button>
-              <el-button type="info" size="small" v-hasPerm="['memberList:changeMoney']" @click="table.editHandler(row, 2)">改钱</el-button>
-              <el-button type="success" size="small" v-hasPerm="['memberList:lowerLevelRecharge']" @click="table.editHandler(row, 5)">下级充值</el-button>
-              <el-button type="danger" size="small" v-hasPerm="['memberList:forceOffLine']" @click="forceOfflineHandler(row)">下线</el-button>
-              <el-button type="warning" size="small" v-hasPerm="['memberList:simulateLogin']" :loading="loading[1]" @click="simulateLogin(row)">模拟登录</el-button>
+              <el-button type="primary" size="small" @click="table.editHandler(row, 3)">{{ $t("xiangQing") }}</el-button>
+              <el-button type="success" size="small" v-hasPerm="['memberList:supplement']" @click="replenishmentHandler(row)">{{ $t("buDan") }}</el-button>
+              <el-button type="warning" size="small" v-hasPerm="['memberList:checkMoney']" :loading="loading[0]" @click="checkMoney(row)">{{ $t("chaQian") }}</el-button>
+              <el-button type="info" size="small" v-hasPerm="['memberList:changeMoney']" @click="table.editHandler(row, 2)">{{ $t("gaiQian") }}</el-button>
+              <el-button type="success" size="small" v-hasPerm="['memberList:lowerLevelRecharge']" @click="table.editHandler(row, 5)">{{ $t("xiaJiChongZhi") }}</el-button>
+              <el-button type="danger" size="small" v-hasPerm="['memberList:forceOffLine']" @click="forceOfflineHandler(row)">{{ $t("xiaXian") }}</el-button>
+              <el-button type="warning" size="small" v-hasPerm="['memberList:simulateLogin']" :loading="loading[1]" @click="simulateLogin(row)">{{ $t("moNiDengLu") }}</el-button>
             </div>
           </template>
         </el-table-column>
@@ -340,7 +340,7 @@
     <batchOperation v-model="table.visible.value[1]" :account="table.selectList.value" :tabIndex="tabIndex" @finish="table.queryHandler()" />
     <changeBalance v-model="table.visible.value[2]" :member-id="table.currentData.value?.id" @finish="table.queryHandler()" />
     <detail v-model="table.visible.value[3]" :member-id="table.currentData.value?.id" @finish="table.queryHandler()" />
-    <lowerLevel v-model="table.visible.value[4]" :member-id="table.currentData.value?.id" @finish="table.queryHandler()" />
+    <lowerLevel v-model="table.visible.value[4]" :member-id="table.currentData.value?.id" :member-account="table.currentData.value?.account" @finish="table.queryHandler()" />
     <lowerLevelRecharge v-model="table.visible.value[5]" :member-id="table.currentData.value?.id" @finish="table.queryHandler()" />
   </div>
 </template>
@@ -386,86 +386,86 @@ const config: QueryConfig = {
       modelKey: "id",
       label: "ID",
       props: {
-        placeholder: "请输入id",
+        placeholder: $t("qingShuRuId"),
         style: { width: "200px" },
       },
     },
     {
       type: "input",
       modelKey: "account",
-      label: "账户",
+      label: $t("zhangHu"),
       props: {
-        placeholder: "请输入账户",
+        placeholder: $t("qingShuRuZhangHu"),
         style: { width: "200px" },
       },
     },
     {
       type: "input",
       modelKey: "invita_code",
-      label: "邀请码",
+      label: $t("yaoQingMa_0"),
       props: {
-        placeholder: "请输入邀请码",
+        placeholder: $t("qingShuRuYaoQingMa"),
         style: { width: "200px" },
       },
     },
     {
       type: "datetimerange",
       modelKey: "created_at",
-      label: "注册时间",
+      label: $t("zhuCeShiJian"),
       props: {
         style: { width: "400px" },
-        startPlaceholder: "开始时间",
-        endPlaceholder: "结束时间",
+        startPlaceholder: $t("kaiShiShiJian_2"),
+        endPlaceholder: $t("jieShuShiJian_2"),
       },
     },
     {
       type: "input",
       modelKey: "register_ip",
-      label: "注册IP",
+      label: $t("zhuCeIp"),
       props: {
-        placeholder: "请输入注册IP",
+        placeholder: $t("qingShuRuZhuCeIp"),
         style: { width: "200px" },
       },
     },
     {
       type: "datetimerange",
       modelKey: "last_login_time",
-      label: "最后登录时间",
+      label: $t("zuiHouDengLuShiJian"),
       props: {
         style: { width: "400px" },
-        startPlaceholder: "开始时间",
-        endPlaceholder: "结束时间",
+        startPlaceholder: $t("kaiShiShiJian_2"),
+        endPlaceholder: $t("jieShuShiJian_2"),
       },
     },
     {
       type: "input",
       modelKey: "last_login_ip",
-      label: "最后登录IP",
+      label: $t("zuiHouDengLuIp"),
       props: {
-        placeholder: "请输入最后登录IP",
+        placeholder: $t("qingShuRuZuiHouDeng"),
         style: { width: "200px" },
       },
     },
     {
       type: "select",
       modelKey: "group_id",
-      label: "用户组",
+      label: $t("yongHuZu"),
       options: groupOptions,
       props: {
-        placeholder: "请选择用户组",
+        placeholder: $t("qingXuanZeYongHuZu"),
         style: { width: "200px" },
       },
     },
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: [
-        { value: StatusEnum.False, label: "正常" },
-        { value: StatusEnum.True, label: "禁用" },
+        { value: StatusEnum.False, label: $t("zhengChang") },
+        { value: StatusEnum.True, label: $t("jinYong") },
       ],
       props: {
-        placeholder: "请选择状态",
+        placeholder: $t("qingXuanZeZhuangTai"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -473,64 +473,64 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "last_recharge_time",
-      label: "最后充值时间",
+      label: $t("zuiHouChongZhiShiJi"),
       props: {
         style: {},
-        startPlaceholder: "开始时间",
-        endPlaceholder: "结束时间",
+        startPlaceholder: $t("kaiShiShiJian_2"),
+        endPlaceholder: $t("jieShuShiJian_2"),
       },
     },
     {
       type: "inputnumber",
       modelKey: ["min_total_recharge_amount", "max_total_recharge_amount"],
-      label: "总充值金额",
+      label: $t("zongChongZhiJinE"),
       props: {
-        placeholder: ["最小充值金额", "最大充值金额"],
+        placeholder: [$t("zuiXiaoChongZhiJinE"), $t("zuiDaChongZhiJinE")],
         style: { width: "200px" },
       },
     },
     {
       type: "inputnumber",
       modelKey: ["min_total_withdrawal_amount", "max_total_withdrawal_amount"],
-      label: "总提现金额",
+      label: $t("zongTiXianJinE"),
       props: {
-        placeholder: ["最小提现金额", "最大提现金额"],
+        placeholder: [$t("zuiXiaoTiXianJinE_0"), $t("zuiDaTiXianJinE")],
         style: { width: "200px" },
       },
     },
     {
       type: "inputnumber",
       modelKey: ["min_brokerage_account", "max_brokerage_account"],
-      label: "经纪人账户",
+      label: $t("jingJiRenZhangHu"),
       props: {
-        placeholder: ["最小金额", "最大金额"],
+        placeholder: [$t("zuiXiaoJinE"), $t("zuiDaJinE")],
         style: { width: "200px" },
       },
     },
     {
       type: "inputnumber",
       modelKey: "last_withdrawal_amount",
-      label: "最后提现金额",
+      label: $t("zuiHouTiXianJinE"),
       props: {
-        placeholder: "请输入最后提现金额",
+        placeholder: $t("qingShuRuZuiHouTiX"),
         style: { width: "200px" },
       },
     },
     {
       type: "input",
       modelKey: "withdrawal_wallet",
-      label: "提现钱包",
+      label: $t("tiXianQianBao"),
       props: {
-        placeholder: "请输入提现钱包",
+        placeholder: $t("qingShuRuTiXianQian"),
         style: { width: "200px" },
       },
     },
     {
       type: "input",
       modelKey: "recharge_wallet",
-      label: "充值钱包",
+      label: $t("chongZhiQianBao"),
       props: {
-        placeholder: "请输入充值钱包",
+        placeholder: $t("qingShuRuChongZhiQi"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -538,10 +538,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "lang_id",
-      label: "语言",
+      label: $t("yuYan_0"),
       options: langOptions,
       props: {
-        placeholder: "请选择语言",
+        placeholder: $t("qingXuanZeYuYan"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -594,9 +594,9 @@ async function getvipList() {
   if (res) {
     res.reverse();
     const number = res.map((val) => val.number).reduce((pre, cur) => pre + cur);
-    res.unshift({ title: "全部", number, vip_level: -1 });
+    res.unshift({ title: $t("quanBu"), number, vip_level: -1 });
     res.sort((a, b) => a.vip_level - b.vip_level);
-    res.find((val) => !val.title)!.title = "普通用户";
+    res.find((val) => !val.title)!.title = $t("puTongYongHu");
     vipList.value = res;
     console.log("🚀 ~ getvipList ~ vipList.value :", vipList.value);
     currentVip.value = res[0].vip_level as number;
@@ -624,22 +624,22 @@ function statusChangeHandler(row: Member, type: keyof Pick<Member, "status" | "w
   });
 }
 function getRegisterType(type: number) {
-  if (type == 1) return "手机号";
-  else if (type == 2) return "邮箱";
-  else if (type == 3) return "用户名";
+  if (type == 1) return $t("shouJiHao");
+  else if (type == 2) return $t("youXiang");
+  else if (type == 3) return $t("login.username");
   else if (type == 4) return "telegram";
-  else if (type == 5) return "auto telegram";
+  else if (type == 5) return $t("autoTelegram");
   else return type;
 }
 
 async function replenishmentHandler(row: Member) {
-  await ElMessageBox.confirm("确认补单？", "提示", {
+  await ElMessageBox.confirm($t("queRenBuDan"), $t("tiShi"), {
     type: "warning",
     beforeClose: async (action, instance, done) => {
       if (action === "confirm") {
         instance.confirmButtonLoading = true;
         await api.addOrder(row.id);
-        ElMessage.success("操作成功");
+        ElMessage.success($t("caoZuoChengGong"));
       }
       done();
     },
@@ -664,7 +664,7 @@ async function simulateLogin(row: Member) {
 }
 
 async function forceOfflineHandler(row: Member) {
-  await ElMessageBox.confirm("确认强制下线？", "提示", {
+  await ElMessageBox.confirm($t("queRenQiangZhiXiaXi"), $t("tiShi"), {
     type: "warning",
     beforeClose: async (action, instance, done) => {
       if (action === "confirm") {

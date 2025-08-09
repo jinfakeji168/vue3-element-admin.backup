@@ -1,25 +1,25 @@
 <template>
-  <el-dialog v-model="visible" width="70%" title="审核" :close-on-click-modal="false">
-    <el-descriptions title="提现订单详情" :column="2" border v-if="data">
-      <el-descriptions-item label="提现类型">{{ data.channel }}</el-descriptions-item>
-      <el-descriptions-item label="提现地址">{{ data.rece_address }}</el-descriptions-item>
-      <el-descriptions-item label="提现金额">{{ data.withdraw_amount }}</el-descriptions-item>
-      <el-descriptions-item label="手续费">{{ data.fees }}</el-descriptions-item>
-      <el-descriptions-item label="实际到账">{{ data.arrival_amount }}</el-descriptions-item>
-      <el-descriptions-item label="创建时间">{{ data.created_at }}</el-descriptions-item>
+  <el-dialog v-model="visible" width="70%" :title="$t('shenHe')" :close-on-click-modal="false">
+    <el-descriptions :title="$t('tiXianDingDanXiangQ')" :column="2" border v-if="data">
+      <el-descriptions-item :label="$t('tiXianLeiXing')">{{ data.channel }}</el-descriptions-item>
+      <el-descriptions-item :label="$t('tiXianDiZhi')">{{ data.rece_address }}</el-descriptions-item>
+      <el-descriptions-item :label="$t('tiXianJinE')">{{ data.withdraw_amount }}</el-descriptions-item>
+      <el-descriptions-item :label="$t('shouXuFei')">{{ data.fees }}</el-descriptions-item>
+      <el-descriptions-item :label="$t('shiJiDaoZhang')">{{ data.arrival_amount }}</el-descriptions-item>
+      <el-descriptions-item :label="$t('chuangJianShiJian')">{{ data.created_at }}</el-descriptions-item>
     </el-descriptions>
-    <el-form-item label="审核" style="margin-top: 20px">
+    <el-form-item :label="$t('shenHe_0')" style="margin-top: 20px">
       <el-radio-group v-model="model.status">
-        <el-radio :label="1">通过</el-radio>
-        <el-radio :label="3">拒绝</el-radio>
+        <el-radio :label="1">{{ $t("tongGuo") }}</el-radio>
+        <el-radio :label="3">{{ $t("juJue") }}</el-radio>
       </el-radio-group>
     </el-form-item>
-    <el-form-item label="备注">
+    <el-form-item :label="$t('beiZhu')">
       <el-input v-model="model.remark" type="textarea" />
     </el-form-item>
     <template #footer>
-      <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="submitHandler" :loading="loading">确定</el-button>
+      <el-button @click="visible = false">{{ $t("quXiao_0") }}</el-button>
+      <el-button type="primary" @click="submitHandler" :loading="loading">{{ $t("queDing_0") }}</el-button>
     </template>
   </el-dialog>
 </template>
@@ -50,7 +50,7 @@ async function submitHandler() {
   }
   const enableGoogleVerify = await commonStore.keyByConfigValue("update_money_google_secret");
   if (enableGoogleVerify == 1) {
-    const res = await ElMessageBox.prompt("输入谷歌验证码进行修改");
+    const res = await ElMessageBox.prompt($t("shuRuGuGeYanZhengM"));
     if (res.action == "confirm" && res.value) {
       await systemConfig.verifyGoogleAuth(res.value);
     } else {

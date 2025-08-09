@@ -164,7 +164,9 @@ export const keyMap: Record<TabNames, string[]> = {
     securityConfig: [
         'update_money_google_secret',
         'edit_address_is_google',
-        'extract_check_is_google_code'
+        'extract_check_is_google_code',
+        'update_banner_is_google',
+        'update_logo_is_google',
     ]
 
 

@@ -5,13 +5,10 @@ const AUTH_BASE_URL = "/api/v1/auth";
 const AuthAPI = {
   /** 登录 接口*/
   login(data: LoginData) {
-    const formData = new FormData();
-    formData.append("username", data.username);
-    formData.append("password", data.password);
     return request<any, LoginResult>({
       url: `/admin/auth/login`,
       method: "post",
-      data: formData,
+      data,
       // headers: {
       //   "Content-Type": "multipart/form-data",
       // },
@@ -25,6 +22,21 @@ const AuthAPI = {
       method: "post",
     });
   },
+
+  /**检查是否需要google验证 */
+  checkGoogleAuth(account: string) {
+    return request<any, { need_google2fa: boolean, admin_id: number }>({
+      url: `/admin/auth/check-google2fa`,
+      method: 'post',
+      data: {
+        username: account
+      },
+      headers: {
+        resultMsg: false
+      }
+    })
+  },
+
 
   /** 获取验证码 接口*/
   getCaptcha() {
@@ -43,10 +55,12 @@ export interface LoginData {
   username: string;
   /** 密码 */
   password: string;
+  /** google验证 */
+  google2fa_code?: string;
   /** 验证码缓存key */
-  captchaKey: string;
+  captchaKey?: string;
   /** 验证码 */
-  captchaCode: string;
+  captchaCode?: string;
 }
 
 /** 登录响应 */

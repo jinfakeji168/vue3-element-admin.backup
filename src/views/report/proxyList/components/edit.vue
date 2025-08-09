@@ -1,19 +1,19 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="600px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="120px">
-      <el-form-item label="用户账号" prop="account">
-        <el-select remote :remoteMethod="remoteMethodHandler" filterable clearable :loading="remoteLoading" v-model="formData.account" placeholder="请输入用户账号">
+      <el-form-item :label="$t('yongHuZhangHao')" prop="account">
+        <el-select remote :remoteMethod="remoteMethodHandler" filterable clearable :loading="remoteLoading" v-model="formData.account" :placeholder="$t('qingShuRuYongHuZhan')">
           <el-option v-for="item in memberList" :key="item.label" :label="item.label" :value="item.value" />
         </el-select>
       </el-form-item>
-      <el-form-item label="备注" prop="remark">
-        <el-input v-model="formData.remark" placeholder="请输入备注" />
+      <el-form-item :label="$t('beiZhu')" prop="remark">
+        <el-input v-model="formData.remark" :placeholder="$t('qingShuRuBeiZhu')" />
       </el-form-item>
     </el-form>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -27,15 +27,15 @@ import { FormInstance } from "element-plus";
 const visible = defineModel<boolean>();
 
 /** 表单标题 */
-const title = ref("新增");
+const title = ref($t("xinZeng"));
 
 /** 表单数据 */
 const formData = ref<AddProxyForm>({});
 
 /** 表单校验规则 */
 const rules = {
-  account: [{ required: true, message: "请选择账号", trigger: "blur" }],
-  remark: [{ required: true, message: "请输入备注", trigger: "blur" }],
+  account: [{ required: true, message: $t("qingXuanZeZhangHao"), trigger: "blur" }],
+  remark: [{ required: true, message: $t("qingShuRuBeiZhu_0"), trigger: "blur" }],
 };
 const remoteLoading = ref(false);
 const memberList = ref<Awaited<ReturnType<typeof searchMember>>>([]);

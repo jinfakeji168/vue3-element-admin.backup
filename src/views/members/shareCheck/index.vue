@@ -6,44 +6,48 @@
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button type="success" @click="checkHandler(1)" :loading="checkLoading" :disabled="!table.selectList.value.length" v-hasPerm="['shareCheck:check']">通过</el-button>
-        <el-button type="danger" @click="checkHandler(2)" :loading="checkLoading" :disabled="!table.selectList.value.length" v-hasPerm="['shareCheck:check']">不通过</el-button>
+        <el-button type="success" @click="checkHandler(1)" :loading="checkLoading" :disabled="!table.selectList.value.length" v-hasPerm="['shareCheck:check']">
+          {{ $t("tongGuo") }}
+        </el-button>
+        <el-button type="danger" @click="checkHandler(2)" :loading="checkLoading" :disabled="!table.selectList.value.length" v-hasPerm="['shareCheck:check']">
+          {{ $t("buTongGuo") }}
+        </el-button>
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" :selectable="(row) => row.status == 0" />
-        <el-table-column prop="uid" label="用户ID" min-width="80" />
-        <el-table-column prop="ip" label="IP信息" min-width="120" />
-        <el-table-column prop="screenshot" label="截图" min-width="100">
+        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="80" />
+        <el-table-column prop="ip" :label="$t('ipXinXi')" min-width="120" />
+        <el-table-column prop="screenshot" :label="$t('jieTu')" min-width="100">
           <template #default="{ row }">
             <el-image v-if="row.screenshot" :src="row.screenshot" :preview-src-list="[row.screenshot]" class="icon" />
           </template>
         </el-table-column>
-        <el-table-column prop="completed_notes" label="完成说明" min-width="120" />
-        <el-table-column prop="bonus_type" label="奖励类型" min-width="120">
+        <el-table-column prop="completed_notes" :label="$t('wanChengShuoMing')" min-width="120" />
+        <el-table-column prop="bonus_type" :label="$t('jiangLiLeiXing')" min-width="120">
           <template #default="{ row }">
             <el-tag>{{ bonus_type_options.find((t) => t.value === row.bonus_type)?.label }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="bonus_detail" label="奖励详情" min-width="120" />
-        <el-table-column prop="status" label="状态" min-width="100">
+        <el-table-column prop="bonus_detail" :label="$t('jiangLiXiangQing')" min-width="120" />
+        <el-table-column prop="status" :label="$t('zhuangTai')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="status_types[row.status]?.type">
               {{ status_types[row.status]?.label }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="operator_name" label="审核人" min-width="100" />
-        <el-table-column prop="review_time" label="审核时间" min-width="180" />
-        <el-table-column prop="created_at" label="添加时间" min-width="180" />
-        <el-table-column prop="updated_at" label="最后编辑时间" min-width="180" />
-        <el-table-column fixed="right" label="操作" width="150">
+        <el-table-column prop="operator_name" :label="$t('shenHeRen')" min-width="100" />
+        <el-table-column prop="review_time" :label="$t('shenHeShiJian')" min-width="180" />
+        <el-table-column prop="created_at" :label="$t('tianJiaShiJian')" min-width="180" />
+        <el-table-column prop="updated_at" :label="$t('zuiHouBianJiShiJian')" min-width="180" />
+        <el-table-column fixed="right" :label="$t('caoZuo')" width="150">
           <template #default="{ row }">
             <div>
               <el-button v-if="row.status === 0" type="primary" size="small" @click="checkHandler(1, row.id)" :loading="checkLoading" v-hasPerm="['shareCheck:check']">
-                通过
+                {{ $t("tongGuo") }}
               </el-button>
               <el-button v-if="row.status === 0" type="danger" size="small" @click="checkHandler(2, row.id)" :loading="checkLoading" v-hasPerm="['shareCheck:check']">
-                不通过
+                {{ $t("buTongGuo_0") }}
               </el-button>
             </div>
           </template>
@@ -64,16 +68,16 @@ import TableInstance from "@/utils/tableInstance";
 
 /** 奖励类型选项 */
 const bonus_type_options = [
-  { value: 1, label: "奖励佣金账户" },
-  { value: 2, label: "奖励vip" },
-  { value: 3, label: "奖励基础账户" },
+  { value: 1, label: $t("jiangLiYongJinZhang") },
+  { value: 2, label: $t("jiangLiVip_0") },
+  { value: 3, label: $t("jiangLiJiChuZhangHu") },
 ];
 
 /** 状态类型 */
-const status_types = {
-  0: { label: "待审核", type: "info" },
-  1: { label: "通过", type: "success" },
-  2: { label: "拒绝", type: "danger" },
+const status_types: Record<any, any> = {
+  0: { label: $t("daiShenHe"), type: "info" },
+  1: { label: $t("tongGuo"), type: "success" },
+  2: { label: $t("juJue"), type: "danger" },
 };
 
 const memberList = ref<any>([]);
@@ -86,10 +90,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -105,10 +109,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "bonus_type",
-      label: "奖励类型",
+      label: $t("jiangLiLeiXing"),
       options: bonus_type_options,
       props: {
-        placeholder: "请选择奖励类型",
+        placeholder: $t("qingXuanZeJiangLiLe"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -116,13 +120,13 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "status",
-      label: "状态",
+      label: $t("zhuangTai"),
       options: Object.entries(status_types).map(([value, item]) => ({
         value: Number(value),
         label: item.label,
       })),
       props: {
-        placeholder: "请选择状态",
+        placeholder: $t("qingXuanZeZhuangTai"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -130,7 +134,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "review_time",
-      label: "审核时间",
+      label: $t("shenHeShiJian_0"),
       props: { style: { width: "400px" } },
     },
   ],
@@ -156,9 +160,9 @@ const checkLoading = ref(false);
  */
 function checkHandler(status: 1 | 2, id?: number) {
   const ids = id ? [id] : table.selectList.value;
-  ElMessageBox.prompt(`将进行${ids.length}条数据审核，请输入备注内容并确认`, `确认审核${status == 1 ? "通过" : "不通过"}！`, {
-    confirmButtonText: "确定",
-    cancelButtonText: "取消",
+  ElMessageBox.prompt($t("jiangJinHangIdslength", [ids.length]), $t("queRenShenHe")`${status == 1 ? $t("tongGuo") : $t("buTongGuo")}`, {
+    confirmButtonText: $t("queDing_0"),
+    cancelButtonText: $t("quXiao_0"),
   }).then(({ value }) => {
     checkLoading.value = true;
     api

@@ -1,14 +1,14 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="600px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="120px">
-      <el-form-item label="标题" prop="title">
-        <el-input v-model="formData.title" placeholder="请输入标题" />
+      <el-form-item :label="$t('biaoTi')" prop="title">
+        <el-input v-model="formData.title" :placeholder="$t('qingShuRuBiaoTi')" />
       </el-form-item>
     </el-form>
     <template #footer>
       <div class="dialog-footer">
-        <el-button @click="closeHandler">取 消</el-button>
-        <el-button type="primary" @click="submitHandler" :loading="loading">确 定</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
+        <el-button type="primary" @click="submitHandler" :loading="loading">{{ $t("queDing") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -36,10 +36,10 @@ watch(
   () => {
     if (!visible.value) return;
     if (props.data) {
-      title.value = "编辑分组";
+      title.value = $t("bianJiFenZu");
       formData.value = { ...props.data };
     } else {
-      title.value = "新增分组";
+      title.value = $t("xinZengFenZu");
       formData.value = {};
     }
   },
@@ -53,7 +53,7 @@ const formData = ref<Form>({});
 
 /** 表单校验规则 */
 const rules = {
-  title: [{ required: true, message: "请输入标题", trigger: "blur" }],
+  title: [{ required: true, message: $t("qingShuRuBiaoTi_0"), trigger: "blur" }],
 };
 
 const formRef = ref<FormInstance>();

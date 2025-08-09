@@ -1,45 +1,45 @@
 <template>
-  <el-dialog v-model="visible" title="批量操作" width="80%">
+  <el-dialog v-model="visible" :title="$t('piLiangCaoZuo')" width="80%">
     <el-tabs v-model="activeTab" tab-position="left" type="border-card" :beforeLeave="beforeLeaveHandler">
       <el-tab-pane v-for="(tab, index) of tabs" :key="index" :label="tab.label" :name="index"></el-tab-pane>
       <el-card shadow="never">
         <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
-          <el-form-item label="批量方式" prop="batch_type" v-if="tabs[activeTab].batchWay.length">
+          <el-form-item :label="$t('piLiangFangShi')" prop="batch_type" v-if="tabs[activeTab].batchWay.length">
             <el-radio-group v-model="formData.batch_type">
               <el-radio v-for="item of tabs[activeTab].batchWay" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
             </el-radio-group>
           </el-form-item>
 
           <template v-if="formData.batch_type === 1">
-            <el-form-item label="会员账户" prop="accountInput">
-              <el-input type="textarea" v-model="accountInput" placeholder="请输入会员账户，多个会员账户用逗号隔开" />
+            <el-form-item :label="$t('huiYuanZhangHu')" prop="accountInput">
+              <el-input type="textarea" v-model="accountInput" :placeholder="$t('qingShuRuHuiYuanZha_1')" />
             </el-form-item>
           </template>
           <template v-else-if="formData.batch_type === 2">
-            <el-form-item label="会员等级" prop="old_vip_level">
+            <el-form-item :label="$t('huiYuanDengJi_0')" prop="old_vip_level">
               <el-select v-model="formData.old_vip_level">
                 <el-option v-for="item of store.vipList" :key="item.id" :value="item.level" :label="item.title" />
               </el-select>
             </el-form-item>
-            <el-form-item label="注册时间" prop="register_time">
+            <el-form-item :label="$t('zhuCeShiJian')" prop="register_time">
               <el-date-picker v-model="formData.register_time" type="datetimerange" range-separator="至" start-placeholder="开始时间" end-placeholder="结束时间" />
             </el-form-item>
           </template>
           <template v-else-if="formData.batch_type === 3">
-            <el-form-item label="充提差" prop="charge_mention_diff">
-              <el-input v-model="formData.charge_mention_diff" placeholder="请输入充提差" />
+            <el-form-item :label="$t('chongTiCha')" prop="charge_mention_diff">
+              <el-input v-model="formData.charge_mention_diff" :placeholder="$t('qingShuRuChongTiCha')" />
             </el-form-item>
           </template>
           <template v-else-if="formData.batch_type === 4">
-            <el-form-item label="指定会员所有下级" prop="spec_account">
-              <el-select v-model="formData.spec_account" :remote-method="remoteHandler" :loading="loading[1]" filterable remote placeholder="请输入会员账号">
+            <el-form-item :label="$t('zhiDingHuiYuanSuoYo')" prop="spec_account">
+              <el-select v-model="formData.spec_account" :remote-method="remoteHandler" :loading="loading[1]" filterable remote :placeholder="$t('qingShuRuHuiYuanZha_0')">
                 <el-option v-for="item in memberList" :key="item.value" :label="item.label" :value="item.label" />
               </el-select>
               <span>{{ subordinateNumStr }}</span>
             </el-form-item>
           </template>
           <template v-else-if="formData.batch_type === 5">
-            <el-form-item label="分组" prop="group_id">
+            <el-form-item :label="$t('fenZu')" prop="group_id">
               <el-select v-model="formData.group_id">
                 <el-option v-for="item of store.groupList" :key="item.id" :value="item.id" :label="item.title" :disabled="item.status == StatusEnum.True" />
               </el-select>
@@ -47,169 +47,169 @@
           </template>
           <hr />
           <template v-if="activeTab === 0">
-            <el-form-item label="调整后等级" prop="new_vip_level">
+            <el-form-item :label="$t('tiaoZhengHouDengJi')" prop="new_vip_level">
               <el-select v-model="formData.new_vip_level">
                 <el-option v-for="item of store.vipList" :key="item.id" :value="item.level" :label="item.title" />
               </el-select>
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 1">
-            <el-form-item label="升级才能做量化" prop="is_upgrade_quant">
+            <el-form-item :label="$t('shengJiCaiNengZuoLi')" prop="is_upgrade_quant">
               <el-radio-group v-model="formData.is_upgrade_quant">
-                <el-radio :label="1">是</el-radio>
-                <el-radio :label="2">否</el-radio>
+                <el-radio :label="1">{{ $t("shi") }}</el-radio>
+                <el-radio :label="2">{{ $t("fou") }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 2">
-            <el-form-item label="量化开关" prop="is_quant">
+            <el-form-item :label="$t('liangHuaKaiGuan')" prop="is_quant">
               <el-radio-group v-model="formData.is_quant">
-                <el-radio :label="1">开启</el-radio>
-                <el-radio :label="2">关闭</el-radio>
+                <el-radio :label="1">{{ $t("kaiQi") }}</el-radio>
+                <el-radio :label="2">{{ $t("guanBi") }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 3">
-            <el-form-item label="收益折扣" prop="quant_final_earnings_discount">
-              <el-input v-model="formData.quant_final_earnings_discount" placeholder="请输入收益折扣" />
+            <el-form-item :label="$t('shouYiZheKou')" prop="quant_final_earnings_discount">
+              <el-input v-model="formData.quant_final_earnings_discount" :placeholder="$t('qingShuRuShouYiZhe')" />
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 4">
-            <el-form-item label="佣金全部转量化">
+            <el-form-item :label="$t('yongJinQuanBuZhuanL')">
               <el-radio-group v-model="trueConst">
-                <el-radio :label="true">是</el-radio>
+                <el-radio :label="true">{{ $t("shi") }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 5">
-            <el-form-item label="邀请量化" prop="is_invite_user_quant">
+            <el-form-item :label="$t('yaoQingLiangHua')" prop="is_invite_user_quant">
               <el-radio-group v-model="formData.is_invite_user_quant">
-                <el-radio :label="1">是</el-radio>
-                <el-radio :label="2">否</el-radio>
+                <el-radio :label="1">{{ $t("shi") }}</el-radio>
+                <el-radio :label="2">{{ $t("fou") }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="邀请用户数量" prop="quant_invite_user_number">
-              <el-input v-model.number="formData.quant_invite_user_number" placeholder="请输入邀请用户数量" />
+            <el-form-item :label="$t('yaoQingYongHuShuLia')" prop="quant_invite_user_number">
+              <el-input v-model.number="formData.quant_invite_user_number" :placeholder="$t('qingShuRuYaoQingYon')" />
             </el-form-item>
-            <el-form-item label="邀请充值金额" prop="quant_invite_user_recharge_amount">
-              <el-input v-model.number="formData.quant_invite_user_recharge_amount" placeholder="请输入邀请用户充值金额" />
+            <el-form-item :label="$t('yaoQingChongZhiJinE')" prop="quant_invite_user_recharge_amount">
+              <el-input v-model.number="formData.quant_invite_user_recharge_amount" :placeholder="$t('qingShuRuYaoQingYon_0')" />
             </el-form-item>
-            <el-form-item label="有效时间" prop="quant_invite_user_effective_time">
-              <el-date-picker v-model="formData.quant_invite_user_effective_time" type="datetime" placeholder="选择有效时间" />
+            <el-form-item :label="$t('youXiaoShiJian')" prop="quant_invite_user_effective_time">
+              <el-date-picker v-model="formData.quant_invite_user_effective_time" type="datetime" :placeholder="$t('xuanZeYouXiaoShiJia_0')" />
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 6">
-            <el-form-item label="封禁类型" prop="ban_type">
+            <el-form-item :label="$t('fengJinLeiXing')" prop="ban_type">
               <el-checkbox-group v-model="formData.ban_type">
-                <el-checkbox :label="1">登录</el-checkbox>
-                <el-checkbox :label="2">提款</el-checkbox>
+                <el-checkbox :label="1">{{ $t("dengLu") }}</el-checkbox>
+                <el-checkbox :label="2">{{ $t("tiKuan") }}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="操作类型" prop="operation">
+            <el-form-item :label="$t('caoZuoLeiXing')" prop="operation">
               <el-radio-group v-model="formData.operation">
-                <el-radio :label="1">解封</el-radio>
-                <el-radio :label="2">封禁</el-radio>
+                <el-radio :label="1">{{ $t("jieFeng") }}</el-radio>
+                <el-radio :label="2">{{ $t("fengJin") }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 7">
-            <el-form-item label="操作对象" prop="op_type">
+            <el-form-item :label="$t('caoZuoDuiXiang')" prop="op_type">
               <el-radio-group v-model="formData.op_type">
-                <el-radio :label="1">量化账户余额</el-radio>
-                <el-radio :label="2">充值金额</el-radio>
-                <el-radio :label="3">佣金账户余额</el-radio>
-                <el-radio :label="4">智能账户余额</el-radio>
-                <el-radio :label="5">体验金余额</el-radio>
-                <el-radio :label="6">秒合约余额</el-radio>
+                <el-radio :label="1">{{ $t("liangHuaZhangHuYuE") }}</el-radio>
+                <el-radio :label="2">{{ $t("chongZhiJinE_0") }}</el-radio>
+                <el-radio :label="3">{{ $t("yongJinZhangHuYuE") }}</el-radio>
+                <el-radio :label="4">{{ $t("zhiNengZhangHuYuE") }}</el-radio>
+                <el-radio :label="5">{{ $t("tiYanJinYuE") }}</el-radio>
+                <el-radio :label="6">{{ $t("miaoHeYueYuE") }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="变动类型" prop="change_type">
+            <el-form-item :label="$t('bianDongLeiXing')" prop="change_type">
               <el-radio-group v-model="formData.change_type">
-                <el-radio :label="1">减少</el-radio>
-                <el-radio :label="2">增加</el-radio>
+                <el-radio :label="1">{{ $t("jianShao") }}</el-radio>
+                <el-radio :label="2">{{ $t("zengJia") }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="变动金额" prop="change_amount">
-              <el-input v-model.number="formData.change_amount" placeholder="请输入变动金额" />
+            <el-form-item :label="$t('bianDongJinE')" prop="change_amount">
+              <el-input v-model.number="formData.change_amount" :placeholder="$t('qingShuRuBianDongJi')" />
             </el-form-item>
-            <el-form-item label="备注" prop="change_remark">
-              <el-input v-model="formData.change_remark" placeholder="请输入备注" />
+            <el-form-item :label="$t('beiZhu')" prop="change_remark">
+              <el-input v-model="formData.change_remark" :placeholder="$t('qingShuRuBeiZhu_0')" />
             </el-form-item>
           </template>
 
           <template v-else-if="activeTab === 8">
-            <el-form-item label="赠送类型" prop="lottery_type">
+            <el-form-item :label="$t('zengSongLeiXing')" prop="lottery_type">
               <el-radio-group v-model="formData.lottery_type">
-                <el-radio :label="1">注册赠送次数</el-radio>
-                <el-radio :label="2">邀请赠送次数</el-radio>
-                <el-radio :label="3">充值赠送次数</el-radio>
+                <el-radio :label="1">{{ $t("zhuCeZengSongCiShu") }}</el-radio>
+                <el-radio :label="2">{{ $t("yaoQingZengSongCiSh") }}</el-radio>
+                <el-radio :label="3">{{ $t("chongZhiZengSongCiS") }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="赠送次数" prop="gift_number">
-              <el-input v-model.number="formData.gift_number" placeholder="请输入赠送次数" />
+            <el-form-item :label="$t('zengSongCiShu')" prop="gift_number">
+              <el-input v-model.number="formData.gift_number" :placeholder="$t('qingShuRuZengSongCi')" />
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 9">
-            <el-form-item label="投资类型" prop="invest_type">
+            <el-form-item :label="$t('touZiLeiXing')" prop="invest_type">
               <el-radio-group v-model="formData.invest_type">
-                <el-radio :label="1">提现买投资</el-radio>
-                <el-radio :label="2">量化买投资</el-radio>
+                <el-radio :label="1">{{ $t("tiXianMaiTouZi") }}</el-radio>
+                <el-radio :label="2">{{ $t("liangHuaMaiTouZi") }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="投资产品" prop="invest_product">
+            <el-form-item :label="$t('touZiChanPin')" prop="invest_product">
               <el-checkbox-group v-model="formData.invest_product">
-                <el-checkbox label="product1">产品1</el-checkbox>
-                <el-checkbox label="product2">产品2</el-checkbox>
+                <el-checkbox label="product1">{{ $t("chanPin_1") }}</el-checkbox>
+                <el-checkbox label="product2">{{ $t("chanPin_2") }}</el-checkbox>
               </el-checkbox-group>
             </el-form-item>
-            <el-form-item label="有效时间" prop="effective_time">
-              <el-date-picker v-model="formData.effective_time" type="datetime" placeholder="选择有效时间" />
+            <el-form-item :label="$t('youXiaoShiJian_0')" prop="effective_time">
+              <el-date-picker v-model="formData.effective_time" type="datetime" :placeholder="$t('xuanZeYouXiaoShiJia_0')" />
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 10">
-            <el-form-item label="输赢概率" prop="second_contract_win_lose_ratio">
-              <el-input v-model.number="formData.second_contract_win_lose_ratio" placeholder="请输入概率" />
+            <el-form-item :label="$t('shuYingGaiShuai')" prop="second_contract_win_lose_ratio">
+              <el-input v-model.number="formData.second_contract_win_lose_ratio" :placeholder="$t('qingShuRuGaiShuai')" />
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 11">
-            <el-form-item label="升级才能提现" prop="is_upgrade_withdrawal">
+            <el-form-item :label="$t('shengJiCaiNengTiXia')" prop="is_upgrade_withdrawal">
               <el-radio-group v-model="formData.is_upgrade_withdrawal">
-                <el-radio :label="1">是</el-radio>
-                <el-radio :label="2">否</el-radio>
+                <el-radio :label="1">{{ $t("shi") }}</el-radio>
+                <el-radio :label="2">{{ $t("fou") }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 12">
-            <el-form-item label="邀请提现" prop="is_invite_user_withdrawal">
+            <el-form-item :label="$t('yaoQingTiXian')" prop="is_invite_user_withdrawal">
               <el-radio-group v-model="formData.is_invite_user_withdrawal">
-                <el-radio :label="1">是</el-radio>
-                <el-radio :label="2">否</el-radio>
+                <el-radio :label="1">{{ $t("shi") }}</el-radio>
+                <el-radio :label="2">{{ $t("fou") }}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="提现次数" prop="withdrawal_number">
-              <el-input v-model.number="formData.withdrawal_number" placeholder="请输入提现次数" />
+            <el-form-item :label="$t('tiXianCiShu')" prop="withdrawal_number">
+              <el-input v-model.number="formData.withdrawal_number" :placeholder="$t('qingShuRuTiXianCiS')" />
             </el-form-item>
-            <el-form-item label="邀请用户数量" prop="withdrawal_invite_user_number">
-              <el-input v-model.number="formData.withdrawal_invite_user_number" placeholder="请输入邀请用户数量" />
+            <el-form-item :label="$t('yaoQingYongHuShuLia')" prop="withdrawal_invite_user_number">
+              <el-input v-model.number="formData.withdrawal_invite_user_number" :placeholder="$t('qingShuRuYaoQingYon_1')" />
             </el-form-item>
-            <el-form-item label="邀请充值金额" prop="withdrawal_invite_user_recharge_amount">
-              <el-input v-model.number="formData.withdrawal_invite_user_recharge_amount" placeholder="请输入邀请用户充值金额" />
+            <el-form-item :label="$t('yaoQingChongZhiJinE_0')" prop="withdrawal_invite_user_recharge_amount">
+              <el-input v-model.number="formData.withdrawal_invite_user_recharge_amount" :placeholder="$t('qingShuRuYaoQingYon_2')" />
             </el-form-item>
-            <el-form-item label="有效时间" prop="withdrawal_invite_user_effective_time">
-              <el-date-picker v-model="formData.withdrawal_invite_user_effective_time" type="datetime" placeholder="选择有效时间" />
+            <el-form-item :label="$t('youXiaoShiJian_1')" prop="withdrawal_invite_user_effective_time">
+              <el-date-picker v-model="formData.withdrawal_invite_user_effective_time" type="datetime" :placeholder="$t('xuanZeYouXiaoShiJia_0')" />
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 13">
-            <el-form-item label="新分组" prop="new_group_id">
-              <el-select v-model="formData.new_group_id" placeholder="请选择新分组">
+            <el-form-item :label="$t('xinFenZu')" prop="new_group_id">
+              <el-select v-model="formData.new_group_id" :placeholder="$t('qingXuanZeXinFenZu')">
                 <el-option v-for="item in store.groupList" :key="item.id" :label="item.title" :value="item.id" :disabled="item.status == StatusEnum.True" />
               </el-select>
             </el-form-item>
           </template>
         </el-form>
         <template #footer>
-          <el-button @click="visible = false">取消</el-button>
-          <el-button type="primary" @click="submitForm" :loading="loading[0]">确认修改</el-button>
+          <el-button @click="visible = false">{{ $t("quXiao_0") }}</el-button>
+          <el-button type="primary" @click="submitForm" :loading="loading[0]">{{ $t("queRenXiuGai") }}</el-button>
         </template>
       </el-card>
     </el-tabs>
@@ -258,9 +258,9 @@ async function beforeLeaveHandler() {
   const res = getChangedFormKey();
   if (res.length) {
     return new Promise((resolve, inject) => {
-      const res = ElMessageBox.confirm("当前页面有未保存的配置，是否离开？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
+      const res = ElMessageBox.confirm($t("dangQianYeMianYouWe"), $t("tiShi"), {
+        confirmButtonText: $t("queDing_0"),
+        cancelButtonText: $t("quXiao_0"),
         type: "warning",
       })
         .then(() => {
@@ -276,38 +276,38 @@ async function beforeLeaveHandler() {
 }
 
 const batchTypeOptions = [
-  { label: "指定会员", value: 1 },
-  { label: "按等级", value: 2 },
-  { label: "充提差", value: 3 },
-  { label: "指定会员下级", value: 4 },
-  { label: "按分组", value: 5 },
+  { label: $t("zhiDingHuiYuan"), value: 1 },
+  { label: $t("anDengJi"), value: 2 },
+  { label: $t("chongTiCha"), value: 3 },
+  { label: $t("zhiDingHuiYuanXiaJi"), value: 4 },
+  { label: $t("anFenZu"), value: 5 },
 ];
 
 const tabs = [
-  { label: "等级修改", batchWay: batchTypeOptions.slice(0, 2), fu: api.batchLevel, formKey: ["new_vip_level"] },
-  { label: "升级量化", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchQuant, formKey: ["is_upgrade_quant"] },
-  { label: "量化开关", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchQuantSwitch, formKey: ["is_quant"] },
-  { label: "收益折扣", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchDiscount, formKey: ["quant_final_earnings_discount"] },
-  { label: "佣金转量化", batchWay: batchTypeOptions.slice(0, 1), fu: api.batchCommission },
+  { label: $t("dengJiXiuGai"), batchWay: batchTypeOptions.slice(0, 2), fu: api.batchLevel, formKey: ["new_vip_level"] },
+  { label: $t("shengJiLiangHua"), batchWay: batchTypeOptions.slice(0, 5), fu: api.batchQuant, formKey: ["is_upgrade_quant"] },
+  { label: $t("liangHuaKaiGuan_0"), batchWay: batchTypeOptions.slice(0, 5), fu: api.batchQuantSwitch, formKey: ["is_quant"] },
+  { label: $t("shouYiZheKou_0"), batchWay: batchTypeOptions.slice(0, 5), fu: api.batchDiscount, formKey: ["quant_final_earnings_discount"] },
+  { label: $t("yongJinZhuanLiangHua"), batchWay: batchTypeOptions.slice(0, 1), fu: api.batchCommission },
   {
-    label: "邀请量化",
+    label: $t("yaoQingLiangHua"),
     batchWay: batchTypeOptions.slice(0, 5),
     fu: api.batchInvitation,
     formKey: ["is_invite_user_quant", "quant_invite_user_number", "quant_invite_user_recharge_amount", "quant_invite_user_effective_time"],
   },
-  { label: "封禁", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchBan, formKey: ["ban_type", "operation"] },
-  { label: "余额修改", batchWay: batchTypeOptions.slice(0, 1), fu: api.batchBalance, formKey: ["op_type", "change_type", "change_amount", "change_remark"] },
-  { label: "赠送抽奖", batchWay: batchTypeOptions.slice(0, 1), fu: api.batchLottery, formKey: ["lottery_type", "gift_number"] },
-  { label: "强制投资", batchWay: batchTypeOptions.slice(0, 2), fu: api.batchInvest, formKey: ["invest_type", "invest_product", "effective_time"] },
-  { label: "秒合约概率", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchProbability, formKey: ["second_contract_win_lose_ratio"] },
-  { label: "升级提现", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchWithdrawal, formKey: ["is_upgrade_withdrawal"] },
+  { label: $t("fengJin_0"), batchWay: batchTypeOptions.slice(0, 5), fu: api.batchBan, formKey: ["ban_type", "operation"] },
+  { label: $t("yuexiuGai"), batchWay: batchTypeOptions.slice(0, 1), fu: api.batchBalance, formKey: ["op_type", "change_type", "change_amount", "change_remark"] },
+  { label: $t("zengSongChouJiang"), batchWay: batchTypeOptions.slice(0, 1), fu: api.batchLottery, formKey: ["lottery_type", "gift_number"] },
+  { label: $t("qiangZhiTouZi"), batchWay: batchTypeOptions.slice(0, 2), fu: api.batchInvest, formKey: ["invest_type", "invest_product", "effective_time"] },
+  { label: $t("miaoHeYueGaiShuai"), batchWay: batchTypeOptions.slice(0, 5), fu: api.batchProbability, formKey: ["second_contract_win_lose_ratio"] },
+  { label: $t("shengJiTiXian"), batchWay: batchTypeOptions.slice(0, 5), fu: api.batchWithdrawal, formKey: ["is_upgrade_withdrawal"] },
   {
-    label: "邀请提现",
+    label: $t("yaoQingTiXian"),
     batchWay: batchTypeOptions.slice(0, 5),
     fu: api.batchInvitationWithdrawal,
     formKey: ["is_invite_user_withdrawal", "withdrawal_number", "withdrawal_invite_user_number", "withdrawal_invite_user_recharge_amount", "withdrawal_invite_user_effective_time"],
   },
-  { label: "分组", batchWay: batchTypeOptions.slice(0, 5), fu: api.batchGroup, formKey: ["new_group_id"] },
+  { label: $t("fenZu_0"), batchWay: batchTypeOptions.slice(0, 5), fu: api.batchGroup, formKey: ["new_group_id"] },
 ];
 
 const formRef = ref<FormInstance>();
@@ -334,32 +334,32 @@ const formData = ref<BatchOperationForm>({ ...originFormData });
 
 const accountInput = ref<string>();
 const rules = {
-  batch_type: [{ required: true, message: "请选择批量操作类型", trigger: "change" }],
-  old_vip_level: [{ required: true, message: "请选择原等级", trigger: "change" }],
-  register_time: [{ required: true, message: "请选择注册时间范围", trigger: "change" }],
-  new_vip_level: [{ required: true, message: "请选择新等级", trigger: "change" }],
-  is_upgrade_quant: [{ required: true, message: "请选择是否升级才能做量化", trigger: "change" }],
-  is_quant: [{ required: true, message: "请选择量化开关状态", trigger: "change" }],
-  quant_final_earnings_discount: [{ required: true, message: "请输入收益折扣", trigger: "blur" }],
-  is_invite_user_quant: [{ required: true, message: "请选择是否需要邀请量化", trigger: "change" }],
-  ban_type: [{ required: true, message: "请选择封禁类型", trigger: "change" }],
-  operation: [{ required: true, message: "请选择操作类型", trigger: "change" }],
-  op_type: [{ required: true, message: "请选择操作对象", trigger: "change" }],
-  change_type: [{ required: true, message: "请选择变动类型", trigger: "change" }],
-  change_amount: [{ required: true, message: "请输入变动金额", trigger: "blur" }],
-  lottery_type: [{ required: true, message: "请选择赠送类型", trigger: "change" }],
-  gift_number: [{ required: true, message: "请输入赠送次数", trigger: "blur" }],
-  invest_type: [{ required: true, message: "请选择投资类型", trigger: "change" }],
-  invest_product: [{ required: true, message: "请选择投资产品", trigger: "change" }],
-  effective_time: [{ required: true, message: "请选择有效时间", trigger: "change" }],
-  second_contract_win_lose_ratio: [{ required: true, message: "请输入概率", trigger: "blur" }],
-  is_upgrade_withdrawal: [{ required: true, message: "请选择是否升级才能提现", trigger: "change" }],
-  is_invite_user_withdrawal: [{ required: true, message: "请选择是否邀请提现", trigger: "change" }],
-  withdrawal_number: [{ required: true, message: "请输入提现次数", trigger: "blur" }],
-  withdrawal_invite_user_number: [{ required: true, message: "请输入邀请用户数量", trigger: "blur" }],
-  withdrawal_invite_user_recharge_amount: [{ required: true, message: "请输入邀请充值金额", trigger: "blur" }],
-  withdrawal_invite_user_effective_time: [{ required: true, message: "请选择有效时间", trigger: "change" }],
-  new_group_id: [{ required: true, message: "请选择新分组", trigger: "change" }],
+  batch_type: [{ required: true, message: $t("qingXuanZePiLiangCa"), trigger: "change" }],
+  old_vip_level: [{ required: true, message: $t("qingXuanZeYuanDengJ"), trigger: "change" }],
+  register_time: [{ required: true, message: $t("qingXuanZeZhuCeShi"), trigger: "change" }],
+  new_vip_level: [{ required: true, message: $t("qingXuanZeXinDengJi"), trigger: "change" }],
+  is_upgrade_quant: [{ required: true, message: $t("qingXuanZeShiFouShe"), trigger: "change" }],
+  is_quant: [{ required: true, message: $t("qingXuanZeLiangHuaK"), trigger: "change" }],
+  quant_final_earnings_discount: [{ required: true, message: $t("qingShuRuShouYiZhe_0"), trigger: "blur" }],
+  is_invite_user_quant: [{ required: true, message: $t("qingXuanZeShiFouXu"), trigger: "change" }],
+  ban_type: [{ required: true, message: $t("qingXuanZeFengJinLe"), trigger: "change" }],
+  operation: [{ required: true, message: $t("qingXuanZeCaoZuoLei"), trigger: "change" }],
+  op_type: [{ required: true, message: $t("qingXuanZeCaoZuoDui"), trigger: "change" }],
+  change_type: [{ required: true, message: $t("qingXuanZeBianDongL"), trigger: "change" }],
+  change_amount: [{ required: true, message: $t("qingShuRuBianDongJi_0"), trigger: "blur" }],
+  lottery_type: [{ required: true, message: $t("qingXuanZeZengSongL"), trigger: "change" }],
+  gift_number: [{ required: true, message: $t("qingShuRuZengSongCi_0"), trigger: "blur" }],
+  invest_type: [{ required: true, message: $t("qingXuanZeTouZiLei"), trigger: "change" }],
+  invest_product: [{ required: true, message: $t("qingXuanZeTouZiChan"), trigger: "change" }],
+  effective_time: [{ required: true, message: $t("qingXuanZeYouXiaoSh"), trigger: "change" }],
+  second_contract_win_lose_ratio: [{ required: true, message: $t("qingShuRuGaiShuai"), trigger: "blur" }],
+  is_upgrade_withdrawal: [{ required: true, message: $t("qingXuanZeShiFouShe_0"), trigger: "change" }],
+  is_invite_user_withdrawal: [{ required: true, message: $t("qingXuanZeShiFouYao"), trigger: "change" }],
+  withdrawal_number: [{ required: true, message: $t("qingShuRuTiXianCiS_0"), trigger: "blur" }],
+  withdrawal_invite_user_number: [{ required: true, message: $t("qingShuRuYaoQingYon_3"), trigger: "blur" }],
+  withdrawal_invite_user_recharge_amount: [{ required: true, message: $t("qingShuRuYaoQingCho"), trigger: "blur" }],
+  withdrawal_invite_user_effective_time: [{ required: true, message: $t("qingXuanZeYouXiaoSh_0"), trigger: "change" }],
+  new_group_id: [{ required: true, message: $t("qingXuanZeXinFenZu_0"), trigger: "change" }],
 };
 
 watch(visible, (val) => {
@@ -398,24 +398,24 @@ async function submitForm() {
     }
     // 处理时间范围
     if (postData.register_time) {
-      postData.register_time = [dayjs(postData.register_time[0]).format("YYYY-MM-DD HH:mm:ss"), dayjs(postData.register_time[1]).format("YYYY-MM-DD HH:mm:ss")];
+      postData.register_time = [dayjs(postData.register_time[0]).format($t("yyyyMmDdHhMmSs")), dayjs(postData.register_time[1]).format($t("yyyyMmDdHhMmSs"))];
     }
 
     // 处理单个时间字段
     if (postData.quant_invite_user_effective_time) {
-      postData.quant_invite_user_effective_time = dayjs(postData.quant_invite_user_effective_time).format("YYYY-MM-DD HH:mm:ss");
+      postData.quant_invite_user_effective_time = dayjs(postData.quant_invite_user_effective_time).format($t("yyyyMmDdHhMmSs"));
     }
 
     if (postData.effective_time) {
-      postData.effective_time = dayjs(postData.effective_time).format("YYYY-MM-DD HH:mm:ss");
+      postData.effective_time = dayjs(postData.effective_time).format($t("yyyyMmDdHhMmSs"));
     }
 
     if (postData.withdrawal_invite_user_effective_time) {
-      postData.withdrawal_invite_user_effective_time = dayjs(postData.withdrawal_invite_user_effective_time).format("YYYY-MM-DD HH:mm:ss");
+      postData.withdrawal_invite_user_effective_time = dayjs(postData.withdrawal_invite_user_effective_time).format($t("yyyyMmDdHhMmSs"));
     }
     const enableGoogleVerify = await store.keyByConfigValue("update_money_google_secret");
     if (enableGoogleVerify == 1 && activeTab.value == 7) {
-      const res = await ElMessageBox.prompt("输入谷歌验证码进行修改");
+      const res = await ElMessageBox.prompt($t("shuRuGuGeYanZhengM"));
       if (res.action == "confirm" && res.value) {
         await systemConfig.verifyGoogleAuth(res.value);
       } else {
@@ -437,7 +437,7 @@ const debouncedGetSubordinate = useDebounceFn(async (val: string) => {
   if (val) {
     try {
       const res = await api.getSubordinate(val);
-      subordinateNumStr.value = `共${res.number}个下级`;
+      subordinateNumStr.value = $t("gongResnumberGeXiaJi", [res.number]);
     } catch (err: any) {
       subordinateNumStr.value = err;
     }

@@ -3,8 +3,8 @@
     <content v-model="formData" :keys="['remark_original', 'remark_translation']" style="height: 70vh; overflow: auto" />
     <template #footer>
       <div class="dialog-footer">
-        <el-button type="primary" @click="submitHandler">确 定</el-button>
-        <el-button @click="closeHandler">取 消</el-button>
+        <el-button type="primary" @click="submitHandler">{{ $t("queDing") }}</el-button>
+        <el-button @click="closeHandler">{{ $t("quXiao") }}</el-button>
       </div>
     </template>
   </el-dialog>
@@ -23,7 +23,7 @@ watch(
   visible,
   () => {
     if (!visible.value) return;
-    title.value = "充值说明";
+    title.value = $t("chongZhiShuoMing");
     formData.value = JSON.parse(JSON.stringify(props.data));
   },
   {

@@ -8,32 +8,32 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" min-width="100" />
-        <el-table-column prop="order_sn" label="订单号" min-width="120" />
-        <el-table-column label="uid/用户账号" min-width="120">
+        <el-table-column prop="order_sn" :label="$t('dingDanHao_0')" min-width="120" />
+        <el-table-column :label="$t('uidYongHuZhangHao')" min-width="120">
           <template #default="{ row }">
-            <span>{{ row.has_member?.id }}/</span>
+            <span>{{ $t("rowHasMemberId_0", [row.has_member?.id]) }}</span>
             <span>{{ row.has_member?.account }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="amount" label="转账金额(U)" min-width="120">
+        <el-table-column prop="amount" :label="$t('zhuanZhangJineu')" min-width="120">
           <template #default="{ row }">
             {{ row.amount }}
           </template>
         </el-table-column>
-        <el-table-column prop="fees" label="手续费" min-width="100">
+        <el-table-column prop="fees" :label="$t('shouXuFei')" min-width="100">
           <template #default="{ row }">
             {{ row.fees }}
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" min-width="100">
+        <el-table-column prop="status" :label="$t('zhuangTai')" min-width="100">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'warning'">
-              {{ row.status === 1 ? "已结算" : "未结算" }}
+              {{ row.status === 1 ? $t("yiJieSuan") : $t("weiJieSuan") }}
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="remark" label="备注" min-width="120" />
-        <el-table-column prop="created_at" label="添加时间" min-width="180" />
+        <el-table-column prop="remark" :label="$t('beiZhu')" min-width="120" />
+        <el-table-column prop="created_at" :label="$t('tianJiaShiJian')" min-width="180" />
       </el-table>
 
       <template #footer>
@@ -58,10 +58,10 @@ const config: QueryConfig = {
     {
       type: "select",
       modelKey: "uid",
-      label: "用户",
+      label: $t("yongHu"),
       options: memberList,
       props: {
-        placeholder: "请输入用户进行查询",
+        placeholder: $t("qingShuRuYongHuJin"),
         style: { width: "200px" },
         filterable: true,
         remote: true,
@@ -77,9 +77,9 @@ const config: QueryConfig = {
     {
       type: "input",
       modelKey: "order_sn",
-      label: "订单号",
+      label: $t("dingDanHao_0"),
       props: {
-        placeholder: "请输入订单号",
+        placeholder: $t("qingShuRuDingDanHao"),
         style: { width: "200px" },
         clearable: true,
       },
@@ -87,7 +87,7 @@ const config: QueryConfig = {
     {
       type: "datetimerange",
       modelKey: "datetime",
-      label: "时间范围",
+      label: $t("shiJianFanWei"),
       props: {
         style: { width: "400px" },
       },

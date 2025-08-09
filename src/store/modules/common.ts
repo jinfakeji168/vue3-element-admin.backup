@@ -2,7 +2,6 @@ import langApi, { Form } from "@/api/system/lang";
 import api from "@/api/common";
 import systemApi, { type TeamRechargeAward } from "@/api/system/systemConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
-import configApi from "@/api/system/systemConfig";
 
 export const useStore = defineStore("common", () => {
   /**语言列表 */
@@ -74,7 +73,7 @@ export const useStore = defineStore("common", () => {
 
   const config = ref();
   async function getConfigAsync() {
-    if (!config.value) config.value = await configApi.getConfig();
+    if (!config.value) config.value = await systemApi.getConfig();
   }
 
   async function keyByConfigValue(key: string) {
@@ -83,6 +82,22 @@ export const useStore = defineStore("common", () => {
   }
   function setNewConfig(newConfig: any) {
     config.value = newConfig;
+  }
+
+
+  /**获取google配置状态 */
+  const googleStatus = ref<boolean>();
+  async function getGoogleStatusAsync() {
+    const res = await systemApi.getGoogleAuthStatus();
+    googleStatus.value = Boolean(res?.enabled);
+    return Promise.resolve();
+  }
+  function updateGoogleStatus() {
+    getGoogleStatusAsync();
+  }
+  async function getGoogleStatus() {
+    if (googleStatus.value === undefined) await getGoogleStatusAsync();
+    return Promise.resolve(googleStatus.value);
   }
   return {
     getLangListAsync,
@@ -98,7 +113,9 @@ export const useStore = defineStore("common", () => {
     timeZoneList,
     teamLevelList,
     keyByConfigValue,
-    setNewConfig
+    setNewConfig,
+    getGoogleStatus,
+    updateGoogleStatus
   };
 });
 

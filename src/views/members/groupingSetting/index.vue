@@ -6,30 +6,30 @@
           <template #icon>
             <Plus />
           </template>
-          新增
+          {{ $t("xinZeng") }}
         </el-button>
-        <el-button type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()"  v-hasPerm="['groupingSetting:delete']">
+        <el-button type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()" v-hasPerm="['groupingSetting:delete']">
           <template #icon>
             <Delete />
           </template>
-          删除
+          {{ $t("shanChu_0") }}
         </el-button>
       </template>
 
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="title" label="标题" min-width="120" />
-        <el-table-column prop="created_at" label="添加时间" min-width="180" />
-        <el-table-column prop="updated_at" label="更新时间" min-width="180" />
-        <el-table-column label="操作" fixed="right" align="left" width="150">
+        <el-table-column prop="title" :label="$t('biaoTi')" min-width="120" />
+        <el-table-column prop="created_at" :label="$t('tianJiaShiJian')" min-width="180" />
+        <el-table-column prop="updated_at" :label="$t('gengXinShiJian')" min-width="180" />
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="150">
           <template #default="{ row }">
-            <el-button type="primary" link size="small" @click.stop="table.editHandler(row, 0)"  v-hasPerm="['groupingSetting:edit']">
+            <el-button type="primary" link size="small" @click.stop="table.editHandler(row, 0)" v-hasPerm="['groupingSetting:edit']">
               <template #icon><EditPen /></template>
-              编辑
+              {{ $t("bianJi") }}
             </el-button>
-            <el-button type="danger" link size="small" @click.stop="table.deleteHandler(row.id)"  v-hasPerm="['groupingSetting:delete']">
+            <el-button type="danger" link size="small" @click.stop="table.deleteHandler(row.id)" v-hasPerm="['groupingSetting:delete']">
               <template #icon><Delete /></template>
-              删除
+              {{ $t("shanChu_0") }}
             </el-button>
           </template>
         </el-table-column>
