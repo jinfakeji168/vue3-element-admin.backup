@@ -23,7 +23,7 @@
         <template #label>
           <div class="flex-center">
             <span>{{ $t("jieSuoYaoQingRenShu_0") }}</span>
-            <el-tooltip content="购买此等级所需邀请人数(下三级人数都算)，0代表无需邀请" placement="top">
+            <el-tooltip :content="$t('gouMaiCiDengJiSuoX')" placement="top">
               <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
@@ -34,7 +34,7 @@
         <template #label>
           <div class="flex-center">
             <span>{{ $t("yaoQingJiSuanCengJi_0") }}</span>
-            <el-tooltip content="购买此等级所需邀请人数计算层级，1代表计算一级下级，3代表计算三级下级" placement="top">
+            <el-tooltip :content="$t('gouMaiCiDengJiSuoX_0')" placement="top">
               <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
@@ -45,7 +45,7 @@
         <template #label>
           <div class="flex-center">
             <span>{{ $t("yaoQingRenShuYouXia_0") }}</span>
-            <el-tooltip content="购买此等级所需邀请人数需要充值满多少才算有效邀请人" placement="top">
+            <el-tooltip :content="$t('gouMaiCiDengJiSuoX_1')" placement="top">
               <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
@@ -56,7 +56,7 @@
         <template #label>
           <div class="flex-center">
             <span>{{ $t("liangHuaYouXiaoTian_0") }}</span>
-            <el-tooltip content="解锁此等级可以做量化的天数,到期后返还给用户解锁的本金" placement="top">
+            <el-tooltip :content="$t('jieSuoCiDengJiKeYi')" placement="top">
               <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
@@ -67,7 +67,7 @@
         <template #label>
           <div class="flex-center">
             <span>{{ $t("shouYiShuaiFanWei_0") }}</span>
-            <el-tooltip content="单次完成量化的收益率范围。每次量化的收益率计算本金会在最小值到最大值中取一个" placement="top">
+            <el-tooltip :content="$t('danCiWanChengLiangH')" placement="top">
               <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
@@ -84,10 +84,7 @@
         <template #label>
           <div class="flex-center">
             <span>{{ $t("pingTaiFuWuFeiBiLi_0") }}</span>
-            <el-tooltip
-              content="平台服务费比例。用户的收益平台收取的比例，单位百分比，范围0-100，例如设置50，用户收益是1，那么用户最终收益是0.5，平台服务费0.5 用户收益计算公式：用户量化账户金额 * 收益率范围随机值 * 用户最终收益折扣% *（1-平台服务费%），用户最终收益折扣默认100，当前配置预计单次量化收益范围，预计单日量化收益范围"
-              placement="top"
-            >
+            <el-tooltip :content="$t('pingTaiFuWuFeiBiLi_2')" placement="top">
               <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
@@ -101,7 +98,7 @@
         <template #label>
           <div class="flex-center">
             <span>{{ $t("chongZhiFanLi_0") }}</span>
-            <el-tooltip content="格式1,2,3分别代表第一二三下级的充值返利%,最多可设置六级" placement="top">
+            <el-tooltip :content="$t('geShi_123FenBieDaiB')" placement="top">
               <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
@@ -112,7 +109,7 @@
         <template #label>
           <div class="flex-center">
             <span>{{ $t("liangHuaFanLi_0") }}</span>
-            <el-tooltip content="格式1,2,3分别代表第一二三下级的量化返利%,最多可设置六级" placement="top">
+            <el-tooltip :content="$t('geShi_123FenBieDaiB_0')" placement="top">
               <el-icon><QuestionFilled /></el-icon>
             </el-tooltip>
           </div>
@@ -242,6 +239,8 @@ const rules = {
   cash_withdrawal_time: [{ required: true, message: $t("keTiXianShiJianBuN"), trigger: "blur" }],
 };
 
+import { useStore } from "@/store/modules/common";
+const store = useStore();
 const formRef = ref<FormInstance>();
 const emit = defineEmits(["finish"]);
 const loading = ref(false);
@@ -267,6 +266,7 @@ async function submitHandler() {
     loading.value = false;
   }
   visible.value = false;
+  store.updateVipList();
   emit("finish");
 }
 function closeHandler() {

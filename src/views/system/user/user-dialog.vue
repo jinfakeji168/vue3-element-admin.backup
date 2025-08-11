@@ -56,7 +56,7 @@ const roleOptions = ref<OptionType[]>([]);
 const rules = {
   username: [{ required: true, message: $t("yongHuMingBuNengWei"), trigger: "blur" }],
   nickname: [{ required: true, message: $t("yongHuNiChengBuNeng"), trigger: "blur" }],
-  department_id: [{ required: true, message: $t("suoShuBuMenBuNengW"), trigger: "blur" }],
+  // department_id: [{ required: true, message: $t("suoShuBuMenBuNengW"), trigger: "blur" }],
   roles: [{ required: true, message: $t("yongHuJiaoSeBuNeng"), trigger: "blur" }],
   password: [
     {

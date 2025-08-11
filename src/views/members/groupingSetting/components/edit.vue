@@ -56,6 +56,9 @@ const rules = {
   title: [{ required: true, message: $t("qingShuRuBiaoTi_0"), trigger: "blur" }],
 };
 
+import { useStore } from "@/store/modules/common";
+const store = useStore();
+
 const formRef = ref<FormInstance>();
 const emits = defineEmits(["finish"]);
 const loading = ref(false);
@@ -74,6 +77,7 @@ async function submitHandler() {
     loading.value = false;
   }
   visible.value = false;
+  store.updateGroupList();
   emits("finish");
 }
 

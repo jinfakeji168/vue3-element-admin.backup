@@ -11,7 +11,9 @@
               <el-radio v-model="form.op_type" :value="type.value" :label="type.label" class="!m-0"></el-radio>
             </div>
             <div class="card-body">
-              <div class="balance-amount">{{ $t("balancedata") }} {{ $t("and") }}{{ $t("andBalancedataTypeKey") }}</div>
+              <div class="balance-amount">
+                {{ (balanceData && balanceData[type.key]) || "0.00" }}
+              </div>
               <div class="balance-label">{{ $t("dangQianYuE") }}</div>
             </div>
           </div>

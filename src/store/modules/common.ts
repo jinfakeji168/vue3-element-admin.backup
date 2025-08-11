@@ -17,8 +17,12 @@ export const useStore = defineStore("common", () => {
 
   /**vip列表 */
   const _vipList = ref<vipView[]>();
+  async function updateVipList() {
+    _vipList.value = await api.getVipList<vipView[]>();
+    return Promise.resolve();
+  }
   async function getVipListAsync() {
-    if (!_vipList.value) _vipList.value = await api.getVipList<vipView[]>();
+    if (!_vipList.value) await updateVipList();
     return Promise.resolve(_vipList.value);
   }
   const vipList = computed<vipView[]>(() => {
@@ -28,8 +32,12 @@ export const useStore = defineStore("common", () => {
 
   /**分组列表 */
   const _groupList = ref<groupView[]>();
+  async function updateGroupList() {
+    _groupList.value = await api.getGroupList<groupView[]>();
+    return Promise.resolve();
+  }
   async function getGroupListAsync() {
-    if (!_groupList.value) _groupList.value = await api.getGroupList<groupView[]>();
+    if (!_groupList.value) await updateGroupList();
     return Promise.resolve(_groupList.value);
   }
   const groupList = computed<groupView[]>(() => {
@@ -102,7 +110,9 @@ export const useStore = defineStore("common", () => {
   return {
     getLangListAsync,
     getVipListAsync,
+    updateVipList,
     getGroupListAsync,
+    updateGroupList,
     getTradeListAsync,
     getTimeZoneListAsync,
     getTeamLevelListAsync,

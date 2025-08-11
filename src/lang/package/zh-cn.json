@@ -1398,9 +1398,7 @@
   "chongZhiZhangHuYuE": "充值账户余额",
   "queRen": "确认",
   "dangQianYuE": "当前余额",
-  "andBalancedataTypeKey": "& balanceData[type.key]) || \"0.000000\" }}",
   "and": "&",
-  "balancedata": "{{ (balanceData",
   "huiYuanId": "会员ID",
   "xiuGaiYuE": "修改余额",
   "huiYuanRiZhi": "会员日志",
@@ -1559,7 +1557,6 @@
   "qingShuRuShouRu": "请输入收入",
   "shouRu": "收入",
   "touXiang": "头像",
-  "propsdataidBianJiBang": "`+props.data?.id ? `编辑榜单` : `新增榜单",
   "bianJiBangDan": "编辑榜单",
   "xinZengBangDan": "新增榜单",
   "shenHeShiJian_0": "审核时间",
@@ -1588,5 +1585,13 @@
   "huiYuanDaoQiShiJian": "会员到期时间",
   "huaFeiJinE": "花费金额",
   "shengJiHouDengJi": "升级后等级",
-  "yuanShiDengJi": "原始等级"
+  "yuanShiDengJi": "原始等级",
+  "geShi_123FenBieDaiB_0": "格式1,2,3分别代表第一二三下级的量化返利%,最多可设置六级",
+  "geShi_123FenBieDaiB": "格式1,2,3分别代表第一二三下级的充值返利%,最多可设置六级",
+  "pingTaiFuWuFeiBiLi_2": "平台服务费比例。用户的收益平台收取的比例，单位百分比，范围0-100，例如设置50，用户收益是1，那么用户最终收益是0.5，平台服务费0.5 用户收益计算公式：用户量化账户金额 * 收益率范围随机值 * 用户最终收益折扣% *（1-平台服务费%），用户最终收益折扣默认100，当前配置预计单次量化收益范围，预计单日量化收益范围",
+  "danCiWanChengLiangH": "单次完成量化的收益率范围。每次量化的收益率计算本金会在最小值到最大值中取一个",
+  "jieSuoCiDengJiKeYi": "解锁此等级可以做量化的天数,到期后返还给用户解锁的本金",
+  "gouMaiCiDengJiSuoX_1": "购买此等级所需邀请人数需要充值满多少才算有效邀请人",
+  "gouMaiCiDengJiSuoX_0": "购买此等级所需邀请人数计算层级，1代表计算一级下级，3代表计算三级下级",
+  "gouMaiCiDengJiSuoX": "购买此等级所需邀请人数(下三级人数都算)，0代表无需邀请"
 }

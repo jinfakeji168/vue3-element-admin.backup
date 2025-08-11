@@ -2,7 +2,7 @@
   <el-dialog v-model="visible" :title="$t('xiangQing')" width="90%">
     <el-tabs v-model="activeTab" tab-position="left" type="border-card">
       <el-tab-pane v-for="(tab, index) of tabs" :key="index" :label="tab.name" :name="tab.key"></el-tab-pane>
-      <el-card shadow="never" style="height: 65vh; overflow-y: auto">
+      <el-card shadow="never" style="height: 65vh; overflow: auto">
         <component ref="comRef" :is="componentMap[activeTab]" v-bind="$attrs"></component>
       </el-card>
     </el-tabs>

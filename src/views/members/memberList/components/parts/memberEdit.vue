@@ -1,6 +1,6 @@
 <template>
   <el-form ref="formRef" :model="memberForm" :rules="rules" label-width="140px">
-    <div class="grid grid-cols-2">
+    <div class="flex flex-col">
       <!-- 基础信息 -->
       <el-card class="form-section" shadow="never" :header="$t('jiChuXinXi')">
         <el-form-item :label="$t('yongHuZhangHao')" prop="account">
@@ -105,7 +105,7 @@
         <div class="flex flex-row">
           <el-form-item :label="$t('yongHuFenZu')" prop="group_id">
             <el-select v-model="memberForm.group_id" :placeholder="$t('qingXuanZeYongHuFen')" style="width: 200px">
-              <el-option v-for="group in store.groupList" :label="group.title" :value="group?.id" />
+              <el-option v-for="group of store.groupList" :label="group.title" :value="group?.id" />
             </el-select>
           </el-form-item>
 
@@ -311,5 +311,11 @@ defineExpose({
   display: flex;
   align-items: center;
   text-align: right;
+}
+.thebox {
+  // width: 1600px;
+}
+.form-section {
+  // width: 600px;
 }
 </style>
