@@ -29,4 +29,11 @@ const fontColor = computed(() => {
 const { getUserInfo } = useUserStore();
 
 getUserInfo();
+
+// 初始化网站mate信息介绍,从环境变量获取配置
+function initWebSite() {
+  const { VITE_DESCRIPTION, VITE_KEYWORDS } = import.meta.env;
+  document.querySelector('meta[name="description"]')?.setAttribute("content", VITE_DESCRIPTION);
+  document.querySelector('meta[name="keywords"]')?.setAttribute("content", VITE_KEYWORDS);
+}
 </script>

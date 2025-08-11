@@ -52,9 +52,15 @@ const form = ref<MemberAdd>({
 const formRef = ref();
 const rules = reactive({
   type: [{ required: true, message: $t("qingXuanZeYongHuLei"), trigger: "change" }],
-  account: [{ required: true, message: $t("qingShuRuYongHuZhan_0"), trigger: "blur" }],
+  account: [
+    { required: true, message: $t("qingShuRuYongHuZhan_0"), trigger: "blur" },
+    { min: 6, max: 20, message: "长度在 6 到 20 个字符", trigger: "blur" },
+  ],
   password: [{ required: true, message: $t("qingShuRuYongHuMiM"), trigger: "blur" }],
-  secure_password: [{ required: true, message: $t("qingShuRuAnQuanMiM"), trigger: "blur" }],
+  secure_password: [
+    { required: true, message: $t("qingShuRuAnQuanMiM"), trigger: "blur" },
+    { min: 6, max: 20, message: "长度在 8 到 20 个字符，要包含字母和数字", trigger: "blur" },
+  ],
   lang_id: [{ required: true, message: $t("qingXuanZeYuYanLei_0"), trigger: "change" }],
 });
 const loading = ref(false);

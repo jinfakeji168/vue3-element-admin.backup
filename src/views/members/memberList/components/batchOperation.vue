@@ -18,7 +18,7 @@
           <template v-else-if="formData.batch_type === 2">
             <el-form-item :label="$t('huiYuanDengJi_0')" prop="old_vip_level">
               <el-select v-model="formData.old_vip_level">
-                <el-option v-for="item of store.vipList" :key="item.id" :value="item.level" :label="item.title" />
+                <el-option v-for="item of vipList" :key="item.id" :value="item.level" :label="item.title" />
               </el-select>
             </el-form-item>
             <el-form-item :label="$t('zhuCeShiJian')" prop="register_time">
@@ -49,7 +49,7 @@
           <template v-if="activeTab === 0">
             <el-form-item :label="$t('tiaoZhengHouDengJi')" prop="new_vip_level">
               <el-select v-model="formData.new_vip_level">
-                <el-option v-for="item of store.vipList" :key="item.id" :value="item.level" :label="item.title" />
+                <el-option v-for="item of vipList" :key="item.id" :value="item.level" :label="item.title" />
               </el-select>
             </el-form-item>
           </template>
@@ -226,6 +226,16 @@ import systemConfig from "@/api/system/systemConfig";
 import { searchMember } from "@/utils";
 import { useStore } from "@/store/modules/common";
 const store = useStore();
+const vipList = ref();
+async function getVipList() {
+  let result = await store.getVipListAsync();
+  result = JSON.parse(JSON.stringify(result));
+  result?.splice(0, 0, { id: 0, level: 0, title: "普通用户" });
+  vipList.value = result;
+}
+
+getVipList();
+
 const visible = defineModel<boolean>();
 const props = withDefaults(defineProps<{ account?: Member[]; tabIndex: number }>(), {});
 

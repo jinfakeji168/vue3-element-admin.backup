@@ -101,7 +101,7 @@
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("dengJi_1") }}</span>
-                <span class="text-gray-700">{{ $t("levelRowviplevelRowiso", [row.vip_level, row.is_online == 1 ? "在线" : "离线"]) }}</span>
+                <span class="text-gray-700">{{ $t("levelRowviplevelRowiso", [row.vip_level, row.is_online == 1 ? $t("zaiXian") : $t("liXian")]) }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("yuYan") }}</span>
@@ -120,27 +120,27 @@
             <div class="flex flex-col">
               <div>
                 <span class="text-gray-500">{{ $t("liangHuaZhangHu_3") }}</span>
-                <span class="text-gray-700">{{ row.quant_account || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.quant_account || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("yongJinZhangHu_2") }}</span>
-                <span class="text-gray-700">{{ row.brokerage_account || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.brokerage_account || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("zhiNengZhangHu_0") }}</span>
-                <span class="text-gray-700">{{ row.smart_account || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.smart_account || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("heYueZhangHu_0") }}</span>
-                <span class="text-gray-700">{{ row.second_contract_account || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.second_contract_account || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("liangHuaShouYi") }}</span>
-                <span class="text-gray-700">{{ row.quant_final_earnings_discount || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.quant_final_earnings_discount || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("touZiWeiJieSuan") }}</span>
-                <span class="text-gray-700">{{ row.quant_buy_invest || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.quant_buy_invest || "0.0000" }}</span>
               </div>
             </div>
           </template>
@@ -150,15 +150,15 @@
             <div class="flex flex-col">
               <div>
                 <span class="text-gray-500">trx:</span>
-                <span class="text-gray-700">{{ row.min_withdrawal_amount_trx || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.min_withdrawal_amount_trx || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">trc20-usdt:</span>
-                <span class="text-gray-700">{{ row.min_withdrawal_amount_usdt || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.min_withdrawal_amount_usdt || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">bnb:</span>
-                <span class="text-gray-700">{{ row.min_withdrawal_amount_bnb || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.min_withdrawal_amount_bnb || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">bep20-usdt/usdc:</span>
@@ -166,7 +166,7 @@
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("touZiZonge") }}</span>
-                <span class="text-gray-700">{{ row.quant_buy_invest || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.quant_buy_invest || "0.0000" }}</span>
               </div>
             </div>
           </template>
@@ -236,11 +236,11 @@
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("kaiShiShiJian_3") }}</span>
-                <span class="text-gray-700">{{ row.quant_buy_invest_effective_time || "2025-05-20 23:13:58" }}</span>
+                <span class="text-gray-700">{{ row.quant_buy_invest_effective_time || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("jieShuShiJian_3") }}</span>
-                <span class="text-gray-700">{{ row.withdrawal_buy_invest_effective_time || "2026-05-20 23:13:58" }}</span>
+                <span class="text-gray-700">{{ row.withdrawal_buy_invest_effective_time || "--" }}</span>
               </div>
             </div>
           </template>
@@ -250,7 +250,7 @@
             <div class="flex flex-col">
               <div>
                 <span class="text-gray-500">{{ $t("zhiTuiXiaJi") }}</span>
-                <span class="text-gray-700">{{ row.withdrawal_invite_user_number }}</span>
+                <span class="text-gray-700">{{ row.withdrawal_invite_user_number || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("youXiang_0") }}</span>
@@ -258,7 +258,7 @@
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("lianXiFangShi_0") }}</span>
-                <span class="text-gray-700">{{ row.telephone || "" }}</span>
+                <span class="text-gray-700">{{ row.telephone || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("beiZhu_1") }}</span>

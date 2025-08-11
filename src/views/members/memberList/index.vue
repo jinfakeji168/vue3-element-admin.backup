@@ -154,28 +154,28 @@
             <div class="flex flex-col">
               <div>
                 <span class="text-gray-500">{{ $t("yongJinZhangHu_2") }}</span>
-                <span class="text-gray-700">{{ row.brokerage_account || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.brokerage_account || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("zhiNengZhangHu_0") }}</span>
-                <span class="text-gray-700">{{ row.smart_account || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.smart_account || "0.0000" }}</span>
               </div>
 
               <div>
                 <span class="text-gray-500">{{ $t("heYueZhangHu_0") }}</span>
-                <span class="text-gray-700">{{ row.second_contract_account || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.second_contract_account || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("liangHuaZhangHu_3") }}</span>
-                <span class="text-gray-700">{{ row.quant_account || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.quant_account || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("tiYanJin") }}</span>
-                <span class="text-gray-700">{{ row.experience_account || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.experience_account || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("liangHuaShouYi") }}</span>
-                <span class="text-gray-700">{{ row.quant_profit || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.quant_profit || "0.0000" }}</span>
               </div>
             </div>
           </template>
@@ -185,15 +185,15 @@
             <div class="flex flex-col">
               <div>
                 <span class="text-gray-500">trx:</span>
-                <span class="text-gray-700">{{ row.min_withdrawal_amount_trx || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.min_withdrawal_amount_trx || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">trc20-usdt:</span>
-                <span class="text-gray-700">{{ row.min_withdrawal_amount_usdt || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.min_withdrawal_amount_usdt || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">bnb:</span>
-                <span class="text-gray-700">{{ row.min_withdrawal_amount_bnb || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.min_withdrawal_amount_bnb || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">bep20-usdt/usdc:</span>
@@ -201,11 +201,11 @@
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("touZiZonge") }}</span>
-                <span class="text-gray-700">{{ row.invest_total || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.invest_total || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("touZiWeiJieSuan") }}</span>
-                <span class="text-gray-700">{{ row.invest_unsettled || "0.00" }}</span>
+                <span class="text-gray-700">{{ row.invest_unsettled || "0.0000" }}</span>
               </div>
             </div>
           </template>
@@ -215,7 +215,7 @@
             <div class="flex flex-col">
               <div>
                 <span class="text-gray-500">{{ $t("zhuCeFangShi") }}</span>
-                <span class="text-gray-700">{{ getRegisterType(row.type) || "--" }}</span>
+                <span class="text-gray-700">{{ getRegisterType(row.type) || "后台" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("zhuCe_0") }}</span>
@@ -227,7 +227,7 @@
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("zuiHou") }}</span>
-                <span class="text-gray-700">{{ row.last_login_time || "--" }}</span>
+                <span class="text-gray-700">{{ row.last_login_at || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("zuiHouIp") }}</span>
@@ -245,19 +245,19 @@
             <div class="flex flex-col">
               <div>
                 <span class="text-gray-500">{{ $t("dingJi") }}</span>
-                <span class="text-gray-700">{{ row.top_id }}/{{ row.top_account }}</span>
+                <span class="text-gray-700">{{ row.top_id || "--" }}/{{ row.top_account || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("yiJi") }}</span>
-                <span class="text-gray-700">{{ row.parent_id }}/{{ row.parent_account }}</span>
+                <span class="text-gray-700">{{ row.parent_id || "--" }}/{{ row.parent_account || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("erJi_0") }}</span>
-                <span class="text-gray-700">{{ row.grandpa_id }}/{{ row.grandpa_account }}</span>
+                <span class="text-gray-700">{{ row.grandpa_id || "--" }}/{{ row.grandpa_account || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("sanJi_0") }}</span>
-                <span class="text-gray-700">{{ row.great_grandpa_id }}/{{ row.great_grandpa_account }}</span>
+                <span class="text-gray-700">{{ row.great_grandpa_id || "--" }}/{{ row.great_grandpa_account || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("yaoQingMa") }}</span>
@@ -271,11 +271,11 @@
             <div class="flex flex-col">
               <div>
                 <span class="text-gray-500">{{ $t("chongZhi_0") }}</span>
-                <span class="text-gray-700">{{ row.total_recharge_amount || "0.000000" }}</span>
+                <span class="text-gray-700">{{ row.total_recharge_amount || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("tiXian_0") }}</span>
-                <span class="text-gray-700">{{ row.total_withdrawal_amount || "0.000000" }}</span>
+                <span class="text-gray-700">{{ row.total_withdrawal_amount || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("kaiShiShiJian_3") }}</span>
@@ -301,7 +301,7 @@
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("lianXiFangShi_0") }}</span>
-                <span class="text-gray-700">{{ row.telephone || "" }}</span>
+                <span class="text-gray-700">{{ row.telephone || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("beiZhu_1") }}</span>
@@ -596,7 +596,10 @@ async function getvipList() {
     const number = res.map((val) => val.number).reduce((pre, cur) => pre + cur);
     res.unshift({ title: $t("quanBu"), number, vip_level: -1 });
     res.sort((a, b) => a.vip_level - b.vip_level);
-    res.find((val) => !val.title)!.title = $t("puTongYongHu");
+    const findRes = res.find((val) => !val.title);
+    if (findRes) {
+      findRes.title = $t("puTongYongHu");
+    }
     vipList.value = res;
     console.log("🚀 ~ getvipList ~ vipList.value :", vipList.value);
     currentVip.value = res[0].vip_level as number;
@@ -648,7 +651,12 @@ async function replenishmentHandler(row: Member) {
 async function checkMoney(row: Member) {
   loading.value[0] = true;
   const res = await api.checkMoney(row.id);
-  ElMessageBox.confirm(res.msg, {
+  let html = [];
+  for (let k in res) {
+    html.push(h("div", `${k}: ${res[k]}`));
+  }
+  ElMessageBox({
+    message: h("div", html),
     showCancelButton: false,
   });
   loading.value[0] = false;
@@ -659,7 +667,7 @@ async function simulateLogin(row: Member) {
   const res = await api.simulateLogin(row.id);
   loading.value[1] = false;
   if (res) {
-    window.open(res, "_blank");
+    window.open(res.url, "_blank");
   }
 }
 

@@ -66,7 +66,7 @@
       <!-- 投资设置 -->
       <el-card class="form-section" shadow="never" :header="$t('touZiSheZhi')">
         <el-form-item :label="$t('liangHuaMaiTouZi')" prop="quant_buy_invest">
-          <el-select multiple v-model="memberForm.quant_buy_invest" :placeholder="$t('qingXuanZeLiangHuaM')">
+          <el-select multiple v-model="memberForm.quant_buy_invest" :placeholder="$t('qingXuanZeLiangHuaM')" clearable>
             <el-option v-for="item in investList" :label="item.val" :value="item.key" />
           </el-select>
         </el-form-item>
@@ -82,7 +82,7 @@
         </el-form-item>
 
         <el-form-item :label="$t('tiXianMaiTouZi')" prop="withdrawal_buy_invest">
-          <el-select multiple v-model="memberForm.withdrawal_buy_invest" :placeholder="$t('qingShuRuTiXianMai')">
+          <el-select multiple v-model="memberForm.withdrawal_buy_invest" :placeholder="$t('qingShuRuTiXianMai')" clearable>
             <el-option v-for="item in investList" :label="item.val" :value="item.key" />
           </el-select>
         </el-form-item>
@@ -104,7 +104,7 @@
         </el-form-item>
         <div class="flex flex-row">
           <el-form-item :label="$t('yongHuFenZu')" prop="group_id">
-            <el-select v-model="memberForm.group_id" :placeholder="$t('qingXuanZeYongHuFen')" style="width: 200px">
+            <el-select v-model="memberForm.group_id" :placeholder="$t('qingXuanZeYongHuFen')" style="width: 200px" clearable>
               <el-option v-for="group of store.groupList" :label="group.title" :value="group?.id" />
             </el-select>
           </el-form-item>
@@ -141,10 +141,10 @@
           </el-form-item>
         </div>
         <div class="flex flex-row">
-          <el-form-item :label="$t('zhuCeShengYuChouJia')" prop="vip_level">
+          <el-form-item :label="$t('zhuCeShengYuChouJia')" prop="register_remain_lottery_num">
             <el-input-number v-model="memberForm.register_remain_lottery_num" style="width: 200px" />
           </el-form-item>
-          <el-form-item :label="$t('yaoQingShengYuChouJ')" prop="vip_level">
+          <el-form-item :label="$t('yaoQingShengYuChouJ')" prop="invite_remain_lottery_num">
             <el-input-number v-model="memberForm.invite_remain_lottery_num" style="width: 200px" />
           </el-form-item>
         </div>
@@ -250,16 +250,19 @@
 </template>
 <script setup lang="ts">
 import { MemberDetailData } from "@/api/members/memberList";
-import { useStore } from "@/store/modules/common";
 import api from "@/api/members/memberList";
 import commApi from "@/api/common";
+import { useStore } from "@/store/modules/common";
 const store = useStore();
-const vipList = computed(() => {
-  const temp = store.vipList;
-  temp.splice(0, 0, { level: 0, title: $t("puTongYongHu"), id: 0 });
-  return temp;
-});
+const vipList = ref();
+async function getVipList() {
+  let result = await store.getVipListAsync();
+  result = JSON.parse(JSON.stringify(result));
+  result?.splice(0, 0, { id: 0, level: 0, title: "普通用户" });
+  vipList.value = result;
+}
 
+getVipList();
 const props = withDefaults(
   defineProps<{
     memberId?: number;

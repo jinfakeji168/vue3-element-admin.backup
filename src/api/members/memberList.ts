@@ -261,7 +261,7 @@ export default {
   },
   /**查钱 */
   checkMoney(uid: number) {
-    return request<any, any>({
+    return request<any, Record<string, string>>({
       url: `${BasePath}/fixedBalanceQuery`,
       method: "get",
       params: { uid },
@@ -269,7 +269,7 @@ export default {
   },
   /**模拟登录 */
   simulateLogin(uid: number) {
-    return request<SimulateLoginResult>({
+    return request<any, SimulateLoginResult>({
       url: `${BasePath}/simulateLoginByUid`,
       method: "get",
       params: { uid }
