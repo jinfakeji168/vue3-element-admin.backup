@@ -1,5 +1,5 @@
 <template>
-  <el-dialog v-model="visible" :title="title" width="70vw">
+  <el-dialog v-model="visible" :title="$t('heYueShiJianSheZhi')" width="70vw">
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
         <el-button v-hasPerm="['instantContractSetting:add']" type="success" @click="table.editHandler()">
@@ -44,13 +44,13 @@
   <el-dialog v-model="table.visible.value[0]" :title="dialogTitle" width="50vw">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
       <el-form-item :label="$t('shiJianMiao_0')" prop="second">
-        <el-input v-model="formData.second" :placeholder="$t('qingShuRuShiJianMia')" />
+        <el-input-number v-model="formData.second" :placeholder="$t('qingShuRuShiJianMia')" :min="1" :step="1" />
       </el-form-item>
       <el-form-item :label="$t('zuiXiaoTouZiJinE_0')" prop="min_amount">
-        <el-input v-model="formData.min_amount" :placeholder="$t('qingShuRuZuiXiaoTou')" :formatter="parserHandler" :parser="parserHandler" />
+        <el-input-number v-model="formData.min_amount" :placeholder="$t('qingShuRuZuiXiaoTou')" :min="0" :precision="2" :step="0.05" />
       </el-form-item>
       <el-form-item :label="$t('yingLiShuai_0')" prop="profit_rate">
-        <el-input-number v-model="formData.profit_rate" :placeholder="$t('qingShuRuYingLiShua')" :min="0" :max="100" />
+        <el-input-number v-model="formData.profit_rate" :placeholder="$t('qingShuRuYingLiShua')" :min="0" :max="100" :precision="2" />
       </el-form-item>
     </el-form>
     <template #footer>
@@ -68,11 +68,7 @@ import { FormInstance } from "element-plus";
 import { parserHandler } from "@/utils/index";
 const visible = defineModel<boolean>();
 const title = ref<string>("");
-watch(visible, (val) => {
-  if (val) {
-    title.value = $t("chongZhiPeiZhi");
-  }
-});
+
 const formRef = ref<FormInstance>();
 const table = new TableInstance<TimeForm>(api, {}, 20);
 

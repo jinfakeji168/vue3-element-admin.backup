@@ -18,7 +18,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="$t('yongJinJinE')" prop="share_amount">
-        <el-input v-model="formData.share_amount" :min="0" />
+        <el-input-number v-model="formData.share_amount" :min="0" :precision="2" />
       </el-form-item>
 
       <el-form-item :label="$t('jiangLiVipDengJi')" prop="reward_vip_level">
@@ -27,7 +27,7 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="$t('jiangLiVipTianShu')" prop="reward_vip_days">
-        <el-input v-model="formData.reward_vip_days" :min="0" type="number" />
+        <el-input-number v-model="formData.reward_vip_days" :min="0" type="number" />
       </el-form-item>
 
       <el-form-item :label="$t('qiYongZhuangTai')" prop="status">
@@ -119,9 +119,23 @@ watch(
 );
 const formData = ref<Form>({});
 
-const rules = {
-  share_amount: [{ required: true, message: $t("tianXieYongJinJinE"), trigger: "blur" }],
-};
+const rules = ref();
+watch(
+  () => formData.value.type,
+  (val) => {
+    unref(formRef)?.clearValidate();
+    if (val == 2) {
+      rules.value = {
+        reward_vip_level: [{ required: true, message: $t("qingXuanZeVipDengJi"), trigger: "blur" }],
+        reward_vip_days: [{ required: true, message: $t("tianXieJiangLiTianS"), trigger: "blur" }],
+      };
+    } else {
+      rules.value = {
+        share_amount: [{ required: true, message: $t("tianXieYongJinJinE"), trigger: "blur" }],
+      };
+    }
+  }
+);
 
 const formRef = ref<FormInstance>();
 const contentRef = ref<InstanceType<typeof Content>[]>([]);

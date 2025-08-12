@@ -1,29 +1,29 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="800px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
-      <el-form-item :show-message="$t('leiXing_0')" prop="type">
+      <el-form-item :label="$t('leiXing_0')" prop="type">
         <el-radio-group v-model="formData.type">
           <el-radio :label="1">{{ $t("yeMian") }}</el-radio>
           <el-radio :label="2">{{ $t("ziDingYiNeiRong") }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item :show-message="$t('tiaoZhuanYeMian')" prop="level" v-if="formData?.type == 1">
-        <el-select v-model="formData.jump_page" :show-messageplaceholder="$t('qingXuanZe')">
+      <el-form-item :label="$t('tiaoZhuanYeMian')" prop="level" v-if="formData?.type == 1">
+        <el-select v-model="formData.jump_page" :labelplaceholder="$t('qingXuanZe')">
           <el-option v-for="item of activityList" :label="item?.val" :value="item?.key" />
         </el-select>
       </el-form-item>
-      <el-form-item :show-message="$t('tuPian')" prop="icon">
+      <el-form-item :label="$t('tuPian')" prop="icon">
         <upload-part v-model="formData.bg_icon"></upload-part>
       </el-form-item>
-      <el-form-item :show-message="$t('qiYongZhuangTai')" prop="status">
+      <el-form-item :label="$t('qiYongZhuangTai')" prop="status">
         <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item>
-      <el-form-item :show-message="$t('xianShiPaiXu')" prop="sort">
+      <el-form-item :label="$t('xianShiPaiXu')" prop="sort">
         <el-input-number v-model="formData.sort" :min="1" />
       </el-form-item>
     </el-form>
     <el-tabs v-model="currentIndex">
-      <el-tab-pane :show-message="$t('biaoTi')" :name="0">
+      <el-tab-pane :label="$t('biaoTi')" :name="0">
         <Content
           class="content"
           :ref="
@@ -37,7 +37,7 @@
           style="height: 50vh"
         ></Content>
       </el-tab-pane>
-      <el-tab-pane :show-message="$t('fuBiaoTi')" :name="1">
+      <el-tab-pane :label="$t('fuBiaoTi')" :name="1">
         <Content
           class="content"
           :ref="
@@ -51,7 +51,7 @@
           style="height: 50vh"
         ></Content>
       </el-tab-pane>
-      <el-tab-pane :show-message="$t('neiRong')" :name="2" :disabled="formData?.type != 2">
+      <el-tab-pane :label="$t('neiRong')" :name="2" :disabled="formData?.type != 2">
         <Content
           class="content"
           :ref="
@@ -140,7 +140,7 @@ function closeHandler() {
 }
 
 const currentIndex = ref(0);
-const activityList = inject("activityList", []);
+const activityList = inject<any>("activityList", []);
 </script>
 
 <style lang="scss" scoped>

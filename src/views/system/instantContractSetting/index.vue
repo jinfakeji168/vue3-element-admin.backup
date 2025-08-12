@@ -13,10 +13,10 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="$t('miaoHeYueShouXuFei')" prop="contract_second_contract_fee">
-          <el-input-number v-model="formData.contract_second_contract_fee" :min="0" />
+          <el-input-number v-model="formData.contract_second_contract_fee" :min="0" :step="0.05" :precision="2" />
         </el-form-item>
         <el-form-item :label="$t('yongHuChuShiShuYing')" prop="contract_user_init_win_loss_ratio">
-          <el-input-number v-model="formData.contract_user_init_win_loss_ratio" :min="0" :max="100" />
+          <el-input-number v-model="formData.contract_user_init_win_loss_ratio" :min="0" :max="100" :step="0.05" :precision="2" />
         </el-form-item>
         <el-form-item :label="$t('heYueShuoMingSheZhi')">
           <el-button type="primary" @click="visible[0] = true">{{ $t("chaKanBianJi_0") }}</el-button>

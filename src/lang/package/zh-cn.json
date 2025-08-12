@@ -1199,7 +1199,7 @@
   "itemMinPrizeNumItem": "{0} ({1}%)",
   "qingXuanZeJiangXiang": "请选择奖项",
   "jiangXiang": "奖项",
-  "qingXuanZeVipDengJi": "请选择VIP等级",
+  "qingXuanZeVipDengJi": "选择vip等级",
   "qingShuRuHuiYuanZha": "请输入会员账号，多个账号用英文逗号分隔",
   "zhiDingHuiYuanZhang": "指定会员账号",
   "anDengJi": "按等级",
@@ -1593,5 +1593,7 @@
   "jieSuoCiDengJiKeYi": "解锁此等级可以做量化的天数,到期后返还给用户解锁的本金",
   "gouMaiCiDengJiSuoX_1": "购买此等级所需邀请人数需要充值满多少才算有效邀请人",
   "gouMaiCiDengJiSuoX_0": "购买此等级所需邀请人数计算层级，1代表计算一级下级，3代表计算三级下级",
-  "gouMaiCiDengJiSuoX": "购买此等级所需邀请人数(下三级人数都算)，0代表无需邀请"
+  "gouMaiCiDengJiSuoX": "购买此等级所需邀请人数(下三级人数都算)，0代表无需邀请",
+  "tianXieJiangLiTianS": "填写奖励天数",
+  "liangHuaZuiZhongShou_1": "量化最终收益折扣：代表用户做量化收益量化最终收益折扣，例如10做量化只有原收益的10%，大于100则为放大，用户实际收益 = 原收益*最终收益折扣% ）"
 }

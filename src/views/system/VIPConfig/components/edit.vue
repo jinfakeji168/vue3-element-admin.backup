@@ -5,7 +5,7 @@
         <el-input v-model="formData.title" :placeholder="$t('qingShuRuVipMingChe')" />
       </el-form-item>
       <el-form-item :label="$t('vipDengJi')" prop="level">
-        <el-input v-model="formData.level" :placeholder="$t('qingShuRuVipDengJi')" type="number" :min="1" />
+        <el-input-number v-model="formData.level" :placeholder="$t('qingShuRuVipDengJi')" :min="1" />
       </el-form-item>
       <el-form-item :label="$t('tuBiao')" prop="icon">
         <upload-part v-model="formData.icon"></upload-part>
@@ -14,10 +14,10 @@
         <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item>
       <el-form-item :label="$t('liangHuaCiShu')" prop="quant_num">
-        <el-input v-model="formData.quant_num" :placeholder="$t('qingShuRuLiangHuaCi')" type="number" />
+        <el-input-number v-model="formData.quant_num" :placeholder="$t('qingShuRuLiangHuaCi')" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('jieSuoJinE')" prop="min_unlock_amount">
-        <el-input v-model="formData.min_unlock_amount" :placeholder="$t('qingShuRuJieSuoSuo')" />
+        <el-input-number v-model="formData.min_unlock_amount" :placeholder="$t('qingShuRuJieSuoSuo')" :precision="2" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('jieSuoYaoQingRenShu_0')" prop="unlock_invitation_num">
         <template #label>
@@ -50,7 +50,7 @@
             </el-tooltip>
           </div>
         </template>
-        <el-input v-model="formData.invited_num_effect_recharge" :placeholder="$t('qingShuRuYaoQingRen')" />
+        <el-input-number v-model="formData.invited_num_effect_recharge" :placeholder="$t('qingShuRuYaoQingRen')" :precision="2" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('liangHuaYouXiaoTian_0')" prop="quant_effect_days">
         <template #label>
@@ -74,9 +74,9 @@
         </template>
         <template #default>
           <div class="flex-center gap-4">
-            <el-input v-model="formData.min_rate_of_return" :placeholder="$t('zuiXiaoShouYiShuai')" @blur="percentageBlurHandler($event, 'min_rate_of_return')" />
+            <el-input-number v-model="formData.min_rate_of_return" type="number" :placeholder="$t('zuiXiaoShouYiShuai')" :precision="2" :min="0" :max="100" />
             <span>-</span>
-            <el-input v-model="formData.max_rate_of_return" :placeholder="$t('zuiDaShouYiShuai')" @blur="percentageBlurHandler($event, 'max_rate_of_return')" />
+            <el-input-number v-model="formData.max_rate_of_return" type="number" :placeholder="$t('zuiDaShouYiShuai')" :precision="2" :min="0" :max="100" />
           </div>
         </template>
       </el-form-item>
@@ -89,7 +89,7 @@
             </el-tooltip>
           </div>
         </template>
-        <el-input v-model="formData.service_fee_ratio" :placeholder="$t('qingShuRu_0100ZhiJia')" @blur="percentageBlurHandler($event, 'service_fee_ratio')" />
+        <el-input-number v-model="formData.service_fee_ratio" :placeholder="$t('qingShuRu_0100ZhiJia')" :precision="2" :min="0" :max="100" />
       </el-form-item>
       <el-form-item :label="$t('shiFouXianShiFuWuF')" prop="show_service_fee">
         <el-switch v-model="formData.show_service_fee" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
@@ -117,10 +117,10 @@
         <el-input v-model="formData.quant_rebate_ratio" :placeholder="$t('qingShuRuFanLiBiLi_0')" />
       </el-form-item>
       <el-form-item :label="$t('fuChongShouYiShuai')" prop="recharge_yield_ratio">
-        <el-input v-model="formData.recharge_yield_ratio" :placeholder="$t('qingShuRuFuChongSho')" @blur="percentageBlurHandler($event, 'recharge_yield_ratio')" />
+        <el-input-number v-model="formData.recharge_yield_ratio" :placeholder="$t('qingShuRuFuChongSho')" :precision="2" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('fuChongFengDing')" prop="recharge_cap">
-        <el-input v-model="formData.recharge_cap" :placeholder="$t('qingShuRuFuChongFen')" />
+        <el-input-number v-model="formData.recharge_cap" :placeholder="$t('qingShuRuFuChongFen')" :precision="2" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('shiFouKeJieSuoGouM')" prop="is_unlock_purchase">
         <el-switch v-model="formData.is_unlock_purchase" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />

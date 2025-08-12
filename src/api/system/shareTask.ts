@@ -14,7 +14,7 @@ export interface Query extends PageQuery {
   reward_type?: string;
 }
 
-/** 部门类型 */
+/** 类型 */
 export interface Form {
   id?: number;
   icon?: string;
@@ -24,7 +24,7 @@ export interface Form {
   reward_type?: number;
   share_amount?: number;
   reward_vip_level?: string;
-  reward_vip_days?: string;
+  reward_vip_days?: number;
   title_original?: string;
   title_translation?: TranslationItem[];
   step_original?: string;

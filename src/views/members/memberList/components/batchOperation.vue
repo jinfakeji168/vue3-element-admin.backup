@@ -71,7 +71,17 @@
           </template>
           <template v-else-if="activeTab === 3">
             <el-form-item :label="$t('shouYiZheKou')" prop="quant_final_earnings_discount">
-              <el-input v-model="formData.quant_final_earnings_discount" :placeholder="$t('qingShuRuShouYiZhe')" />
+              <template #label>
+                <el-tooltip :content="$t('liangHuaZuiZhongShou_1')" placement="top">
+                  <div>
+                    {{ $t("shouYiZheKou") }}
+                    <el-icon style="vertical-align: -0.15em" size="16">
+                      <QuestionFilled />
+                    </el-icon>
+                  </div>
+                </el-tooltip>
+              </template>
+              <el-input-number v-model="formData.quant_final_earnings_discount" :placeholder="$t('qingShuRuShouYiZhe')" :precision="2" :min="0" />
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 4">
@@ -89,10 +99,10 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('yaoQingYongHuShuLia')" prop="quant_invite_user_number">
-              <el-input v-model.number="formData.quant_invite_user_number" :placeholder="$t('qingShuRuYaoQingYon')" />
+              <el-input-number v-model.number="formData.quant_invite_user_number" :placeholder="$t('qingShuRuYaoQingYon')" :min="0" />
             </el-form-item>
             <el-form-item :label="$t('yaoQingChongZhiJinE')" prop="quant_invite_user_recharge_amount">
-              <el-input v-model.number="formData.quant_invite_user_recharge_amount" :placeholder="$t('qingShuRuYaoQingYon_0')" />
+              <el-input-number v-model.number="formData.quant_invite_user_recharge_amount" :placeholder="$t('qingShuRuYaoQingYon_0')" :precision="2" :min="0" />
             </el-form-item>
             <el-form-item :label="$t('youXiaoShiJian')" prop="quant_invite_user_effective_time">
               <el-date-picker v-model="formData.quant_invite_user_effective_time" type="datetime" :placeholder="$t('xuanZeYouXiaoShiJia_0')" />
@@ -130,7 +140,7 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('bianDongJinE')" prop="change_amount">
-              <el-input v-model.number="formData.change_amount" :placeholder="$t('qingShuRuBianDongJi')" />
+              <el-input-number v-model.number="formData.change_amount" :placeholder="$t('qingShuRuBianDongJi')" :precision="2" :min="0" />
             </el-form-item>
             <el-form-item :label="$t('beiZhu')" prop="change_remark">
               <el-input v-model="formData.change_remark" :placeholder="$t('qingShuRuBeiZhu_0')" />
@@ -146,7 +156,7 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('zengSongCiShu')" prop="gift_number">
-              <el-input v-model.number="formData.gift_number" :placeholder="$t('qingShuRuZengSongCi')" />
+              <el-input-number v-model.number="formData.gift_number" :placeholder="$t('qingShuRuZengSongCi')" :min="0" />
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 9">
@@ -168,7 +178,7 @@
           </template>
           <template v-else-if="activeTab === 10">
             <el-form-item :label="$t('shuYingGaiShuai')" prop="second_contract_win_lose_ratio">
-              <el-input v-model.number="formData.second_contract_win_lose_ratio" :placeholder="$t('qingShuRuGaiShuai')" />
+              <el-input-number v-model.number="formData.second_contract_win_lose_ratio" :placeholder="$t('qingShuRuGaiShuai')" :precision="2" :min="0" :max="100" />
             </el-form-item>
           </template>
           <template v-else-if="activeTab === 11">
@@ -187,13 +197,13 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('tiXianCiShu')" prop="withdrawal_number">
-              <el-input v-model.number="formData.withdrawal_number" :placeholder="$t('qingShuRuTiXianCiS')" />
+              <el-input-number v-model.number="formData.withdrawal_number" :placeholder="$t('qingShuRuTiXianCiS')" :min="0" />
             </el-form-item>
             <el-form-item :label="$t('yaoQingYongHuShuLia')" prop="withdrawal_invite_user_number">
-              <el-input v-model.number="formData.withdrawal_invite_user_number" :placeholder="$t('qingShuRuYaoQingYon_1')" />
+              <el-input-number v-model.number="formData.withdrawal_invite_user_number" :placeholder="$t('qingShuRuYaoQingYon_1')" :min="0" />
             </el-form-item>
             <el-form-item :label="$t('yaoQingChongZhiJinE_0')" prop="withdrawal_invite_user_recharge_amount">
-              <el-input v-model.number="formData.withdrawal_invite_user_recharge_amount" :placeholder="$t('qingShuRuYaoQingYon_2')" />
+              <el-input-number v-model.number="formData.withdrawal_invite_user_recharge_amount" :placeholder="$t('qingShuRuYaoQingYon_2')" :precision="2" :min="0" />
             </el-form-item>
             <el-form-item :label="$t('youXiaoShiJian_1')" prop="withdrawal_invite_user_effective_time">
               <el-date-picker v-model="formData.withdrawal_invite_user_effective_time" type="datetime" :placeholder="$t('xuanZeYouXiaoShiJia_0')" />
@@ -230,7 +240,7 @@ const vipList = ref();
 async function getVipList() {
   let result = await store.getVipListAsync();
   result = JSON.parse(JSON.stringify(result));
-  result?.splice(0, 0, { id: 0, level: 0, title: "普通用户" });
+  result?.splice(0, 0, { id: 0, level: 0, title: $t("puTongYongHu") });
   vipList.value = result;
 }
 

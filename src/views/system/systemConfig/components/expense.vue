@@ -25,7 +25,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="$t('meiRiTiXianCiShu')">
-          <el-input-number v-model="getI('extract_num_day').values" :min="1" :max="99" />
+          <el-input-number v-model="getI('extract_num_day').values" :min="0" />
         </el-form-item>
         <el-form-item :label="$t('zhiYunXuYiGeTiXian')">
           <el-switch v-model="getI('extract_address_channel').values" :active-value="1" :inactive-value="2" />

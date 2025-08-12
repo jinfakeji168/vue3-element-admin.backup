@@ -142,10 +142,10 @@
         </div>
         <div class="flex flex-row">
           <el-form-item :label="$t('zhuCeShengYuChouJia')" prop="register_remain_lottery_num">
-            <el-input-number v-model="memberForm.register_remain_lottery_num" style="width: 200px" />
+            <el-input-number v-model="memberForm.register_remain_lottery_num" style="width: 200px" :min="0" />
           </el-form-item>
           <el-form-item :label="$t('yaoQingShengYuChouJ')" prop="invite_remain_lottery_num">
-            <el-input-number v-model="memberForm.invite_remain_lottery_num" style="width: 200px" />
+            <el-input-number v-model="memberForm.invite_remain_lottery_num" style="width: 200px" :min="0" />
           </el-form-item>
         </div>
       </el-card>

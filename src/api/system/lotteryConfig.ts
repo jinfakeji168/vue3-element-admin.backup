@@ -53,8 +53,8 @@ export interface Form {
 }
 
 export interface lottery_item {
-  prize_id?: string;
-  min_prize_num?: string;
+  prize_id?: number;
+  min_prize_num?: number;
   probability?: number;
 }
 

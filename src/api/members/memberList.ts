@@ -527,7 +527,7 @@ export interface BatchOperationForm {
   /** 是否能量化 1.是 2.否  */
   is_quant?: 1 | 2;
   /**用户最终收益折扣 */
-  quant_final_earnings_discount?: string;
+  quant_final_earnings_discount?: number;
   /** 邀请用户才能做量化 1.是 2.否 */
   is_invite_user_quant?: 1 | 2;
   /** 邀请用户才能做量化 - 邀请几个用户 */

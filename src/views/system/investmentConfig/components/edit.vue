@@ -22,13 +22,13 @@
         <upload-part v-model="formData.icon"></upload-part>
       </el-form-item>
       <el-form-item :label="$t('gouMaiJiaGe')" prop="purchase_price">
-        <el-input v-model="formData.purchase_price" />
+        <el-input-number v-model="formData.purchase_price" :precision="2" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('touZiZhouQi')" prop="invest_cycle">
         <el-input-number v-model="formData.invest_cycle" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('meiRiShouYiShuai')" prop="daily_yield">
-        <el-input v-model="formData.daily_yield" />
+        <el-input-number v-model="formData.daily_yield" :precision="2" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('shouYiLeiXing_0')" prop="yield_type">
         <el-select v-model="formData.yield_type" :placeholder="$t('qingXuanZeShouYiLei')">

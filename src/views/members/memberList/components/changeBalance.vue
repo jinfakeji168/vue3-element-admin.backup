@@ -26,7 +26,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="$t('bianDongJinE')" prop="change_amount">
-        <el-input-number v-model="form.change_amount" :precision="6" :min="0" class="w-full" />
+        <el-input-number v-model="form.change_amount" :precision="2" :min="0" class="w-full" />
       </el-form-item>
       <el-form-item :label="$t('beiZhu')" prop="change_remark">
         <el-input v-model="form.change_remark" type="textarea" :placeholder="$t('qingShuRuBeiZhu_0')" />

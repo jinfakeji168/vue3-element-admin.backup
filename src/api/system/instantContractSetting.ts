@@ -46,7 +46,7 @@ export interface Form {
 
 export interface TimeForm {
   id?: number;
-  second?: string;
-  min_amount?: string;
+  second?: number;
+  min_amount?: number;
   profit_rate?: number;
 }

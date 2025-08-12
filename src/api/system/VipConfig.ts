@@ -37,21 +37,21 @@ export interface Form {
   /** 量化次数 */
   quant_num?: number;
   /** 解锁最小金额 */
-  min_unlock_amount?: number | string;
+  min_unlock_amount?: number;
   /** 解锁邀请人数0代表无需邀请 */
   unlock_invitation_num?: number;
   /** 邀请计算层级 */
   invited_comp_level?: number;
   /** 邀请人数有效充值 */
-  invited_num_effect_recharge?: number | string;
+  invited_num_effect_recharge?: number;
   /** 量化有效天数 */
   quant_effect_days?: number;
   /** 收益率范围%(最小) */
-  min_rate_of_return?: number | string;
+  min_rate_of_return?: number;
   /** 收益率范围%(最大) */
-  max_rate_of_return?: number | string;
+  max_rate_of_return?: number;
   /** 平台服务费比例% */
-  service_fee_ratio?: number | string;
+  service_fee_ratio?: number;
   /** 是否显示服务费 1.是 2.否 */
   show_service_fee?: number;
   /** 充值返利% */
@@ -59,9 +59,9 @@ export interface Form {
   /** 量化返利% */
   quant_rebate_ratio?: string;
   /** 复充收益率% */
-  recharge_yield_ratio?: string;
+  recharge_yield_ratio?: number;
   /** 复充封顶 0 不封顶 */
-  recharge_cap?: number | string;
+  recharge_cap?: number;
   /** 是否可解锁购买  1.是 2.否 */
   is_unlock_purchase?: number;
   /** 可提现星期 */

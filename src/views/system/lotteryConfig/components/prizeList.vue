@@ -5,17 +5,17 @@
         <div class="input_row">
           <div class="input_item">
             <span>{{ $t("idWeiYiZhi") }}</span>
-            <el-input class="el_input" :disabled="disabled" v-model="item.prize_id" :placeholder="$t('qingShuRuJiangXiang')" />
+            <el-input-number class="el_input" :disabled="disabled" v-model="item.prize_id" :placeholder="$t('qingShuRuJiangXiang')" :min="0" />
           </div>
           <div class="input_item">
             <span>{{ $t("zhongJiangJineu") }}</span>
             <el-form-item :prop="`min_prize_num${index}`">
-              <el-input class="el_input" :disabled="disabled" v-model="item.min_prize_num" :placeholder="$t('qingShuRuZhongJiang')" />
+              <el-input-number class="el_input" :disabled="disabled" v-model="item.min_prize_num" :placeholder="$t('qingShuRuZhongJiang')" :min="0" :precision="2" />
             </el-form-item>
           </div>
           <div class="input_item">
             <span>{{ $t("gaiShuai") }}</span>
-            <el-input-number class="el_input" :disabled="disabled" v-model="item.probability" :min="0" :max="100" :placeholder="$t('qingShuRuGaiShuai')" />
+            <el-input-number class="el_input" :disabled="disabled" v-model="item.probability" :precision="2" :min="0" :max="100" :placeholder="$t('qingShuRuGaiShuai')" />
           </div>
           <el-button type="danger" @click="removeHandler(index)" :disabled="prizeListLength <= 6">{{ $t("shanChu_0") }}</el-button>
         </div>
@@ -98,7 +98,7 @@ function addHandler() {
     id = Math.max(...formData.value[props._key]!.map((item) => Number(item.prize_id))) + 1;
   }
 
-  formData.value[props._key]?.push({ min_prize_num: "", probability: 0, prize_id: String(id) });
+  formData.value[props._key]?.push({ min_prize_num: undefined, probability: 0, prize_id: id });
 }
 function removeHandler(index: number) {
   formData.value[props._key]?.splice(index, 1);
