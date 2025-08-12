@@ -245,7 +245,7 @@ export default {
   },
   /**修改用户钱包地址 */
   changeWallet(data: ChangeWalletForm) {
-    return request({
+    return request<any, { address: string }>({
       url: `${BasePath}/updateWallet`,
       method: "put",
       data,

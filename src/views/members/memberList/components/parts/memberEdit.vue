@@ -51,14 +51,14 @@
         <el-form-item :label="$t('trc20ChongZhiQianBao')" prop="trc20_recharge_wallet">
           <div class="flex flex-row gap2 w-full">
             <el-input v-model="memberForm.trc20_recharge_wallet" :placeholder="$t('trc20ChongZhiQianBao_0')" disabled />
-            <el-button type="primary" @click="changeWallet(1)">{{ $t("gengHuanChongZhiQian") }}</el-button>
+            <el-button type="primary" @click="changeWallet('trc20')">{{ $t("gengHuanChongZhiQian") }}</el-button>
           </div>
         </el-form-item>
 
         <el-form-item :label="$t('bep20ChongZhiQianBao')" prop="bep20_recharge_wallet">
           <div class="flex flex-row gap2 w-full">
             <el-input v-model="memberForm.bep20_recharge_wallet" :placeholder="$t('bep20ChongZhiQianBao_0')" disabled />
-            <el-button type="primary" @click="changeWallet(1)">{{ $t("gengHuanChongZhiQian_0") }}</el-button>
+            <el-button type="primary" @click="changeWallet('bep20')">{{ $t("gengHuanChongZhiQian_0") }}</el-button>
           </div>
         </el-form-item>
       </el-card>
@@ -295,13 +295,15 @@ async function submitForm() {
   return api.saveMemberDetail(memberForm.value);
 }
 
-async function changeWallet(type: number) {
-  const res = await ElMessageBox.confirm($t("shiFouQueRenGengHua"), $t("jingGao"), {});
+async function changeWallet(type: "trc20" | "bep20") {
+  await ElMessageBox.confirm($t("shiFouQueRenGengHua"), $t("jingGao"), {});
 
-  api.changeWallet({
+  const result = await api.changeWallet({
     id: memberForm.value.id,
-    type: type == 1 ? "trc20" : "bep20",
+    type,
   });
+  if (type === "trc20") memberForm.value.trc20_recharge_wallet = result.address;
+  else if (type === "bep20") memberForm.value.bep20_recharge_wallet = result.address;
 }
 
 defineExpose({

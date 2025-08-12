@@ -20,8 +20,10 @@
       <el-form-item :label="$t('yongHuYaoQingMa')">
         <el-input v-model="form.invita_code" />
       </el-form-item>
-      <el-form-item :label="$t('shangJiYaoQingMa')" prop="invite_id">
-        <el-input v-model="form.invite_id" />
+      <el-form-item :label="'上级'" prop="invite_id">
+        <el-select v-model="form.invite_id" :placeholder="'请输入会员名字搜索'" filterable remote :remote-method="searchMemberHandler" :loading="search_loading" clearable>
+          <el-option :label="item.label" :value="item.value" v-for="item of memberList" :key="item.value" />
+        </el-select>
       </el-form-item>
       <el-form-item :label="$t('yuYanLeiXing')" prop="lang_id">
         <el-select v-model="form.lang_id" :placeholder="$t('qingXuanZeYuYanLei')" filterable>
@@ -39,6 +41,8 @@
 </template>
 
 <script setup lang="ts">
+import { searchMember } from "@/utils";
+
 import { useStore } from "@/store/modules/common";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import api, { type MemberAdd } from "@/api/members/memberList";
@@ -90,4 +94,12 @@ watch(dialogVisible, (val) => {
     formRef.value?.clearValidate();
   }
 });
+
+const search_loading = ref(false);
+const memberList = ref<Awaited<ReturnType<typeof searchMember>>>([]);
+async function searchMemberHandler(query: string) {
+  search_loading.value = true;
+  memberList.value = await searchMember({ account: query });
+  search_loading.value = false;
+}
 </script>
