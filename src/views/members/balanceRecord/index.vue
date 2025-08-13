@@ -9,26 +9,29 @@
         <el-table-column type="selection" width="55" />
         <el-table-column prop="uid" :label="$t('yongHuId')" min-width="80" />
         <el-table-column prop="member.account" :label="$t('login.username')" min-width="120" />
-        <el-table-column prop="access_type" :label="$t('jinChuLeiXing')" min-width="100">
-          <template #default="{ row }">
-            <el-tag :type="row.access_type === ACCESS_TYPE[0].value ? 'success' : 'danger'">
-              {{ ACCESS_TYPE.find((item) => item.value === row.access_type)?.label }}
-            </el-tag>
-          </template>
-        </el-table-column>
+
         <el-table-column prop="bill_title" :label="$t('zhangDanBiaoTi')" min-width="150" />
         <el-table-column prop="detail_type" :label="$t('mingXiZhongLei')" min-width="120">
           <template #default="{ row }">
-            {{ DETAIL_TYPE.find((item) => item.value === row.detail_type)?.label }}
+            {{ row.detail_type_name }}
           </template>
         </el-table-column>
         <el-table-column prop="detail_kind" :label="$t('mingXiLeiXing')" min-width="120">
           <template #default="{ row }">
-            {{ DETAIL_KIND.find((item) => item.value === row.detail_kind)?.label }}
+            {{ row.detail_kind_name }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="access_type" :label="$t('jinChuLeiXing')" min-width="100">
+          <template #default="{ row }">
+            <el-tag :type="row.access_type === ACCESS_TYPE[0].value ? 'success' : 'danger'">
+              {{ row.access_type_name }}
+            </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="before_amount" :label="$t('caoZuoQianYuE')" min-width="120" />
-        <el-table-column prop="operation_amount" :label="$t('caoZuoJinE')" min-width="120" />
+        <el-table-column prop="operation_amount" :label="$t('caoZuoJinE')" min-width="120">
+          <template #default="{ row }">{{ row.access_type === ACCESS_TYPE[0].value ? "+" : "-" }}{{ row.operation_amount }}</template>
+        </el-table-column>
         <el-table-column prop="after_amount" :label="$t('caoZuoHouYuE')" min-width="120" />
         <el-table-column prop="remark" :label="$t('beiZhu')" min-width="150" />
         <el-table-column prop="operator_name" :label="$t('caoZuoRen')" min-width="100" />
@@ -46,33 +49,26 @@
 import api, { type Query, Form } from "@/api/members/balanceRecord";
 import { searchMember } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
+import { rowContextKey } from "element-plus";
 import { ref, reactive, onMounted } from "vue";
 const memberList = ref<any>([]);
 const loading = ref(false);
-/** 选项类型定义 */
-type Option = {
-  value: number;
-  label: string;
-};
 
 /** 进出类型选项 */
-const ACCESS_TYPE: Option[] = [
-  { value: 1, label: $t("huoQu") },
-  { value: 2, label: $t("zhiChu") },
-];
+const ACCESS_TYPE = ref();
 
 /** 明细种类选项 */
-const DETAIL_TYPE: Option[] = [
-  { value: 1, label: $t("jiChuZhangHao") },
-  { value: 2, label: $t("yongJinZhangHu_1") },
-];
+const DETAIL_TYPE = ref();
 
 /** 明细类型选项 */
-const DETAIL_KIND: Option[] = [
-  { value: 1, label: $t("xiTongZengJia") },
-  { value: 2, label: $t("xiTongJianShao") },
-];
-
+const DETAIL_KIND = ref();
+async function getOptions() {
+  const res = await api.getOptions();
+  ACCESS_TYPE.value = res.access_types;
+  DETAIL_TYPE.value = res.detail_types;
+  DETAIL_KIND.value = res.detail_kinds;
+}
+getOptions();
 // 查询配置
 const config: QueryConfig = {
   labelWidth: "100px",

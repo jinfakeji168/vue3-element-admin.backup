@@ -36,9 +36,9 @@
         <el-form-item :label="$t('yunXuZhongFuQuKuan')">
           <el-switch v-model="getI('is_repeat_withdrawal_address').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
-        <el-form-item :label="$t('shouCiTiXianXuLian')">
+        <!-- <el-form-item :label="$t('shouCiTiXianXuLian')">
           <el-switch v-model="getI('extract_input_contact').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item :label="$t('ziDongChuKuanKaiGua')">
           <el-switch v-model="getI('auto_payment').values" :active-value="1" :inactive-value="2" />
         </el-form-item>

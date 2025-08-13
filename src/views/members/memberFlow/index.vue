@@ -8,30 +8,33 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="uid" :label="$t('yongHuId')" min-width="80" />
-        <el-table-column prop="access_type" :label="$t('jinChuLeiXing_0')" min-width="100">
-          <template #default="{ row }">
-            <el-tag :type="row.access_type === 1 ? 'success' : 'danger'">
-              {{ access_types.find((t) => t.value === row.access_type)?.label }}
-            </el-tag>
-          </template>
-        </el-table-column>
+
         <el-table-column prop="bill_title" :label="$t('zhangDanBiaoTi_0')" min-width="120" />
         <el-table-column prop="account_type" :label="$t('zhangHuLeiXing')" min-width="100">
           <template #default="{ row }">
             <el-tag>
-              {{ account_typeList.find((t) => t.value === row.account_type)?.label }}
+              {{ row.account_type_name }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="business_type" :label="$t('yeWuLeiXing')" min-width="100">
           <template #default="{ row }">
             <el-tag>
-              {{ business_typeList.find((t) => t.value === row.business_type)?.label }}
+              {{ row.business_type_name }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="access_type" :label="$t('jinChuLeiXing_0')" min-width="100">
+          <template #default="{ row }">
+            <el-tag :type="row.access_type === 1 ? 'success' : 'danger'">
+              {{ row.access_type_name }}
             </el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="before_amount" :label="$t('caoZuoQianYuE')" min-width="120" />
-        <el-table-column prop="operation_amount" :label="$t('caoZuoJinE')" min-width="120" />
+        <el-table-column prop="operation_amount" :label="$t('caoZuoJinE')" min-width="120">
+          <template #default="{ row }">{{ row.access_type === access_types[0].value ? "+" : "-" }}{{ row.operation_amount }}</template>
+        </el-table-column>
         <el-table-column prop="after_amount" :label="$t('caoZuoHouYuE')" min-width="120" />
         <el-table-column prop="operator_name" :label="$t('caoZuoRen')" min-width="100" />
         <el-table-column prop="updated_at" :label="$t('gengXinShiJian')" min-width="180" />
@@ -50,34 +53,20 @@ import { searchMember } from "@/utils";
 import TableInstance from "@/utils/tableInstance";
 
 /** 进出类型选项 */
-const access_types = [
-  { value: 1, label: $t("huoQu") },
-  { value: 2, label: $t("zhiChu") },
-];
+const access_types = ref();
 
 /** 明细种类选项 */
-const account_typeList = [
-  { value: 1, label: $t("liangHuaZhangHu_2") },
-  { value: 2, label: $t("tiYanJinZhangHu") },
-  { value: 3, label: $t("yongJinZhangHu_1") },
-  { value: 4, label: $t("zhiNengZhangHu") },
-  { value: 5, label: $t("miaoHeYueZhangHu") },
-  { value: 6, label: $t("chongZhiZhangHu") },
-];
+const account_typeList = ref();
 
 /** 明细类型选项 */
-const business_typeList = [
-  { value: 1, label: $t("chongZhi") },
-  { value: 2, label: $t("tiXian") },
-  { value: 3, label: $t("touZi") },
-  { value: 4, label: $t("shouYi") },
-  { value: 5, label: $t("zhuanZhang") },
-  { value: 6, label: $t("yongJin") },
-  { value: 7, label: $t("xiTongTiaoZheng") },
-  { value: 8, label: $t("qiTa") },
-  { value: 10, label: $t("chouJiang") },
-  { value: 11, label: $t("miaoHeYue") },
-];
+const business_typeList = ref();
+async function getOptions() {
+  const res = await api.getOptions();
+  access_types.value = res.access_types;
+  account_typeList.value = res.account_types;
+  business_typeList.value = res.business_types;
+}
+getOptions();
 const props = defineProps<{ uid: number }>();
 const memberList = ref<any>([]);
 const loading = ref(false);

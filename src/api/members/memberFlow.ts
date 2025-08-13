@@ -1,10 +1,18 @@
 import type { StatusEnum } from "@/enums/MenuTypeEnum";
+import request from "@/utils/request";
 
 import init from "../basicAPI";
 const BasePath = "/admin/member/balanceFlow";
 
 export default {
   ...init<Query, Form>(BasePath),
+  /**获取筛选选项 */
+  getOptions() {
+    return request<any, OptionsList>({
+      url: `${BasePath}/filterOptions`,
+      method: "get",
+    });
+  }
 };
 
 export interface Query extends PageQuery {
@@ -54,4 +62,15 @@ export interface Form {
   created_at?: string;
   /** 更新时间 */
   updated_at?: string;
+}
+
+
+/** 筛选选项类型 */
+export interface OptionsList {
+  /** 进出类型选项 */
+  access_types: OptionType[];
+  /** 账户类型选项 */
+  account_types: OptionType[];
+  /** 业务类型选项 */
+  business_types: OptionType[];
 }
