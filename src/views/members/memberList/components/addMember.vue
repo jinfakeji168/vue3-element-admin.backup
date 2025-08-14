@@ -9,7 +9,10 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="$t('yongHuZhangHu')" prop="account">
-        <el-input v-model="form.account" />
+        <div class="flex-row">
+          <el-input v-model="phoneCode" style="width: 50px" v-if="form.type == 2" />
+          <el-input v-model="form.account" style="width: auto" />
+        </div>
       </el-form-item>
       <el-form-item :label="$t('yongHuMiMa')" prop="password">
         <el-input v-model="form.password" type="password" />
@@ -21,7 +24,7 @@
         <el-input v-model="form.invita_code" />
       </el-form-item>
       <el-form-item :label="'上级'" prop="invite_id">
-        <el-select v-model="form.invite_id" :placeholder="'请输入会员名字搜索'" filterable remote :remote-method="searchMemberHandler" :loading="search_loading" clearable>
+        <el-select v-model="form.invite_id" :placeholder="'请输入账号搜索'" filterable remote :remote-method="searchMemberHandler" :loading="search_loading" clearable>
           <el-option :label="item.label" :value="item.value" v-for="item of memberList" :key="item.value" />
         </el-select>
       </el-form-item>
@@ -53,6 +56,7 @@ const dialogVisible = defineModel<boolean>();
 const form = ref<MemberAdd>({
   type: 1,
 });
+const phoneCode = ref("+86");
 const formRef = ref();
 const rules = reactive({
   type: [{ required: true, message: $t("qingXuanZeYongHuLei"), trigger: "change" }],
@@ -60,7 +64,10 @@ const rules = reactive({
     { required: true, message: $t("qingShuRuYongHuZhan_0"), trigger: "blur" },
     { min: 6, max: 20, message: "长度在 6 到 20 个字符", trigger: "blur" },
   ],
-  password: [{ required: true, message: $t("qingShuRuYongHuMiM"), trigger: "blur" }],
+  password: [
+    { required: true, message: $t("qingShuRuYongHuMiM"), trigger: "blur" },
+    { min: 6, max: 20, message: "长度在 8 到 20 个字符，要包含字母和数字", trigger: "blur" },
+  ],
   secure_password: [
     { required: true, message: $t("qingShuRuAnQuanMiM"), trigger: "blur" },
     { min: 6, max: 20, message: "长度在 8 到 20 个字符，要包含字母和数字", trigger: "blur" },
@@ -76,6 +83,9 @@ async function submitForm() {
     loading.value = true;
     console.log("form:", form.value);
     try {
+      if (form.value.type == 2) {
+        form.value.account = phoneCode.value + form.value.account;
+      }
       await api.add(form.value);
     } finally {
       loading.value = false;
