@@ -25,8 +25,11 @@
         <el-table-column :label="$t('yongHuXinXi')" min-width="160">
           <template #default="{ row }">
             <div>
+              <span>UID</span>
+              <span>{{ row.uid }}</span>
+            </div>
+            <div>
               <span>{{ $t("yongHu_0") }}</span>
-              <span>{{ $t("rowUid_1", [row.uid]) }}</span>
               <span>{{ row.account }}</span>
             </div>
             <div>

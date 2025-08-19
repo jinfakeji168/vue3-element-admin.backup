@@ -8,8 +8,8 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="order_sn" :label="$t('dingDanHao')" min-width="180" />
-        <el-table-column prop="uid" :label="$t('yongHuId')" min-width="200">
-          <template #default="{ row }">{{ row.has_member?.id }} / {{ row.has_member?.account }}</template>
+        <el-table-column prop="uid" :label="$t('uidZhangHao')" min-width="200">
+          <template #default="{ row }">{{ row.has_member?.account }}</template>
         </el-table-column>
         <el-table-column prop="has_invest_setting" :label="$t('chanPinMingCheng')" min-width="200">
           <template #default="{ row }">{{ row.has_invest_setting?.id }} / {{ row.has_invest_setting?.title }}</template>

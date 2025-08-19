@@ -7,9 +7,9 @@
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
-        <el-table-column :label="$t('uidYongHuZhangHao')" min-width="120">
+        <el-table-column label="ID" prop="id" width="80" />
+        <el-table-column :label="$t('uidZhangHao')" min-width="120">
           <template #default="{ row }">
-            <span>{{ $t("rowHasMemberId", [row.has_member?.id]) }}</span>
             <span>{{ row.has_member?.account }}</span>
           </template>
         </el-table-column>

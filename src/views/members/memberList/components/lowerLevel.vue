@@ -119,10 +119,6 @@
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
-                <span class="text-gray-500">{{ $t("liangHuaZhangHu_3") }}</span>
-                <span class="text-gray-700">{{ row.quant_account || "0.0000" }}</span>
-              </div>
-              <div>
                 <span class="text-gray-500">{{ $t("yongJinZhangHu_2") }}</span>
                 <span class="text-gray-700">{{ row.brokerage_account || "0.0000" }}</span>
               </div>
@@ -130,17 +126,26 @@
                 <span class="text-gray-500">{{ $t("zhiNengZhangHu_0") }}</span>
                 <span class="text-gray-700">{{ row.smart_account || "0.0000" }}</span>
               </div>
+
               <div>
                 <span class="text-gray-500">{{ $t("heYueZhangHu_0") }}</span>
                 <span class="text-gray-700">{{ row.second_contract_account || "0.0000" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">{{ $t("liangHuaShouYi") }}</span>
-                <span class="text-gray-700">{{ row.quant_final_earnings_discount || "0.0000" }}</span>
+                <span class="text-gray-500">{{ $t("liangHuaZhangHu_3") }}</span>
+                <span class="text-gray-700">{{ row.quant_account || "0.0000" }}</span>
+              </div>
+              <!-- <div>
+                <span class="text-gray-500">{{ $t("tiYanJin") }}</span>
+                <span class="text-gray-700">{{ row.experience_account || "0.0000" }}</span>
+              </div> -->
+              <div>
+                <span class="text-gray-500">{{ $t("chongZhiZhangHu") }}</span>
+                <span class="text-gray-700">{{ row.recharge_account || "0.0000" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">{{ $t("touZiWeiJieSuan") }}</span>
-                <span class="text-gray-700">{{ row.quant_buy_invest || "0.0000" }}</span>
+                <span class="text-gray-500">{{ $t("liangHuaShouYi") }}</span>
+                <span class="text-gray-700">{{ row.quant_profit || "0.0000" }}</span>
               </div>
             </div>
           </template>
@@ -166,29 +171,41 @@
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("touZiZonge") }}</span>
-                <span class="text-gray-700">{{ row.quant_buy_invest || "0.0000" }}</span>
+                <span class="text-gray-700">{{ row.invest_total || "0.0000" }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">{{ $t("touZiWeiJieSuan") }}</span>
+                <span class="text-gray-700">{{ row.invest_unsettled || "0.0000" }}</span>
               </div>
             </div>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('zhuCeDengLu')" min-width="200px">
+        <el-table-column :label="$t('zhuCeDengLu')" min-width="250px">
           <template #default="{ row }">
             <div class="flex flex-col">
+              <div>
+                <span class="text-gray-500">{{ $t("zhuCeFangShi") }}</span>
+                <span class="text-gray-700">{{ getRegisterType(row.type) || "后台" }}</span>
+              </div>
               <div>
                 <span class="text-gray-500">{{ $t("zhuCe_0") }}</span>
                 <span class="text-gray-700">{{ row.created_at || "--" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">IP:</span>
-                <span class="text-gray-700">{{ row.register_ip || "(后台)" }}</span>
+                <span class="text-gray-500">{{ $t("zhuCeIp_0") }}</span>
+                <span class="text-gray-700">{{ $t("rowregisteripHouTaiRo", [row.register_ip || "后台", row.register_area]) }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("zuiHou") }}</span>
-                <span class="text-gray-700">{{ row.last_login_time || "--(未知)" }}</span>
+                <span class="text-gray-700">{{ row.last_login_at || "--" }}</span>
               </div>
               <div>
-                <span class="text-gray-500">IP:</span>
-                <span class="text-gray-700">{{ $t("rowLastLoginIpOrOr", [row.last_login_ip || ""]) }}</span>
+                <span class="text-gray-500">{{ $t("zuiHouIp") }}</span>
+                <span class="text-gray-700">{{ $t("rowLastLoginIpOrOr_0", [row.last_login_ip || "", row.last_login_area]) }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">{{ $t("suoZaiCengJi") }}</span>
+                <span class="text-gray-700">{{ row.group_id }}</span>
               </div>
             </div>
           </template>
@@ -197,28 +214,24 @@
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
-                <span class="text-gray-500">{{ $t("suoZaiCengJi") }}</span>
-                <span class="text-gray-700">{{ row.group_id }}</span>
-              </div>
-              <div>
-                <span class="text-gray-500">{{ $t("dingJi") }}</span>
-                <span class="text-gray-700">{{ row.parent_id }}/{{ row.parent_account }}</span>
+                <span class="text-gray-500">{{ $t("shangJi") }}</span>
+                <span class="text-gray-700">{{ row.top_id || "--" }}/{{ row.top_account || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("yiJi") }}</span>
-                <span class="text-gray-700">-/-</span>
+                <span class="text-gray-700">{{ row.parent_id || "--" }}/{{ row.parent_account || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("erJi_0") }}</span>
-                <span class="text-gray-700">-/-</span>
+                <span class="text-gray-700">{{ row.grandpa_id || "--" }}/{{ row.grandpa_account || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("sanJi_0") }}</span>
-                <span class="text-gray-700">-/-</span>
+                <span class="text-gray-700">{{ row.great_grandpa_id || "--" }}/{{ row.great_grandpa_account || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("yaoQingMa") }}</span>
-                <span class="text-gray-700">{{ row.invita_code || "" }}</span>
+                <span class="text-gray-700">{{ row.invita_code || "--" }}</span>
               </div>
             </div>
           </template>
@@ -250,7 +263,7 @@
             <div class="flex flex-col">
               <div>
                 <span class="text-gray-500">{{ $t("zhiTuiXiaJi") }}</span>
-                <span class="text-gray-700">{{ row.withdrawal_invite_user_number || "--" }}</span>
+                <span class="text-gray-700">{{ row.direct_subordinate_count || "--" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("youXiang_0") }}</span>
@@ -313,6 +326,14 @@ const props = withDefaults(
   }>(),
   {}
 );
+function getRegisterType(type: number) {
+  if (type == 1) return $t("shouJiHao");
+  else if (type == 2) return $t("youXiang");
+  else if (type == 3) return $t("login.username");
+  else if (type == 4) return "telegram";
+  else if (type == 5) return $t("autoTelegram");
+  else return type;
+}
 
 const emit = defineEmits<{
   (e: "finish"): void;
@@ -348,6 +369,10 @@ async function getLowerLevelHandler(data: { id: number; level: number }) {
     item.level = (data.level || 1) + 1;
   });
   console.log("🚀 ~ getLowerLevelHandler ~ res:", res.list);
+  if (!res.list?.length) {
+    console.log("🚀 ~ getLowerLevelHandler ~ ElMessage:", ElMessage);
+    ElMessage({ message: $t("zanWuXiaJi"), duration: 1000, type: "warning" });
+  }
   nextTick(() => {
     tableRef.value.toggleRowExpansion(temp, true);
   });

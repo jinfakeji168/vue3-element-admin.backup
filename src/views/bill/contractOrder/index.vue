@@ -9,11 +9,11 @@
       <el-button type="danger" @click="control_lose_Handler()" v-hasPerm="['contractOrder:controll']">{{ $t("zhiDingShu") }}</el-button>
 
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
-        <el-table-column type="selection" width="55" />
+        <el-table-column type="selection" width="55" :selectable="selectableHandler" />
         <el-table-column prop="id" label="ID" min-width="80" />
+        <el-table-column prop="uid" label="UID" min-width="80"></el-table-column>
         <el-table-column prop="uid" :label="$t('uidZhangHao')" min-width="120">
           <template #default="{ row }">
-            <span>{{ $t("rowUid", [row.uid]) }}</span>
             <span>{{ row?.member?.account }}</span>
           </template>
         </el-table-column>
@@ -170,21 +170,21 @@ const config: QueryConfig = {
       modelKey: "type",
       label: $t("heYueLeiXing"),
       options: CONTRACT_TYPES,
-      props: { clearable: true },
+      props: { clearable: true, style: { width: "140px" } },
     },
     {
       type: "select",
       modelKey: "status",
       label: $t("zhuangTai"),
       options: STATUS_TYPES,
-      props: { clearable: true },
+      props: { clearable: true, style: { width: "140px" } },
     },
     {
       type: "select",
       modelKey: "is_control",
       label: $t("kongZhiZhuangTai"),
       options: CONTROL_TYPES,
-      props: { clearable: true },
+      props: { clearable: true, style: { width: "140px" } },
     },
     {
       type: "datetimerange",
@@ -204,7 +204,10 @@ const config: QueryConfig = {
     },
   ],
 };
-
+function selectableHandler(row: Form) {
+  if (row.status == 1) return false;
+  return true;
+}
 /** 查询表单引用 */
 const queryFormRef = ref(ElForm);
 

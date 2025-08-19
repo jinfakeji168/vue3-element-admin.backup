@@ -242,7 +242,6 @@ onUnmounted(() => {
 <style scoped lang="scss">
 .query-form {
   padding: 16px;
-  background: #fff;
   border-radius: 4px;
 }
 

@@ -169,9 +169,13 @@
                 <span class="text-gray-500">{{ $t("liangHuaZhangHu_3") }}</span>
                 <span class="text-gray-700">{{ row.quant_account || "0.0000" }}</span>
               </div>
-              <div>
+              <!-- <div>
                 <span class="text-gray-500">{{ $t("tiYanJin") }}</span>
                 <span class="text-gray-700">{{ row.experience_account || "0.0000" }}</span>
+              </div> -->
+              <div>
+                <span class="text-gray-500">{{ $t("chongZhiZhangHu") }}</span>
+                <span class="text-gray-700">{{ row.recharge_account || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("liangHuaShouYi") }}</span>
@@ -244,7 +248,7 @@
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
-                <span class="text-gray-500">{{ $t("dingJi") }}</span>
+                <span class="text-gray-500">上级</span>
                 <span class="text-gray-700">{{ row.top_id || "--" }}/{{ row.top_account || "--" }}</span>
               </div>
               <div>
@@ -287,7 +291,7 @@
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("zhiTuiXiaJi") }}</span>
-                <span class="text-gray-700">{{ row.withdrawal_invite_user_number }}</span>
+                <span class="text-gray-700">{{ row.direct_subordinate_count }}</span>
               </div>
             </div>
           </template>
@@ -373,7 +377,7 @@ async function getLangOptions() {
 const groupOptions = ref<OptionType[]>([]);
 async function getGroupOptions() {
   const list = await commonStore.getGroupListAsync();
-  groupOptions.value = list.map((val) => ({ label: val.title, value: val.id }));
+  groupOptions.value = list!.map((val) => ({ label: val.title, value: val.id }));
 }
 getGroupOptions();
 getLangOptions();

@@ -20,11 +20,11 @@
       <el-form-item :label="$t('anQuanMiMa')" prop="secure_password">
         <el-input v-model="form.secure_password" type="password" />
       </el-form-item>
-      <el-form-item :label="$t('yongHuYaoQingMa')">
+      <!-- <el-form-item :label="$t('yongHuYaoQingMa')">
         <el-input v-model="form.invita_code" />
-      </el-form-item>
-      <el-form-item :label="'上级'" prop="invite_id">
-        <el-select v-model="form.invite_id" :placeholder="'请输入账号搜索'" filterable remote :remote-method="searchMemberHandler" :loading="search_loading" clearable>
+      </el-form-item> -->
+      <el-form-item :label="$t('shangJi')" prop="invite_id">
+        <el-select v-model="form.invite_id" :placeholder="$t('qingShuRuZhangHaoSo_0')" filterable remote :remote-method="searchMemberHandler" :loading="search_loading" clearable>
           <el-option :label="item.label" :value="item.value" v-for="item of memberList" :key="item.value" />
         </el-select>
       </el-form-item>

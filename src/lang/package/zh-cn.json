@@ -1000,7 +1000,7 @@
   "shouXuFeiU": "手续费(U)",
   "touZiJineu": "投资金额(U)",
   "rowUid": "{0}/",
-  "uidZhangHao": "uid/账号",
+  "uidZhangHao": "账号",
   "zhiDingShu": "指定输",
   "zhiDingYing": "指定赢",
   "daoQiShiJian_0": "到期时间",
@@ -1057,7 +1057,7 @@
   "fuWuFei": "服务费",
   "shouYi": "收益",
   "rowHasMemberId": "{0}/",
-  "uidYongHuZhangHao": "uid/用户账号",
+  "uidYongHuZhangHao": "用户账号",
   "weiZhiZhuangTai": "未知状态",
   "guiJiShiBai_0": "归集失败",
   "guiJiChengGong_0": "归集成功",
@@ -1595,5 +1595,8 @@
   "gouMaiCiDengJiSuoX_0": "购买此等级所需邀请人数计算层级，1代表计算一级下级，3代表计算三级下级",
   "gouMaiCiDengJiSuoX": "购买此等级所需邀请人数(下三级人数都算)，0代表无需邀请",
   "tianXieJiangLiTianS": "填写奖励天数",
-  "liangHuaZuiZhongShou_1": "量化最终收益折扣：代表用户做量化收益量化最终收益折扣，例如10做量化只有原收益的10%，大于100则为放大，用户实际收益 = 原收益*最终收益折扣% ）"
+  "liangHuaZuiZhongShou_1": "量化最终收益折扣：代表用户做量化收益量化最终收益折扣，例如10做量化只有原收益的10%，大于100则为放大，用户实际收益 = 原收益*最终收益折扣% ）",
+  "zanWuXiaJi": "暂无下级",
+  "shangJi": "上级",
+  "qingShuRuZhangHaoSo_0": "请输入账号搜索"
 }

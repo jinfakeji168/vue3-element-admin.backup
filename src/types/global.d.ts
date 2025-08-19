@@ -24,7 +24,7 @@ declare global {
   interface PageResult<T> {
     /** 数据列表 */
     data: T;
-    list: T;
+    list: T[];
     /** 总数 */
     total: number;
     /** 当前页码 */
