@@ -84,6 +84,7 @@
                 <span class="text-gray-700">{{ row.id }}</span>
                 <el-button class="ml-4" type="primary" size="small" @click="getLowerLevelHandler(row)">{{ $t("chaKanXiaJi") }}</el-button>
               </div>
+              <span class="text-red ml-1">{{ row.is_test == 1 ? "test" : "" }}</span>
             </div>
           </template>
         </el-table-column>
@@ -258,7 +259,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('qiTaXinXi')" min-width="200px">
+        <el-table-column :label="$t('qiTaXinXi')" min-width="250px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
@@ -364,21 +365,19 @@ async function getLowerLevelHandler(data: { id: number; level: number }) {
   const res = await api.getSubordinateList({ uid: data.id, page: 1, limit: 999 });
   const temp: any = table.list.value.find((item) => item.id === data.id);
 
+  if (!res.list?.length) {
+    ElMessage({ message: $t("zanWuXiaJi"), duration: 1000, type: "warning" });
+    return;
+  }
   temp.children = res.list;
   temp.children?.forEach((item: any) => {
     item.level = (data.level || 1) + 1;
   });
-  console.log("🚀 ~ getLowerLevelHandler ~ res:", res.list);
-  if (!res.list?.length) {
-    console.log("🚀 ~ getLowerLevelHandler ~ ElMessage:", ElMessage);
-    ElMessage({ message: $t("zanWuXiaJi"), duration: 1000, type: "warning" });
-  }
   nextTick(() => {
     tableRef.value.toggleRowExpansion(temp, true);
   });
 }
 function tableRowClassName({ row, rowIndex }: { row: any; rowIndex: number }) {
-  console.log("🚀 ~ tableRowClassName ~ row:", row.level);
   if (row.level == 2) {
     return "warning-row";
   } else if (row.level == 3) {

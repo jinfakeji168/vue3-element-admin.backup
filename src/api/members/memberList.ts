@@ -457,7 +457,7 @@ export interface Member {
   quant_account?: number;
   /** 经纪人账户 */
   brokerage_account?: number;
-  /** 智能账户 */
+  /** 智慧账户 */
   smart_account?: number;
   /** 体验账户 */
   experience_account?: number;
@@ -485,6 +485,38 @@ export interface Member {
   created_at: string;
   /** 更新时间 */
   updated_at: string;
+  /** 钱包信息(部分链) */
+  wallet_info?: {
+    /** TRX 余额 */
+    trx?: string;
+    /** TRC20-USDT 余额 */
+    trc20_usdt?: string;
+    /** BNB 余额 */
+    bnb?: string;
+    /** BEP20-USDT 余额 */
+    bep20_usdt?: string;
+    /** BEP20-USDC 余额 */
+    bep20_usdc?: string;
+    /** 投资总额 */
+    invest_total?: string;
+  };
+  /** 钱包信息(其余链) */
+  wallet_info2?: {
+    /** ETH 余额 */
+    eth?: string;
+    /** ETH-USDT 余额 */
+    eth_usdt?: string;
+    /** ETH-USDC 余额 */
+    eth_usdc?: string;
+    /** ETH-PYUSD 余额 */
+    eth_pyusd?: string;
+    /** Polygon(MATIC) 余额 */
+    polygon?: string;
+    /** Polygon-USDT 余额 */
+    polygon_usdt?: string;
+    /** Polygon-USDC 余额 */
+    polygon_usdc?: string;
+  };
 }
 /* 添加会员 */
 export interface MemberAdd {
@@ -502,6 +534,8 @@ export interface MemberAdd {
   invite_id?: string;
   /** 语言类型 */
   lang_id?: number;
+  /**1true 2false */
+  is_test: number
 }
 
 /**批量操作Form */
@@ -540,7 +574,7 @@ export interface BatchOperationForm {
   ban_type?: Array<number>;
   /** 操作 1.封禁 2.解封 */
   operation?: 1 | 2;
-  /** 操作对象 1.量化账户余额 2.充值金额 3.佣金账户余额 4.智能账户余额 5.体验金余额 6.秒合约余额 */
+  /** 操作对象 1.量化账户余额 2.充值金额 3.佣金账户余额 4.智慧账户余额 5.体验金余额 6.秒合约余额 */
   op_type?: 1 | 2 | 3 | 4 | 5 | 6;
   /** 变动类型 1.减少 2.增加 */
   change_type?: 1 | 2;
@@ -584,7 +618,7 @@ export interface AccountBalanceData {
   brokerage_account: number;
   /** 充值账户余额 */
   recharge_account: number;
-  /** 智能账户余额 */
+  /** 智慧账户余额 */
   smart_account: number;
   /** 秒合约余额 */
   second_contract_account: number;
@@ -595,7 +629,7 @@ export interface AccountBalanceData {
 export interface AccountBalanceChangeForm {
   /** 会员ID */
   member_id?: number;
-  /** 操作对象 1.量化账户余额 2.充值金额 3.佣金账户余额 4.智能账户余额 5.体验金余额 6.秒合约余额 */
+  /** 操作对象 1.量化账户余额 2.充值金额 3.佣金账户余额 4.智慧账户余额 5.体验金余额 6.秒合约余额 */
   op_type?: 1 | 2 | 3 | 4 | 5 | 6;
   /** 变动类型 1.减少 2.增加 */
   change_type?: 1 | 2;
@@ -730,7 +764,7 @@ export interface MemberDetailData {
   quant_account?: string;
   /** 佣金账户余额 */
   brokerage_account?: string;
-  /** 智能账户余额 */
+  /** 智慧账户余额 */
   smart_account?: string;
   /** 体验金余额 */
   experience_account?: string;

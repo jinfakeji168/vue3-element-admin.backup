@@ -9,7 +9,9 @@
     <template #footer>
       <div class="flex flex-row justify-end">
         <el-button @click="visible = false">{{ $t("quXiao_0") }}</el-button>
-        <el-button type="primary" @click="saveHandler" :disabled="activeTab !== 'memberEdit'" v-hasPerm="['memberListDetail:save']">{{ $t("baoCun") }}</el-button>
+        <el-button :loading="loading" type="primary" @click="saveHandler" :disabled="activeTab !== 'memberEdit'" v-hasPerm="['memberListDetail:save']">
+          {{ $t("baoCun") }}
+        </el-button>
       </div>
     </template>
   </el-dialog>
@@ -62,11 +64,15 @@ watch(visible, (val) => {
   }
 });
 const comRef = ref();
+
+const loading = ref(false);
 async function saveHandler() {
   try {
+    loading.value = true;
     const res = await comRef.value?.submitForm();
     visible.value = false;
   } finally {
+    loading.value = false;
   }
 }
 </script>

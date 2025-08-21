@@ -6,7 +6,7 @@
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
+        <!-- <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
           <template #icon>
             <Plus />
           </template>
@@ -17,11 +17,12 @@
             <Delete />
           </template>
           {{ $t("shanChu_0") }}
-        </el-button>
+        </el-button> -->
       </template>
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="show_name" :label="$t('mingCheng')" min-width="120" />
+        <el-table-column prop="chain" :label="$t('lianLeiXing')" min-width="120" />
         <el-table-column prop="icon" label="" min-width="100">
           <template #default="{ row }">
             <el-image :src="row.icon" class="icon" fit="contain" :preview-src-list="[row.icon]" preview-teleported :z-index="9999" />
@@ -29,10 +30,10 @@
         </el-table-column>
 
         <el-table-column prop="min_withdraw" :label="$t('zuiXiaoTiXianJinE')" min-width="120" />
-        <el-table-column prop="max_withdraw" :label="$t('zuiXiaoTiXianJinE_0')" min-width="120" />
-        <el-table-column prop="withdraw_fee_ratio" :label="$t('tiXianShouXuFei')" min-width="120" />
-        <el-table-column prop="max_withdraw_fee" :label="$t('zuiDaShouXuFeiAnDa')" min-width="120" />
-        <el-table-column prop="min_withdraw_fee" :label="$t('zuiXiaoShouXuFeiAn')" min-width="120" />
+        <el-table-column prop="max_withdraw" :label="$t('zuiDaTiXianJinE')" min-width="120" />
+        <el-table-column prop="withdraw_fee_ratio" :label="$t('tiXianShouXuFei')" min-width="80" />
+        <el-table-column prop="max_withdraw_fee" :label="$t('zuiDaShouXuFeiAnDa')" min-width="100" />
+        <el-table-column prop="min_withdraw_fee" :label="$t('zuiXiaoShouXuFeiAn')" min-width="100" />
         <el-table-column prop="status" :label="$t('zhuangTai')" width="100">
           <template #default="{ row }">
             <el-tag v-if="row.status == StatusEnum.False" type="success">{{ $t("zhengChang") }}</el-tag>
@@ -73,12 +74,6 @@
             <el-button v-hasPerm="['currency:editExplain']" type="primary" link size="small" @click.stop="table.editHandler(row, 1)">
               <template #icon><EditPen /></template>
               {{ $t("chongZhiShuoMing") }}
-            </el-button>
-            <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
-              <template #icon>
-                <Delete />
-              </template>
-              {{ $t("shanChu_0") }}
             </el-button>
             <el-button v-hasPerm="['currency:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
               <template #icon><Switch /></template>

@@ -77,6 +77,7 @@
               <span class="text-gray-500">ID:</span>
               <span class="text-gray-700">{{ row.id }}</span>
               <el-button class="ml-4" type="primary" size="small" @click="table.editHandler(row, 4)">{{ $t("chaKanXiaJi") }}</el-button>
+              <span class="text-red ml-1">{{ row.is_test == 1 ? "test" : "" }}</span>
             </div>
             <div>
               <span class="text-gray-500">{{ $t("zhangHao_0") }}</span>
@@ -184,24 +185,24 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('qianBaoXinXi')" min-width="200px">
+        <el-table-column :label="$t('qianBaoXinXi')" min-width="250px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
                 <span class="text-gray-500">trx:</span>
-                <span class="text-gray-700">{{ row.min_withdrawal_amount_trx || "0.0000" }}</span>
+                <span class="text-gray-700">{{ row?.wallet_info?.trx || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">trc20-usdt:</span>
-                <span class="text-gray-700">{{ row.min_withdrawal_amount_usdt || "0.0000" }}</span>
+                <span class="text-gray-700">{{ row?.wallet_info?.trc20_usdt || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">bnb:</span>
-                <span class="text-gray-700">{{ row.min_withdrawal_amount_bnb || "0.0000" }}</span>
+                <span class="text-gray-700">{{ row?.wallet_info?.bnb || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">bep20-usdt/usdc:</span>
-                <span class="text-gray-700">{{ row.bep20_recharge_wallet || "--" }}/{{ row.bep20_withdrawal_wallet || "--" }}</span>
+                <span class="text-gray-700">{{ row?.wallet_info?.bep20_usdt || "0.0000" }}/{{ row?.wallet_info?.bep20_usdc || "0.0000" }}</span>
               </div>
               <div>
                 <span class="text-gray-500">{{ $t("touZiZonge") }}</span>
@@ -210,6 +211,36 @@
               <div>
                 <span class="text-gray-500">{{ $t("touZiWeiJieSuan") }}</span>
                 <span class="text-gray-700">{{ row.invest_unsettled || "0.0000" }}</span>
+              </div>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('qianBaoXinXi')" min-width="250px">
+          <template #default="{ row }">
+            <div class="flex flex-col">
+              <div>
+                <span class="text-gray-500">eth:</span>
+                <span class="text-gray-700">{{ row?.wallet_info2?.eth || "0.0000" }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">eth-usdt/usdc:</span>
+                <span class="text-gray-700">{{ row?.wallet_info2?.eth_usdt || "0.0000" }}/{{ row?.wallet_info2?.eth_usdc || "0.0000" }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">eth_pyusd:</span>
+                <span class="text-gray-700">{{ row?.wallet_info2?.eth_pyusd || "0.0000" }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">polygon:</span>
+                <span class="text-gray-700">{{ row?.wallet_info2?.polygon || "0.0000" }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">polygon_usdt:</span>
+                <span class="text-gray-700">{{ row?.wallet_info2?.polygon_usdt || "0.0000" }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">polygon_usdc:</span>
+                <span class="text-gray-700">{{ row?.wallet_info2?.polygon_usdc || "0.0000" }}</span>
               </div>
             </div>
           </template>
@@ -247,10 +278,10 @@
         <el-table-column :label="$t('tuiGuangYuan')" min-width="200px">
           <template #default="{ row }">
             <div class="flex flex-col">
-              <div>
+              <!-- <div>
                 <span class="text-gray-500">上级</span>
                 <span class="text-gray-700">{{ row.top_id || "--" }}/{{ row.top_account || "--" }}</span>
-              </div>
+              </div> -->
               <div>
                 <span class="text-gray-500">{{ $t("yiJi") }}</span>
                 <span class="text-gray-700">{{ row.parent_id || "--" }}/{{ row.parent_account || "--" }}</span>
@@ -296,7 +327,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column :label="$t('qiTaXinXi')" min-width="200px">
+        <el-table-column :label="$t('qiTaXinXi')" min-width="250px">
           <template #default="{ row }">
             <div class="flex flex-col">
               <div>
@@ -327,7 +358,7 @@
             <div class="grid grid-cols-2 gap-2">
               <el-button type="primary" size="small" @click="table.editHandler(row, 3)">{{ $t("xiangQing") }}</el-button>
               <el-button type="success" size="small" v-hasPerm="['memberList:supplement']" @click="replenishmentHandler(row)">{{ $t("buDan") }}</el-button>
-              <el-button type="warning" size="small" v-hasPerm="['memberList:checkMoney']" :loading="loading[0]" @click="checkMoney(row)">{{ $t("chaQian") }}</el-button>
+              <!-- <el-button type="warning" size="small" v-hasPerm="['memberList:checkMoney']" :loading="loading[0]" @click="checkMoney(row)">{{ $t("chaQian") }}</el-button> -->
               <el-button type="info" size="small" v-hasPerm="['memberList:changeMoney']" @click="table.editHandler(row, 2)">{{ $t("gaiQian") }}</el-button>
               <el-button type="success" size="small" v-hasPerm="['memberList:lowerLevelRecharge']" @click="table.editHandler(row, 5)">{{ $t("xiaJiChongZhi") }}</el-button>
               <el-button type="danger" size="small" v-hasPerm="['memberList:forceOffLine']" @click="forceOfflineHandler(row)">{{ $t("xiaXian") }}</el-button>

@@ -8,6 +8,9 @@
           <el-radio-button :label="3">{{ $t("login.username") }}</el-radio-button>
         </el-radio-group>
       </el-form-item>
+      <el-form-item prop="is_test">
+        <el-checkbox v-model="form.is_test" :false-value="2" :true-value="1">{{ $t("tianJiaWeiCeShiZhan") }}</el-checkbox>
+      </el-form-item>
       <el-form-item :label="$t('yongHuZhangHu')" prop="account">
         <div class="flex-row">
           <el-input v-model="phoneCode" style="width: 50px" v-if="form.type == 2" />
@@ -55,6 +58,7 @@ const dialogVisible = defineModel<boolean>();
 
 const form = ref<MemberAdd>({
   type: 1,
+  is_test: 2,
 });
 const phoneCode = ref("+86");
 const formRef = ref();

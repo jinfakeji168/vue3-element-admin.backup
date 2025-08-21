@@ -39,7 +39,7 @@ export interface Form {
   access_type_name?: string;
   /** 账单标题 */
   bill_title?: string;
-  /** 账户类型 1.量化账户 2.体验金账户 3.佣金账户 4.智能账户 5.秒合约账户 6.充值账户 */
+  /** 账户类型 1.量化账户 2.体验金账户 3.佣金账户 4.智慧账户 5.秒合约账户 6.充值账户 */
   detail_type?: string;
   /** 账户类型名称 */
   detail_type_name?: string;
