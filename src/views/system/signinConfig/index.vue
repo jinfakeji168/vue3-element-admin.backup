@@ -11,8 +11,7 @@
         </el-form-item>
         <el-form-item :label="$t('qianDaoZengSongJined')" prop="lottery_is_pop">
           <el-radio-group v-model="formData.sign_give_account" fill="#409EFF" text-color="#fff">
-            <el-radio-button :value="1">{{ $t("jiChuZhangHu") }}</el-radio-button>
-            <el-radio-button :value="2">{{ $t("yongJinZhangHu_1") }}</el-radio-button>
+            <el-radio-button v-for="item of store.accountTypeList" :label="item.value">{{ item.label }}</el-radio-button>
           </el-radio-group>
         </el-form-item>
 

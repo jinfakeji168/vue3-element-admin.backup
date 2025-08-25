@@ -45,6 +45,10 @@ export const keyMap: Record<TabNames, string[]> = {
         'voice_is_repeat_extract_voice',
         'voice_recharge_voice_file',
         'voice_withdraw_voice_file',
+        'smart_transfer_targets',
+        'brokerage_transfer_targets',
+        'quant_transfer_targets',
+        'second_contract_transfer_targets'
     ],
     package: [
         'package_app_download_show_switch',
@@ -140,6 +144,7 @@ export const keyMap: Record<TabNames, string[]> = {
     quantitationConfig: [
         "task_show_income_type",
         "auto_unlock_level",
+        "vip_upgrade_mode",
         "auto_is_upgrade_task",
         "quan_currency",
         "quan_time",

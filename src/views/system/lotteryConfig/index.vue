@@ -23,9 +23,7 @@
         </el-form-item>
         <el-form-item :label="$t('chouJiangZengSongZha')" prop="lottery_give_account">
           <el-radio-group v-model="formData.lottery_give_account" fill="#409EFF" text-color="#fff">
-            <el-radio-button :value="1">{{ $t("liangHuaZhangHu_2") }}</el-radio-button>
-            <el-radio-button :value="2">{{ $t("yongJinZhangHu_1") }}</el-radio-button>
-            <el-radio-button :value="3">{{ $t("heYueZhangHu") }}</el-radio-button>
+            <el-radio-button v-for="item of store.accountTypeList" :label="item.value">{{ item.label }}</el-radio-button>
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="$t('chouJiangXingShi')" prop="lottery_type">
@@ -119,7 +117,8 @@ import recharge from "./components/recharge.vue";
 import api, { type Form } from "@/api/system/lotteryConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { hasAuth } from "@/plugins/permission";
-
+import { useStore } from "@/store/modules/common";
+const store = useStore();
 const formData = reactive<Form>({});
 const visible = ref([false]);
 const loading = reactive<boolean[]>([]);

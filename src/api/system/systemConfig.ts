@@ -85,7 +85,14 @@ export default {
       method: 'post',
       data: { code }
     })
-  }
+  },
+  /**获取账户类型字典 */
+  getAccountType() {
+    return request<any, { value: number, label: string }[]>({
+      url: '/admin/system/config/mainAccountTypes',
+      method: 'get'
+    })
+  },
 };
 
 /** 是否启用类型 */

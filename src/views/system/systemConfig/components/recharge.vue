@@ -16,79 +16,53 @@
 
     <el-form-item :label="$t('chongZhiFanLiZhangH')">
       <el-radio-group v-model="getI('recharge_rebate_account').values">
-        <el-radio :label="1">{{ $t("liangHuaZhangHu_0") }}</el-radio>
-        <el-radio :label="2">{{ $t("yongJinZhangHu") }}</el-radio>
+        <el-radio v-for="item of store.accountTypeList" :label="item.value">{{ item.label }}</el-radio>
       </el-radio-group>
     </el-form-item>
 
     <!-- 首充送款相关配置 -->
-    <el-form-item>
-      <template #label>
-        <div class="flex-center">
-          {{ $t("shouChongSongKuanKai") }}
-          <el-tooltip effect="dark" placement="top">
-            <template #content>{{ $t("shouChongSongKuanKai_0") }}</template>
-            <el-icon class="question-icon"><QuestionFilled /></el-icon>
-          </el-tooltip>
-        </div>
-      </template>
-      <el-switch v-model="getI('is_open_first_charge_rebate').values" :active-value="1" :inactive-value="2" />
+    <el-form-item :label="$t('shouChongSongKuanKai')">
+      <el-tooltip effect="dark" placement="right">
+        <template #content>{{ $t("shouChongSongKuanKai_0") }}</template>
+        <el-switch v-model="getI('is_open_first_charge_rebate').values" :active-value="1" :inactive-value="2" />
+      </el-tooltip>
     </el-form-item>
     <template v-if="getI('is_open_first_charge_rebate').values == 1">
       <el-form-item :label="$t('shouChongSongKuanZha')">
         <el-radio-group v-model="getI('first_recharge_send_account').values">
-          <el-radio :label="1">{{ $t("liangHuaZhangHu_1") }}</el-radio>
-          <el-radio :label="2">{{ $t("yongJinZhangHu_0") }}</el-radio>
+          <el-radio v-for="item of store.accountTypeList" :label="item.value">{{ item.label }}</el-radio>
         </el-radio-group>
       </el-form-item>
 
-      <el-form-item>
-        <template #label>
-          <div class="flex-center">
-            {{ $t("shouChongSongKuanPei") }}
-            <el-tooltip effect="dark" placement="top">
-              <template #content>
-                <div>{{ $t("tongYiPeiZhiZhiShe") }}</div>
-                <div>{{ $t("quJianPeiZhiKeYiSh") }}</div>
-              </template>
-              <el-icon class="question-icon"><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
-        <el-radio-group v-model="getI('first_recharge_config_type').values">
-          <el-radio :label="1">{{ $t("tongYiPeiZhi") }}</el-radio>
-          <el-radio :label="2">{{ $t("quJianPeiZhi") }}</el-radio>
-        </el-radio-group>
+      <el-form-item :label="$t('shouChongSongKuanPei')">
+        <el-tooltip effect="dark" placement="right">
+          <template #content>
+            <div>{{ $t("tongYiPeiZhiZhiShe") }}</div>
+            <div>{{ $t("quJianPeiZhiKeYiSh") }}</div>
+          </template>
+          <el-radio-group v-model="getI('first_recharge_config_type').values">
+            <el-radio :label="1">{{ $t("tongYiPeiZhi") }}</el-radio>
+            <el-radio :label="2">{{ $t("quJianPeiZhi") }}</el-radio>
+          </el-radio-group>
+        </el-tooltip>
       </el-form-item>
       <template v-if="getI('first_recharge_config_type').values == 1">
-        <el-form-item>
-          <template #label>
-            <div class="flex-center">
-              {{ $t("shouChongSongKuanZui") }}
-              <el-tooltip effect="dark" placement="top">
-                <template #content>{{ $t("shouChongSongKuanTia") }}</template>
-                <el-icon class="question-icon"><QuestionFilled /></el-icon>
-              </el-tooltip>
-            </div>
-          </template>
-          <el-input-number v-model="getI('first_charge_rebate_min').values" :min="0" :placeholder="$t('sheZhi_0BuXianZhiJi')" />
+        <el-form-item :label="$t('shouChongSongKuanZui')">
+          <el-tooltip effect="dark" placement="right">
+            <template #content>{{ $t("shouChongSongKuanTia") }}</template>
+            <el-input-number v-model="getI('first_charge_rebate_min').values" :min="0" :placeholder="$t('sheZhi_0BuXianZhiJi')" />
+          </el-tooltip>
         </el-form-item>
 
         <el-form-item :label="$t('shouChongSongKuanBi')">
           <el-input-number v-model="getI('first_charge_rebate_percent').values" :min="0" :max="100" :placeholder="$t('ziYouSheZhiBaiFenB')" :precision="2" />
         </el-form-item>
 
-        <el-form-item>
-          <template #label>
-            <div class="flex-center">
-              {{ $t("shouChongSongKuanFen") }}
-              <el-tooltip effect="dark" placement="top">
-                <template #content>{{ $t("shouChongSongKuanedu") }}</template>
-                <el-icon class="question-icon"><QuestionFilled /></el-icon>
-              </el-tooltip>
-            </div>
-          </template>
-          <el-input-number v-model="getI('first_charge_rebate_cap').values" :min="0" :placeholder="$t('keXuan_0BuFengDing')" />
+        <el-form-item :label="$t('shouChongSongKuanFen')">
+          <el-tooltip effect="dark" placement="right">
+            <template #content>{{ $t("shouChongSongKuanedu") }}</template>
+            <el-input-number v-model="getI('first_charge_rebate_cap').values" :min="0" :placeholder="$t('keXuan_0BuFengDing')" />
+          </el-tooltip>
         </el-form-item>
       </template>
       <template v-else>
@@ -98,17 +72,11 @@
       </template>
     </template>
     <!-- 复充送款相关配置 -->
-    <el-form-item>
-      <template #label>
-        <div class="flex-center">
-          {{ $t("fuChongSongKuanKaiG") }}
-          <el-tooltip effect="dark" placement="top">
-            <template #content>{{ $t("fuChongSongKuanKaiG_0") }}</template>
-            <el-icon class="question-icon"><QuestionFilled /></el-icon>
-          </el-tooltip>
-        </div>
-      </template>
-      <el-switch v-model="getI('is_open_again_charge_rebate').values" :active-value="1" :inactive-value="2" />
+    <el-form-item :label="$t('fuChongSongKuanKaiG')">
+      <el-tooltip effect="dark" placement="right">
+        <template #content>{{ $t("fuChongSongKuanKaiG_0") }}</template>
+        <el-switch v-model="getI('is_open_again_charge_rebate').values" :active-value="1" :inactive-value="2" />
+      </el-tooltip>
     </el-form-item>
 
     <el-form-item :label="$t('fuChongSongKuanZuiD')" v-if="getI('is_open_again_charge_rebate').values == 1">
@@ -116,23 +84,16 @@
     </el-form-item>
 
     <!-- 团队充值奖励相关配置 -->
-    <el-form-item>
-      <template #label>
-        <div class="flex-center">
-          {{ $t("tuanDuiChongZhiManej") }}
-          <el-tooltip effect="dark" placement="top">
-            <template #content>{{ $t("tuanDuiChongZhiManej_0") }}</template>
-            <el-icon class="question-icon"><QuestionFilled /></el-icon>
-          </el-tooltip>
-        </div>
-      </template>
-      <el-switch v-model="getI('is_open_team_again_charge_rebate').values" :active-value="1" :inactive-value="2" />
+    <el-form-item :label="$t('tuanDuiChongZhiManej')">
+      <el-tooltip effect="dark" placement="right">
+        <template #content>{{ $t("tuanDuiChongZhiManej_0") }}</template>
+        <el-switch v-model="getI('is_open_team_again_charge_rebate').values" :active-value="1" :inactive-value="2" />
+      </el-tooltip>
     </el-form-item>
     <template v-if="getI('is_open_team_again_charge_rebate').values == 1">
       <el-form-item :label="$t('tuanDuiChongZhiJiang')">
         <el-radio-group v-model="getI('give_team_brokerage_account').values">
-          <el-radio :label="1">{{ $t("liangHuaZhangHu_2") }}</el-radio>
-          <el-radio :label="2">{{ $t("yongJinZhangHu_1") }}</el-radio>
+          <el-radio v-for="item of store.accountTypeList" :label="item.value">{{ item.label }}</el-radio>
         </el-radio-group>
       </el-form-item>
 
@@ -173,6 +134,7 @@ import api, { type Form } from "@/api/system/systemConfig";
 import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { useStore } from "@/store/modules/common";
 const store = useStore();
+
 const props = defineProps<{ configData: Form[] }>();
 function getI(key: string): Form {
   return props.configData?.find((item) => item.name === key) || {};

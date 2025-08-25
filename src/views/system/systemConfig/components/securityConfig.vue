@@ -16,9 +16,12 @@
       <el-switch v-model="getI('update_banner_is_google').values" :active-value="1" :inactive-value="2" />
     </el-form-item>
     <el-form-item :label="$t('miYue')" v-if="!googleStatus?.enabled">
-      <qrcode v-if="googleVerifyInfo?.qr_code_url" :value="googleVerifyInfo?.qr_code_url" :width="180"></qrcode>
-      <el-input style="width: 300px" v-model="googleVerify" :placeholder="$t('tianRuGuGeYanZheng')" />
-      <el-button type="primary" @click="bindGoogleVerifyHandler" :loading="loading">{{ $t("queRenBangDing") }}</el-button>
+      <div class="flex flex-col gap-4">
+        <span>{{ googleVerifyInfo?.secret }}</span>
+        <qrcode v-if="googleVerifyInfo?.qr_code_url" :value="googleVerifyInfo?.qr_code_url" :width="180"></qrcode>
+        <el-input style="width: 200px" v-model="googleVerify" :placeholder="$t('tianRuGuGeYanZheng')" />
+        <el-button type="primary" @click="bindGoogleVerifyHandler" :loading="loading">{{ $t("queRenBangDing") }}</el-button>
+      </div>
     </el-form-item>
   </el-form>
 </template>

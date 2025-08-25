@@ -72,11 +72,10 @@ const rules = reactive({
     { required: true, message: $t("qingShuRuYongHuMiM"), trigger: "blur" },
     { min: 6, max: 20, message: "长度在 8 到 20 个字符，要包含字母和数字", trigger: "blur" },
   ],
-  secure_password: [
-    { required: true, message: $t("qingShuRuAnQuanMiM"), trigger: "blur" },
-    { min: 6, max: 20, message: "长度在 8 到 20 个字符，要包含字母和数字", trigger: "blur" },
-  ],
-  lang_id: [{ required: true, message: $t("qingXuanZeYuYanLei_0"), trigger: "change" }],
+  // secure_password: [
+  //   { required: true, message: $t("qingShuRuAnQuanMiM"), trigger: "blur" },
+  //   { min: 6, max: 20, message: "长度在 8 到 20 个字符，要包含字母和数字", trigger: "blur" },
+  // ],
 });
 const loading = ref(false);
 const emits = defineEmits(["finish"]);

@@ -2,8 +2,7 @@
   <el-form label-width="240px">
     <el-form-item :label="$t('touZiChanPinBenJin')">
       <el-radio-group v-model="getI('finance_capital_give_account').values">
-        <el-radio :label="1">{{ $t("zhiNengZhangHu") }}</el-radio>
-        <el-radio :label="2">{{ $t("yongJinZhangHu_1") }}</el-radio>
+        <el-radio v-for="item of store.accountTypeList" :label="item.value">{{ item.label }}</el-radio>
       </el-radio-group>
     </el-form-item>
   </el-form>

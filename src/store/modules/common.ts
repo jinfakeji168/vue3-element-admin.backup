@@ -107,6 +107,12 @@ export const useStore = defineStore("common", () => {
     if (googleStatus.value === undefined) await getGoogleStatusAsync();
     return Promise.resolve(googleStatus.value);
   }
+  /**获取账户类型数据字典 */
+  const accountTypeList = ref<any[]>([]);
+  async function getAccountTypeList() {
+    accountTypeList.value = await systemApi.getAccountType();
+  }
+  getAccountTypeList()
   return {
     getLangListAsync,
     getVipListAsync,
@@ -125,7 +131,8 @@ export const useStore = defineStore("common", () => {
     keyByConfigValue,
     setNewConfig,
     getGoogleStatus,
-    updateGoogleStatus
+    updateGoogleStatus,
+    accountTypeList
   };
 });
 

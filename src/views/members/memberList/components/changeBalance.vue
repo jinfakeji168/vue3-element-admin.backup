@@ -71,8 +71,8 @@ const rules = {
 };
 
 const accountTypes = [
+  { label: $t("chongZhiZongE"), value: 2, key: "recharge_account" },
   { label: $t("liangHuaZhangHuYuE"), value: 1, key: "quant_account" },
-  { label: $t("chongZhiZhangHuYuE"), value: 2, key: "recharge_account" },
   { label: $t("yongJinZhangHuYuE"), value: 3, key: "brokerage_account" },
   { label: $t("zhiNengZhangHuYuE"), value: 4, key: "smart_account" },
   { label: $t("tiYanJinYuE"), value: 5, key: "experience_account" },

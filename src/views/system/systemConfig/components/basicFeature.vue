@@ -3,7 +3,7 @@
     <el-collapse v-model="activeNames">
       <el-collapse-item :title="$t('wangZhanXinXi')" name="1">
         <el-form-item :label="$t('zhuTiYangShi')">
-          <el-select v-model="getI('website_skin_style').values">
+          <el-select v-model="getI('website_skin_style').values" style="width: 300px">
             <el-option v-for="item of themeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -14,17 +14,17 @@
           <uploadPart v-model="getI('website_operator_icon').values" />
         </el-form-item>
         <el-form-item :label="$t('wangZhanMingCheng')">
-          <el-input v-model="getI('website_name').values" />
+          <el-input v-model="getI('website_name').values" style="width: 300px" />
         </el-form-item>
       </el-collapse-item>
       <el-collapse-item :title="$t('yongHuDuanPeiZhi')" name="2">
         <el-form-item :label="$t('yongHuDuanTuanDuiYo')">
-          <el-select v-model="getI('client_show_spread_level').values">
+          <el-select v-model="getI('client_show_spread_level').values" style="width: 300px">
             <el-option v-for="item of groupLevelOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('yongHuDuanTuanDuiDa')">
-          <el-select v-model="getI('client_proxy_team_show_level').values">
+          <el-select v-model="getI('client_proxy_team_show_level').values" style="width: 300px">
             <el-option v-for="item of groupLevelOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
@@ -49,13 +49,13 @@
             <el-radio :label="2">{{ $t("genJuXiTongMoRenSh") }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('qianDuanMoRenYuYan_0')">
-          <el-select v-model="getI('client_system_default_lang').values">
+        <el-form-item :label="$t('qianDuanMoRenYuYan_0')" v-if="getI('client_system_default_lang_type').values == 2">
+          <el-select v-model="getI('client_system_default_lang').values" style="width: 300px">
             <el-option v-for="item of store.langList" :key="item.mark" :label="item.name" :value="item.mark" />
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('qianDuanShouJiHaoMo')">
-          <el-select v-model="getI('client_system_default_phone_code').values">
+          <el-select v-model="getI('client_system_default_phone_code').values" style="width: 300px">
             <el-option v-for="item of photoCodeAreaOptions" :key="item.val" :label="item.val" :value="item.key" />
           </el-select>
         </el-form-item>
@@ -64,7 +64,7 @@
         </el-form-item>
       </el-collapse-item>
       <el-collapse-item :title="$t('zhuanZhangPeiZhi')" name="3">
-        <el-form-item :label="$t('zhiNengZhangHuShiFo')">
+        <!-- <el-form-item :label="$t('zhiNengZhangHuShiFo')">
           <el-switch v-model="getI('transfer_is_financial_to_basic').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item :label="$t('liangHuaZhangHuShiF')">
@@ -84,25 +84,45 @@
         </el-form-item>
         <el-form-item :label="$t('liRunZhangHuShiFou_1')">
           <el-switch v-model="getI('transfer_is_brokerage_to_contract').values" :active-value="1" :inactive-value="2" />
+        </el-form-item> -->
+        <el-form-item :label="'量化账户可转入'">
+          <el-checkbox-group v-model="getI('quant_transfer_targets').values">
+            <el-checkbox v-for="item of store.accountTypeList.toSpliced(0, 1)" :label="item.value">{{ item.label }}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item :label="'佣金账户可转入'">
+          <el-checkbox-group v-model="getI('brokerage_transfer_targets').values">
+            <el-checkbox v-for="item of store.accountTypeList.toSpliced(1, 1)" :label="item.value">{{ item.label }}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item :label="'智能账户可转入'">
+          <el-checkbox-group v-model="getI('smart_transfer_targets').values">
+            <el-checkbox v-for="item of store.accountTypeList.toSpliced(2, 1)" :label="item.value">{{ item.label }}</el-checkbox>
+          </el-checkbox-group>
+        </el-form-item>
+        <el-form-item :label="'合约账户可转入'">
+          <el-checkbox-group v-model="getI('second_contract_transfer_targets').values">
+            <el-checkbox v-for="item of store.accountTypeList.toSpliced(3, 1)" :label="item.value">{{ item.label }}</el-checkbox>
+          </el-checkbox-group>
         </el-form-item>
 
         <el-form-item :label="$t('liRunZhangHuZhuanCh')">
-          <el-input v-model="getI('transfer_transfer_out_ratio').values" type="number" />
+          <el-input-number v-model="getI('transfer_transfer_out_ratio').values" :precision="2" />
         </el-form-item>
         <el-form-item :label="$t('liRunZhangHuZhuanCh_0')">
-          <el-input v-model="getI('transfer_transfer_out_min').values" type="number" />
+          <el-input-number v-model="getI('transfer_transfer_out_min').values" :precision="2" />
         </el-form-item>
         <el-form-item :label="$t('liRunZhangHuZhuanCh_1')">
-          <el-input v-model="getI('transfer_transfer_out_max').values" type="number" />
+          <el-input-number v-model="getI('transfer_transfer_out_max').values" :precision="2" />
         </el-form-item>
         <el-form-item :label="$t('qiTaZhangHuZhuanChu')">
-          <el-input v-model="getI('transfer_other_transfer_out_ratio').values" type="number" />
+          <el-input-number v-model="getI('transfer_other_transfer_out_ratio').values" :precision="2" />
         </el-form-item>
         <el-form-item :label="$t('qiTaZhangHuZhuanChu_0')">
-          <el-input v-model="getI('transfer_other_transfer_out_min').values" type="number" />
+          <el-input-number v-model="getI('transfer_other_transfer_out_min').values" :precision="2" />
         </el-form-item>
         <el-form-item :label="$t('qiTaZhangHuZhuanChu_1')">
-          <el-input v-model="getI('transfer_other_transfer_out_max').values" type="number" />
+          <el-input-number v-model="getI('transfer_other_transfer_out_max').values" :precision="2" />
         </el-form-item>
       </el-collapse-item>
       <el-collapse-item :title="$t('yuYinPeiZhi')" name="4">

@@ -64,7 +64,9 @@ function getCurrentTabChangeData() {
   let hasChange = unref(configData)?.filter((val) => keyMap[unref(currentTab)].includes(val.name as string));
 
   hasChange = hasChange?.filter((item, index) => {
-    if (item.name == "register_account_status") {
+    if (
+      ["register_account_status", "smart_transfer_targets", "brokerage_transfer_targets", "quant_transfer_targets", "second_contract_transfer_targets"].includes(item.name || "")
+    ) {
       return item.values.join(",") != originConfigData.find((v) => v.name == item.name)?.values.join(",");
     } else if (item.name == "account_type_options") {
       return item.values.join(",") != originConfigData.find((v) => v.name == item.name)?.values.join(",");

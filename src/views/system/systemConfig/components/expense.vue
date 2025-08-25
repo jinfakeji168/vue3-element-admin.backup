@@ -45,19 +45,13 @@
         <el-form-item :label="$t('ziDongChuKuanAnQuan')">
           <el-input-number v-model="getI('auto_payment_safety_value').values" :min="0" />
         </el-form-item>
-        <el-form-item>
-          <template #label>
-            <el-tooltip :content="$t('xuanZeQuanJuYouChon')" placement="top">
-              <div class="flex-center">
-                <span>{{ $t("zuiXiaoTiXianPeiZhi") }}</span>
-                <el-icon class="el-icon--right"><question-filled /></el-icon>
-              </div>
-            </el-tooltip>
-          </template>
-          <el-radio-group v-model="getI('min_extract_config').values">
-            <el-radio :label="1">{{ $t("quanJu") }}</el-radio>
-            <el-radio :label="2">{{ $t("juBu") }}</el-radio>
-          </el-radio-group>
+        <el-form-item :label="$t('zuiXiaoTiXianPeiZhi')">
+          <el-tooltip :content="$t('xuanZeQuanJuYouChon')" placement="right">
+            <el-radio-group v-model="getI('min_extract_config').values">
+              <el-radio :label="1">{{ $t("quanJu") }}</el-radio>
+              <el-radio :label="2">{{ $t("juBu") }}</el-radio>
+            </el-radio-group>
+          </el-tooltip>
         </el-form-item>
         <el-form-item :label="$t('quKuanShuoMingSheZh')">
           <el-button type="primary" @click="visible[0] = true">{{ $t("chaKanBianJi_0") }}</el-button>

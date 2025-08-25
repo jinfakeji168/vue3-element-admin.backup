@@ -24,17 +24,17 @@
     <el-form-item :label="$t('shouYeShiPinDiZhi')">
       <el-input v-model="getI('index_video_url').values" />
     </el-form-item>
-    <el-form-item :label="$t('shouYeDingBuTiShiL')">
+    <!-- <el-form-item :label="$t('shouYeDingBuTiShiL')">
       <el-input v-model="getI('home_top_tips_name').values" />
-    </el-form-item>
+    </el-form-item> -->
 
-    <el-form-item :label="$t('shouYeDingBuTiShiL_0')">
+    <!-- <el-form-item :label="$t('shouYeDingBuTiShiL_0')">
       <el-input v-model="getI('home_top_tips_url').values" />
-    </el-form-item>
+    </el-form-item> -->
 
-    <el-form-item :label="$t('baiPiShuDiZhi')">
+    <!-- <el-form-item :label="$t('baiPiShuDiZhi')">
       <uploadPart v-model="getI('white_paper_url').values" type="files" />
-    </el-form-item>
+    </el-form-item> -->
 
     <el-form-item :label="$t('shouYeGunDongHuiYua')">
       <el-input-number v-model="getI('index_user_income_min').values" :min="0" />

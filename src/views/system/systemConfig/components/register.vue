@@ -18,7 +18,7 @@
           <el-switch v-model="getI('register_is_captcha').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
         <el-form-item :label="$t('zhongFuMiMa')">
-          <el-tooltip :content="$t('zhuCeShiShiFouKaiQ')" placement="top">
+          <el-tooltip :content="$t('zhuCeShiShiFouKaiQ')" placement="right">
             <el-switch v-model="getI('is_repeat_password').values" :active-value="1" :inactive-value="2" />
           </el-tooltip>
         </el-form-item>
@@ -63,29 +63,17 @@
           </el-form-item>
         </template>
         <el-form-item :label="$t('tongIpGeShuXianZhi')">
-          <template #label>
-            <div class="flex-center">
-              {{ $t("tongIpGeShuXianZhi_0") }}
-              <el-tooltip :content="$t('tongIpKeZhuCeZhang')" placement="top">
-                <el-icon><QuestionFilled /></el-icon>
-              </el-tooltip>
-            </div>
-          </template>
-          <el-input-number v-model="getI('ip_register_limit').values" :min="0" placeholder="" />
+          <el-tooltip :content="$t('tongIpKeZhuCeZhang')" placement="right">
+            <el-input-number v-model="getI('ip_register_limit').values" :min="0" placeholder="" />
+          </el-tooltip>
         </el-form-item>
         <el-form-item :label="$t('tongIpGeShuXianZhi_1')">
-          <template #label>
-            <div class="flex-center">
-              {{ $t("tongIpGeShuXianZhi_2") }}
-              <el-tooltip :content="$t('zongCiShuDaiBiaoGai')" placement="top">
-                <el-icon><QuestionFilled /></el-icon>
-              </el-tooltip>
-            </div>
-          </template>
-          <el-radio-group v-model="getI('ip_register_limit_type').values">
-            <el-radio :label="1">{{ $t("meiRiCiShu") }}</el-radio>
-            <el-radio :label="2">{{ $t("zongCiShu") }}</el-radio>
-          </el-radio-group>
+          <el-tooltip :content="$t('zongCiShuDaiBiaoGai')" placement="right">
+            <el-radio-group v-model="getI('ip_register_limit_type').values">
+              <el-radio :label="1">{{ $t("meiRiCiShu") }}</el-radio>
+              <el-radio :label="2">{{ $t("zongCiShu") }}</el-radio>
+            </el-radio-group>
+          </el-tooltip>
         </el-form-item>
         <template v-if="getI('register_account_status').values.includes(2)">
           <el-form-item :label="$t('youXiangZhuCeShiShi')">
@@ -129,9 +117,6 @@
             <el-radio :label="3">{{ $t("shuZiZiMuZuHe") }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('youXiaoYongHuChongZ')">
-          <el-input-number v-model="getI('recharge_num_valid_user').values" :min="0" :placeholder="$t('yongHuChongZhiDuoSh')" />
-        </el-form-item>
       </el-collapse-item>
 
       <el-collapse-item :title="$t('dengLuPeiZhi')" name="4">
@@ -139,26 +124,14 @@
           <el-input-number v-model="getI('error_to_show_pic').values" :min="0" :placeholder="$t('dengLuMiMaShuRuCuo')" />
         </el-form-item>
         <el-form-item :label="$t('fengTingZhangHaoCuo')">
-          <template #label>
-            <div class="flex-center">
-              {{ $t("fengTingZhangHaoCuo_0") }}
-              <el-tooltip :content="$t('lianXuShuRuJiCiCuo')" placement="top">
-                <el-icon><QuestionFilled /></el-icon>
-              </el-tooltip>
-            </div>
-          </template>
-          <el-input-number v-model="getI('error_to_ban').values" :min="0" placeholder="" />
+          <el-tooltip :content="$t('lianXuShuRuJiCiCuo')" placement="right">
+            <el-input-number v-model="getI('error_to_ban').values" :min="0" placeholder="" />
+          </el-tooltip>
         </el-form-item>
         <el-form-item :label="$t('fengTingZhangHaoShi')">
-          <template #label>
-            <div class="flex-center">
-              {{ $t("fengTingZhangHaoShi_0") }}
-              <el-tooltip :content="$t('fengTingZhangHaoDeng')" placement="top">
-                <el-icon><QuestionFilled /></el-icon>
-              </el-tooltip>
-            </div>
-          </template>
-          <el-input-number v-model="getI('login_error_lock_time').values" :min="0" placeholder="" />
+          <el-tooltip :content="$t('fengTingZhangHaoDeng')" placement="right">
+            <el-input-number v-model="getI('login_error_lock_time').values" :min="0" placeholder="" />
+          </el-tooltip>
         </el-form-item>
       </el-collapse-item>
 
@@ -170,7 +143,7 @@
           <template #label>
             <div class="flex-center">
               {{ $t("youXiangYanZhengMaC") }}
-              <el-tooltip :content="$t('24XiaoShiNeiTongYi')" placement="top">
+              <el-tooltip :content="$t('24XiaoShiNeiTongYi')" placement="right">
                 <el-icon><QuestionFilled /></el-icon>
               </el-tooltip>
             </div>
