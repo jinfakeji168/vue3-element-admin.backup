@@ -150,8 +150,8 @@ const UserAPI = {
   /** 修改个人中心用户信息 */
   updateProfile(data: UserProfileForm) {
     return request({
-      url: `${USER_BASE_URL}/profile`,
-      method: "put",
+      url: `/admin/auth/update-profile`,
+      method: "post",
       data: data,
     });
   },
@@ -159,8 +159,8 @@ const UserAPI = {
   /** 修改个人中心用户密码 */
   changePassword(data: PasswordChangeForm) {
     return request({
-      url: `${USER_BASE_URL}/password`,
-      method: "put",
+      url: `/admin/auth/change-password`,
+      method: "post",
       data: data,
     });
   },
@@ -207,6 +207,7 @@ const UserAPI = {
     });
   },
 };
+
 
 export default UserAPI;
 
@@ -416,27 +417,30 @@ export interface UserProfileForm {
   /** 昵称 */
   nickname?: string;
 
-  /** 头像URL */
-  avatar?: string;
-
-  /** 性别 */
-  gender?: number;
-
-  /** 手机号 */
-  mobile?: string;
-
   /** 邮箱 */
   email?: string;
+
+  /** 手机号码 */
+  mobile?: string;
+
+  /** 头像 */
+  avatar?: string;
+
+  /** 性别 1男 2女 */
+  gender?: number;
+
+  /** 备注,个性签名 */
+  remark?: string;
 }
 
 /** 修改密码表单 */
 export interface PasswordChangeForm {
   /** 原密码 */
-  oldPassword?: string;
+  old_password?: string;
   /** 新密码 */
-  newPassword?: string;
+  new_password?: string;
   /** 确认新密码 */
-  confirmPassword?: string;
+  confirm_password?: string;
 }
 
 /** 修改手机表单 */

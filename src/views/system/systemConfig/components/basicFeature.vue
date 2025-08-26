@@ -64,27 +64,6 @@
         </el-form-item>
       </el-collapse-item>
       <el-collapse-item :title="$t('zhuanZhangPeiZhi')" name="3">
-        <!-- <el-form-item :label="$t('zhiNengZhangHuShiFo')">
-          <el-switch v-model="getI('transfer_is_financial_to_basic').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
-        <el-form-item :label="$t('liangHuaZhangHuShiF')">
-          <el-switch v-model="getI('transfer_is_basic_to_brokerage').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
-        <el-form-item :label="$t('heYueZhangHuShiFou')">
-          <el-switch v-model="getI('transfer_is_contract_to_basic').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
-        <el-form-item :label="$t('heYueZhangHuShiFou_0')">
-          <el-switch v-model="getI('transfer_is_contract_to_brokerage').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
-        <el-form-item :label="$t('liRunZhangHuShiFou')">
-          <el-switch v-model="getI('transfer_is_brokerage_to_basic').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
-        <el-form-item :label="$t('liRunZhangHuShiFou_0')">
-          <el-switch v-model="getI('transfer_is_brokerage_to_financial').values" :active-value="1" :inactive-value="2" />
-        </el-form-item>
-        <el-form-item :label="$t('liRunZhangHuShiFou_1')">
-          <el-switch v-model="getI('transfer_is_brokerage_to_contract').values" :active-value="1" :inactive-value="2" />
-        </el-form-item> -->
         <el-form-item :label="'量化账户可转入'">
           <el-checkbox-group v-model="getI('quant_transfer_targets').values">
             <el-checkbox v-for="item of store.accountTypeList.toSpliced(0, 1)" :label="item.value">{{ item.label }}</el-checkbox>

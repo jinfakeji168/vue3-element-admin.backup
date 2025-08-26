@@ -20,101 +20,53 @@
         <el-input-number v-model="formData.min_unlock_amount" :placeholder="$t('qingShuRuJieSuoSuo')" :precision="2" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('jieSuoYaoQingRenShu_0')" prop="unlock_invitation_num">
-        <template #label>
-          <div class="flex-center">
-            <span>{{ $t("jieSuoYaoQingRenShu_0") }}</span>
-            <el-tooltip :content="$t('gouMaiCiDengJiSuoX')" placement="top">
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
-        <el-input-number v-model="formData.unlock_invitation_num" :min="0" />
+        <el-tooltip :content="$t('gouMaiCiDengJiSuoX')" placement="top">
+          <el-input-number v-model="formData.unlock_invitation_num" :min="0" />
+        </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('yaoQingJiSuanCengJi_0')" prop="invited_comp_level">
-        <template #label>
-          <div class="flex-center">
-            <span>{{ $t("yaoQingJiSuanCengJi_0") }}</span>
-            <el-tooltip :content="$t('gouMaiCiDengJiSuoX_0')" placement="top">
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
-        <el-input-number v-model="formData.invited_comp_level" :min="0" />
+        <el-tooltip :content="$t('gouMaiCiDengJiSuoX_0')" placement="top">
+          <el-input-number v-model="formData.invited_comp_level" :min="0" />
+        </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('yaoQingRenShuYouXia_0')" prop="invited_num_effect_recharge">
-        <template #label>
-          <div class="flex-center">
-            <span>{{ $t("yaoQingRenShuYouXia_0") }}</span>
-            <el-tooltip :content="$t('gouMaiCiDengJiSuoX_1')" placement="top">
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
-        <el-input-number v-model="formData.invited_num_effect_recharge" :placeholder="$t('qingShuRuYaoQingRen')" :precision="2" :min="0" />
+        <el-tooltip :content="$t('gouMaiCiDengJiSuoX_1')" placement="top">
+          <el-input-number v-model="formData.invited_num_effect_recharge" :placeholder="$t('qingShuRuYaoQingRen')" :precision="2" :min="0" />
+        </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('liangHuaYouXiaoTian_0')" prop="quant_effect_days">
-        <template #label>
-          <div class="flex-center">
-            <span>{{ $t("liangHuaYouXiaoTian_0") }}</span>
-            <el-tooltip :content="$t('jieSuoCiDengJiKeYi')" placement="top">
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
-        <el-input-number v-model="formData.quant_effect_days" :min="0" />
+        <el-tooltip :content="$t('jieSuoCiDengJiKeYi')" placement="top">
+          <el-input-number v-model="formData.quant_effect_days" :min="0" />
+        </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('shouYiShuaiFanWei_0')" prop="min_rate_of_return">
-        <template #label>
-          <div class="flex-center">
-            <span>{{ $t("shouYiShuaiFanWei_0") }}</span>
-            <el-tooltip :content="$t('danCiWanChengLiangH')" placement="top">
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
         <template #default>
-          <div class="flex-center gap-4">
-            <el-input-number v-model="formData.min_rate_of_return" type="number" :placeholder="$t('zuiXiaoShouYiShuai')" :precision="2" :min="0" :max="100" />
-            <span>-</span>
-            <el-input-number v-model="formData.max_rate_of_return" type="number" :placeholder="$t('zuiDaShouYiShuai')" :precision="2" :min="0" :max="100" />
-          </div>
+          <el-tooltip :content="$t('danCiWanChengLiangH')" placement="top">
+            <div class="flex-center gap-4">
+              <el-input-number v-model="formData.min_rate_of_return" type="number" :placeholder="$t('zuiXiaoShouYiShuai')" :precision="2" :min="0" :max="100" />
+              <span>-</span>
+              <el-input-number v-model="formData.max_rate_of_return" type="number" :placeholder="$t('zuiDaShouYiShuai')" :precision="2" :min="0" :max="100" />
+            </div>
+          </el-tooltip>
         </template>
       </el-form-item>
       <el-form-item :label="$t('pingTaiFuWuFeiBiLi_0')" prop="service_fee_ratio">
-        <template #label>
-          <div class="flex-center">
-            <span>{{ $t("pingTaiFuWuFeiBiLi_0") }}</span>
-            <el-tooltip :content="$t('pingTaiFuWuFeiBiLi_2')" placement="top">
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
-        <el-input-number v-model="formData.service_fee_ratio" :placeholder="$t('qingShuRu_0100ZhiJia')" :precision="2" :min="0" :max="100" />
+        <el-tooltip :content="$t('pingTaiFuWuFeiBiLi_2')" placement="top">
+          <el-input-number v-model="formData.service_fee_ratio" :placeholder="$t('qingShuRu_0100ZhiJia')" :precision="2" :min="0" :max="100" />
+        </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('shiFouXianShiFuWuF')" prop="show_service_fee">
         <el-switch v-model="formData.show_service_fee" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item>
       <el-form-item :label="$t('chongZhiFanLi_0')" prop="recharge_rebate_ratio">
-        <template #label>
-          <div class="flex-center">
-            <span>{{ $t("chongZhiFanLi_0") }}</span>
-            <el-tooltip :content="$t('geShi_123FenBieDaiB')" placement="top">
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
-        <el-input v-model="formData.recharge_rebate_ratio" :placeholder="$t('qingShuRuFanLiBiLi_0')" />
+        <el-tooltip :content="$t('geShi_123FenBieDaiB')" placement="top">
+          <el-input v-model="formData.recharge_rebate_ratio" :placeholder="$t('qingShuRuFanLiBiLi_0')" />
+        </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('liangHuaFanLi_0')" prop="quant_rebate_ratio">
-        <template #label>
-          <div class="flex-center">
-            <span>{{ $t("liangHuaFanLi_0") }}</span>
-            <el-tooltip :content="$t('geShi_123FenBieDaiB_0')" placement="top">
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
-        <el-input v-model="formData.quant_rebate_ratio" :placeholder="$t('qingShuRuFanLiBiLi_0')" />
+        <el-tooltip :content="$t('geShi_123FenBieDaiB_0')" placement="top">
+          <el-input v-model="formData.quant_rebate_ratio" :placeholder="$t('qingShuRuFanLiBiLi_0')" />
+        </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('fuChongShouYiShuai')" prop="recharge_yield_ratio">
         <el-input-number v-model="formData.recharge_yield_ratio" :placeholder="$t('qingShuRuFuChongSho')" :precision="2" :min="0" />
@@ -217,18 +169,9 @@ const rules = {
   invited_comp_level: [{ required: true, message: $t("yaoQingJiSuanCengJi_1"), trigger: "blur" }],
   invited_num_effect_recharge: [{ required: true, message: $t("yaoQingRenShuYouXia_1"), trigger: "blur" }],
   quant_effect_days: [{ required: true, message: $t("liangHuaYouXiaoTian_1"), trigger: "blur" }],
-  min_rate_of_return: [
-    { required: true, message: $t("zuiXiaoShouYiShuaiB"), trigger: "blur" },
-    { pattern: /^\d+(\.\d{2})?$/, message: $t("qingShuRuZhengQueDe_1"), trigger: "blur" },
-  ],
-  max_rate_of_return: [
-    { required: true, message: $t("zuiDaShouYiShuaiBu"), trigger: "blur" },
-    { pattern: /^\d+(\.\d{2})?$/, message: $t("qingShuRuZhengQueDe_1"), trigger: "blur" },
-  ],
-  service_fee_ratio: [
-    { required: true, message: $t("pingTaiFuWuFeiBiLi_1"), trigger: "blur" },
-    { pattern: /^\d+(\.\d{2})?$/, message: $t("qingShuRuZhengQueDe_1"), trigger: "blur" },
-  ],
+  min_rate_of_return: [{ required: true, message: $t("zuiXiaoShouYiShuaiB"), trigger: "blur" }],
+  max_rate_of_return: [{ required: true, message: $t("zuiDaShouYiShuaiBu"), trigger: "blur" }],
+  service_fee_ratio: [{ required: true, message: $t("pingTaiFuWuFeiBiLi_1"), trigger: "blur" }],
   show_service_fee: [{ required: true, message: $t("shiFouXianShiFuWuF_0"), trigger: "blur" }],
   recharge_rebate_ratio: [{ required: true, message: $t("chongZhiFanLiBuNeng"), trigger: "blur" }],
   quant_rebate_ratio: [{ required: true, message: $t("liangHuaFanLiBuNeng"), trigger: "blur" }],

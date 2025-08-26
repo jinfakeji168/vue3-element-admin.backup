@@ -9,27 +9,15 @@
             <el-radio-button :value="StatusEnum.True">{{ $t("guanBi") }}</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item prop="invite_first_recharge_money">
-          <template #label>
-            <div class="flex-center">
-              <span>{{ $t("yaoQingYiJiHuiYuan") }}</span>
-              <el-tooltip :content="$t('yaoQingYiJiHuiYuan_0')" placement="top">
-                <el-icon class="el-icon--right"><el-icon-question-filled /></el-icon>
-              </el-tooltip>
-            </div>
-          </template>
-          <el-input-number v-model="formData.invite_first_recharge_money" :min="0" />
+        <el-form-item prop="invite_first_recharge_money" :label="$t('yaoQingYiJiHuiYuan')">
+          <el-tooltip :content="$t('yaoQingYiJiHuiYuan_0')" placement="right">
+            <el-input-number v-model="formData.invite_first_recharge_money" :min="0" />
+          </el-tooltip>
         </el-form-item>
-        <el-form-item prop="invite_first_give_money">
-          <template #label>
-            <div class="flex-center">
-              <span>{{ $t("yaoQingYiJiHuiYuan_1") }}</span>
-              <el-tooltip :content="$t('yaoQingYiJiHuiYuan_2')" placement="top">
-                <el-icon class="el-icon--right"><el-icon-question-filled /></el-icon>
-              </el-tooltip>
-            </div>
-          </template>
-          <el-input-number v-model="formData.invite_first_give_money" :min="0" />
+        <el-form-item prop="invite_first_give_money" :label="$t('yaoQingYiJiHuiYuan_1')">
+          <el-tooltip :content="$t('yaoQingYiJiHuiYuan_2')" placement="right">
+            <el-input-number v-model="formData.invite_first_give_money" :min="0" />
+          </el-tooltip>
         </el-form-item>
 
         <el-form-item :label="$t('yaoQingJieTiSheZhi')">
