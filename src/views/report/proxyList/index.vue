@@ -45,7 +45,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="created_at" :label="$t('chuangJianShiJian')" min-width="180" />
-        <el-table-column :label="$t('caoZuo')" min-width="100">
+        <el-table-column :label="$t('caoZuo')" min-width="100" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link size="small" @click="table.editHandler(row, 1)" v-hasPerm="['proxyList:view']">
               <template #icon>
@@ -68,7 +68,7 @@
       </template>
     </el-card>
     <edit v-model="table.visible.value[0]" @finish="table.handleResetQuery()" />
-    <lowerLevel v-model="table.visible.value[1]" :member-id="table.currentData.value?.uid" @finish="table.queryHandler()" />
+    <lowerLevel v-model="table.visible.value[1]" :member-id="table.currentData.value?.uid" :member-account="table.currentData.value?.account" @finish="table.queryHandler()" />
   </div>
 </template>
 

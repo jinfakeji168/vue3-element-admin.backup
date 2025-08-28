@@ -6,13 +6,13 @@
 
     <el-card shadow="never" class="table-wrapper" v-loading="table.loading.value">
       <template #header>
-        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()">
+        <el-button v-hasPerm="['currency:add']" type="success" @click="table.editHandler()" :disabled="!enabled">
           <template #icon>
             <Plus />
           </template>
           {{ $t("xinZeng") }}
         </el-button>
-        <el-button v-hasPerm="['currency:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked()">
+        <el-button v-hasPerm="['currency:delete']" type="danger" @click="table.deleteHandler()" :disabled="!table.ischecked() || !enabled">
           <template #icon>
             <Delete />
           </template>
@@ -34,7 +34,7 @@
 
         <el-table-column prop="sort" :label="$t('paiXu')" width="100" />
 
-        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="100">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="100" v-if="enabled">
           <template #default="{ row }">
             <el-button v-hasPerm="['lang:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
               <template #icon><EditPen /></template>
@@ -110,7 +110,24 @@ const queryParams = reactive<Query>({});
 
 const table = new TableInstance<Form>(api, queryParams, 20, queryFormRef);
 
+const enabled: Ref<boolean> = ref(true);
 onMounted(() => {
   table.queryHandler();
+  let count = 0;
+  ElMessageBox.confirm("警告，此页面为开发人员开发使用，请谨慎操作！", {
+    cancelButtonText: "仅查看",
+    confirmButtonText: "开发人员",
+    beforeClose(action, instance, done) {
+      if (action === "confirm") count++;
+      else {
+        done();
+        enabled.value = false;
+      }
+      if (count > 5) {
+        done();
+        enabled.value = true;
+      }
+    },
+  });
 });
 </script>

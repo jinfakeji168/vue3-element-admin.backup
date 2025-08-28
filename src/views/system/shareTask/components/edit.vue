@@ -6,9 +6,7 @@
       </el-form-item>
       <el-form-item :label="$t('jiangLiLeiXing')" prop="type">
         <el-radio-group v-model="formData.type">
-          <el-radio :label="1">{{ $t("yongJinZhangHu_1") }}</el-radio>
-          <el-radio :label="2">{{ $t("jiangLiVip") }}</el-radio>
-          <el-radio :label="3">{{ $t("jiChuZhangHu") }}</el-radio>
+          <el-radio v-for="item of typeList" :label="item.value">{{ item.label }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="$t('jiangLiCiShuLeiXing')" prop="reward_type">
@@ -17,18 +15,20 @@
           <el-radio :label="2">{{ $t("meiRiYiCi") }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item :label="$t('yongJinJinE')" prop="share_amount">
+      <el-form-item :label="$t('yongJinJinE')" prop="share_amount" v-if="formData.type != 5">
         <el-input-number v-model="formData.share_amount" :min="0" :precision="2" />
       </el-form-item>
 
-      <el-form-item :label="$t('jiangLiVipDengJi')" prop="reward_vip_level">
-        <el-select v-model="formData.reward_vip_level">
-          <el-option v-for="item of commonStore.vipList" :key="item.level" :label="item.title" :value="item.level" />
-        </el-select>
-      </el-form-item>
-      <el-form-item :label="$t('jiangLiVipTianShu')" prop="reward_vip_days">
-        <el-input-number v-model="formData.reward_vip_days" :min="0" type="number" />
-      </el-form-item>
+      <template v-if="formData.type == 5">
+        <el-form-item :label="$t('jiangLiVipDengJi')" prop="reward_vip_level">
+          <el-select v-model="formData.reward_vip_level">
+            <el-option v-for="item of commonStore.vipList" :key="item.level" :label="item.title" :value="item.level" />
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('jiangLiVipTianShu')" prop="reward_vip_days">
+          <el-input-number v-model="formData.reward_vip_days" :min="0" type="number" />
+        </el-form-item>
+      </template>
 
       <el-form-item :label="$t('qiYongZhuangTai')" prop="status">
         <el-switch v-model="formData.status" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
@@ -120,11 +120,16 @@ watch(
 const formData = ref<Form>({});
 
 const rules = ref();
+
+const typeList = computed(() => {
+  return commonStore.accountTypeList.toSpliced(4, 0, { label: "VIP体验", value: 5 });
+});
+
 watch(
   () => formData.value.type,
   (val) => {
     unref(formRef)?.clearValidate();
-    if (val == 2) {
+    if (val == 5) {
       rules.value = {
         reward_vip_level: [{ required: true, message: $t("qingXuanZeVipDengJi"), trigger: "blur" }],
         reward_vip_days: [{ required: true, message: $t("tianXieJiangLiTianS"), trigger: "blur" }],

@@ -29,6 +29,7 @@ export interface Query {
 export interface Form {
   id?: number;
   icon?: string;
+  chain?: string;
   show_name?: string;
   sort?: number;
   status?: StatusEnum;

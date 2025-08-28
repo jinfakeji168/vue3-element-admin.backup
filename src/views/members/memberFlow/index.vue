@@ -8,6 +8,7 @@
       <el-table :data="table.list.value" row-key="id" @selection-change="table.selectionChangeHandler($event)">
         <el-table-column type="selection" width="55" />
         <el-table-column prop="uid" :label="$t('yongHuId')" min-width="80" />
+        <el-table-column prop="member.account" :label="$t('yongHu')" min-width="80" />
 
         <el-table-column prop="bill_title" :label="$t('zhangDanBiaoTi_0')" min-width="120" />
         <el-table-column prop="account_type" :label="$t('zhangHuLeiXing')" min-width="100">

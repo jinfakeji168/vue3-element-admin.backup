@@ -27,7 +27,7 @@
 
     <el-card shadow="never" class="table-wrapper" v-loading="loading">
       <template #header>
-        <el-button v-hasPerm="['menu:add']" type="success" @click="handleOpenDialog()">
+        <el-button v-hasPerm="['menu:add']" type="success" @click="handleOpenDialog()" :disabled="!enabled">
           <template #icon>
             <Plus />
           </template>
@@ -83,7 +83,7 @@
 
         <el-table-column :label="$t('zuJianLuJing')" align="left" width="250" prop="component" />
 
-        <el-table-column fixed="right" align="center" :label="$t('caoZuo')" width="220">
+        <el-table-column fixed="right" align="center" :label="$t('caoZuo')" width="220" v-if="enabled">
           <template #default="scope">
             <el-button v-if="scope.row.type == MenuTypeEnum.MENU" v-hasPerm="['menu:add']" type="primary" link size="small" @click.stop="handleOpenDialog(scope.row)">
               <template #icon>
@@ -486,8 +486,24 @@ function handleCloseDialog() {
   formData.value.id = undefined;
   dialog.visible = false;
 }
-
+const enabled: Ref<boolean> = ref(true);
 onMounted(() => {
   handleQuery();
+  let count = 0;
+  ElMessageBox.confirm("警告，此页面为开发人员开发使用，请谨慎操作！", {
+    cancelButtonText: "仅查看",
+    confirmButtonText: "开发人员",
+    beforeClose(action, instance, done) {
+      if (action === "confirm") count++;
+      else {
+        done();
+        enabled.value = false;
+      }
+      if (count > 5) {
+        done();
+        enabled.value = true;
+      }
+    },
+  });
 });
 </script>

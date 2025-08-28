@@ -167,10 +167,9 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="$t('touZiChanPin')" prop="invest_product">
-              <el-checkbox-group v-model="formData.invest_product">
-                <el-checkbox label="product1">{{ $t("chanPin_1") }}</el-checkbox>
-                <el-checkbox label="product2">{{ $t("chanPin_2") }}</el-checkbox>
-              </el-checkbox-group>
+              <el-select multiple v-model="formData.invest_product" :placeholder="$t('qingShuRuTiXianMai')" clearable>
+                <el-option v-for="item in investList" :label="item.val" :value="item.key" />
+              </el-select>
             </el-form-item>
             <el-form-item :label="$t('youXiaoShiJian_0')" prop="effective_time">
               <el-date-picker v-model="formData.effective_time" type="datetime" :placeholder="$t('xuanZeYouXiaoShiJia_0')" />
@@ -232,6 +231,7 @@ import { StatusEnum } from "@/enums/MenuTypeEnum";
 import { FormInstance } from "element-plus";
 import { dayjs } from "element-plus";
 import systemConfig from "@/api/system/systemConfig";
+import commApi from "@/api/common";
 
 import { searchMember } from "@/utils";
 import { useStore } from "@/store/modules/common";
@@ -245,6 +245,13 @@ async function getVipList() {
 }
 
 getVipList();
+
+const investList = ref<Awaited<ReturnType<typeof commApi.getInvestProductList>>>([]);
+async function getInvestList() {
+  const result = await commApi.getInvestProductList({ type: 2 });
+  investList.value = result;
+}
+getInvestList();
 
 const visible = defineModel<boolean>();
 const props = withDefaults(defineProps<{ account?: Member[]; tabIndex: number }>(), {});

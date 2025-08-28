@@ -55,6 +55,7 @@ const currentEditIndex = ref(-2);
 
 const emits = defineEmits(["initBefore"]);
 watch(formData, (val) => {
+  console.log("🚀 ~ val:", val);
   if (!val) return;
   val[props.keys[0]] ??= "";
   val[props.keys[1]] ??= [];

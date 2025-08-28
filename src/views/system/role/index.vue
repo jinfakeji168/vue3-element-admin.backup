@@ -32,20 +32,29 @@
           </template>
         </el-table-column>
 
-        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="200">
+        <el-table-column :label="$t('caoZuo')" fixed="right" align="left" width="100">
           <template #default="{ row }">
-            <el-button v-hasPerm="['currency:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)">
+            <el-button v-hasPerm="['currency:edit']" type="primary" link size="small" @click.stop="table.editHandler(row, 0)" :disabled="row.id == 1">
               <template #icon><EditPen /></template>
               {{ $t("bianJi") }}
             </el-button>
-            <el-button v-hasPerm="['currency:permission']" type="primary" link size="small" @click.stop="table.editHandler(row, 1)">{{ $t("quanXianFenPei") }}</el-button>
-            <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)">
+            <el-button v-hasPerm="['currency:permission']" type="primary" link size="small" @click.stop="table.editHandler(row, 1)" :disabled="row.id == 1">
+              {{ $t("quanXianFenPei") }}
+            </el-button>
+            <el-button v-hasPerm="['currency:delete']" type="danger" link size="small" @click.stop="table.deleteHandler(row.id)" :disabled="row.id == 1">
               <template #icon>
                 <Delete />
               </template>
               {{ $t("shanChu_0") }}
             </el-button>
-            <el-button v-hasPerm="['currency:status']" :type="row.status == StatusEnum.False ? 'danger' : 'success'" link size="small" @click.stop="table.changeStatus(row)">
+            <el-button
+              v-hasPerm="['currency:status']"
+              :type="row.status == StatusEnum.False ? 'danger' : 'success'"
+              link
+              size="small"
+              @click.stop="table.changeStatus(row)"
+              :disabled="row.id == 1"
+            >
               <template #icon><Switch /></template>
               {{ row.status == StatusEnum.False ? "禁用" : "启用" }}
             </el-button>

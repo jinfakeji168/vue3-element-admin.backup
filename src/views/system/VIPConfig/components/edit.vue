@@ -1,11 +1,11 @@
 <template>
-  <el-dialog v-model="visible" :title="title" width="600px" @closed="closeHandler">
+  <el-dialog v-model="visible" :title="title" width="800px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
       <el-form-item :label="$t('vipMingCheng')" prop="title">
-        <el-input v-model="formData.title" :placeholder="$t('qingShuRuVipMingChe')" />
+        <el-input v-model="formData.title" :placeholder="$t('qingShuRuVipMingChe')" style="width: 250px" />
       </el-form-item>
       <el-form-item :label="$t('vipDengJi')" prop="level">
-        <el-input-number v-model="formData.level" :placeholder="$t('qingShuRuVipDengJi')" :min="1" />
+        <el-input-number v-model="formData.level" :placeholder="$t('qingShuRuVipDengJi')" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('tuBiao')" prop="icon">
         <upload-part v-model="formData.icon"></upload-part>
@@ -17,31 +17,33 @@
         <el-input-number v-model="formData.quant_num" :placeholder="$t('qingShuRuLiangHuaCi')" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('jieSuoJinE')" prop="min_unlock_amount">
-        <el-input-number v-model="formData.min_unlock_amount" :placeholder="$t('qingShuRuJieSuoSuo')" :precision="2" :min="0" />
+        <el-tooltip content="满足vip自动解锁条件的最小充值金额，如开启手动解锁，就是解锁vip所需的金额" placement="right">
+          <el-input-number v-model="formData.min_unlock_amount" :placeholder="$t('qingShuRuJieSuoSuo')" :precision="2" :min="0" />
+        </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('jieSuoYaoQingRenShu_0')" prop="unlock_invitation_num">
-        <el-tooltip :content="$t('gouMaiCiDengJiSuoX')" placement="top">
-          <el-input-number v-model="formData.unlock_invitation_num" :min="0" />
+        <el-tooltip :content="$t('gouMaiCiDengJiSuoX')" placement="right">
+          <el-input-number v-model="formData.unlock_invitation_num" :min="0" placeholder="请输入" />
         </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('yaoQingJiSuanCengJi_0')" prop="invited_comp_level">
-        <el-tooltip :content="$t('gouMaiCiDengJiSuoX_0')" placement="top">
-          <el-input-number v-model="formData.invited_comp_level" :min="0" />
+        <el-tooltip :content="$t('gouMaiCiDengJiSuoX_0')" placement="right">
+          <el-input-number v-model="formData.invited_comp_level" :min="0" placeholder="请输入" />
         </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('yaoQingRenShuYouXia_0')" prop="invited_num_effect_recharge">
-        <el-tooltip :content="$t('gouMaiCiDengJiSuoX_1')" placement="top">
+        <el-tooltip :content="$t('gouMaiCiDengJiSuoX_1')" placement="right">
           <el-input-number v-model="formData.invited_num_effect_recharge" :placeholder="$t('qingShuRuYaoQingRen')" :precision="2" :min="0" />
         </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('liangHuaYouXiaoTian_0')" prop="quant_effect_days">
-        <el-tooltip :content="$t('jieSuoCiDengJiKeYi')" placement="top">
-          <el-input-number v-model="formData.quant_effect_days" :min="0" />
+        <el-tooltip :content="$t('jieSuoCiDengJiKeYi')" placement="right">
+          <el-input-number v-model="formData.quant_effect_days" :min="0" placeholder="请输入" />
         </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('shouYiShuaiFanWei_0')" prop="min_rate_of_return">
         <template #default>
-          <el-tooltip :content="$t('danCiWanChengLiangH')" placement="top">
+          <el-tooltip :content="$t('danCiWanChengLiangH')" placement="right">
             <div class="flex-center gap-4">
               <el-input-number v-model="formData.min_rate_of_return" type="number" :placeholder="$t('zuiXiaoShouYiShuai')" :precision="2" :min="0" :max="100" />
               <span>-</span>
@@ -51,7 +53,7 @@
         </template>
       </el-form-item>
       <el-form-item :label="$t('pingTaiFuWuFeiBiLi_0')" prop="service_fee_ratio">
-        <el-tooltip :content="$t('pingTaiFuWuFeiBiLi_2')" placement="top">
+        <el-tooltip :content="$t('pingTaiFuWuFeiBiLi_2')" placement="right">
           <el-input-number v-model="formData.service_fee_ratio" :placeholder="$t('qingShuRu_0100ZhiJia')" :precision="2" :min="0" :max="100" />
         </el-tooltip>
       </el-form-item>
@@ -59,13 +61,13 @@
         <el-switch v-model="formData.show_service_fee" :active-value="StatusEnum.False" :inactive-value="StatusEnum.True" />
       </el-form-item>
       <el-form-item :label="$t('chongZhiFanLi_0')" prop="recharge_rebate_ratio">
-        <el-tooltip :content="$t('geShi_123FenBieDaiB')" placement="top">
-          <el-input v-model="formData.recharge_rebate_ratio" :placeholder="$t('qingShuRuFanLiBiLi_0')" />
+        <el-tooltip :content="$t('geShi_123FenBieDaiB')" placement="right">
+          <el-input v-model="formData.recharge_rebate_ratio" :placeholder="$t('qingShuRuFanLiBiLi_0')" style="width: 250px" />
         </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('liangHuaFanLi_0')" prop="quant_rebate_ratio">
-        <el-tooltip :content="$t('geShi_123FenBieDaiB_0')" placement="top">
-          <el-input v-model="formData.quant_rebate_ratio" :placeholder="$t('qingShuRuFanLiBiLi_0')" />
+        <el-tooltip :content="$t('geShi_123FenBieDaiB_0')" placement="right">
+          <el-input v-model="formData.quant_rebate_ratio" :placeholder="$t('qingShuRuFanLiBiLi_0')" style="width: 250px" />
         </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('fuChongShouYiShuai')" prop="recharge_yield_ratio">
@@ -129,14 +131,22 @@ watch(
       formData.value = { ...props.data };
     } else {
       title.value = $t("xinZeng");
-      formData.value = { status: StatusEnum.False, is_unlock_purchase: StatusEnum.False, show_service_fee: StatusEnum.False };
+      formData.value = {
+        status: StatusEnum.False,
+        is_unlock_purchase: StatusEnum.False,
+        show_service_fee: StatusEnum.False,
+        cash_withdrawal_week: [1, 2, 3, 4, 5, 6, 7],
+        cash_withdrawal_time: ["00:00:00", "23:59:59"],
+      };
     }
   },
   {
     flush: "post",
   }
 );
-const formData = ref<Form>({});
+const formData = ref<Form>({
+  cash_withdrawal_week: [1, 2, 3, 4, 5, 6, 7],
+});
 
 /**
  * 格式化百分比，确保至少两位小数

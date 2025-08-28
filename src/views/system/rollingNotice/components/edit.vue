@@ -12,7 +12,7 @@
       </el-form-item> -->
     </el-form>
     <el-tabs v-model="currentIndex">
-      <el-tab-pane :label="$t('biaoTi')" :name="0">
+      <!-- <el-tab-pane :label="$t('biaoTi')" :name="0">
         <Content
           class="content"
           :ref="
@@ -24,13 +24,13 @@
           :keys="['title_original', 'title_translation']"
           type="public"
         ></Content>
-      </el-tab-pane>
-      <el-tab-pane :label="$t('neiRong')" :name="1">
+      </el-tab-pane> -->
+      <el-tab-pane :label="$t('neiRong')" :name="0">
         <Content
           class="content"
           :ref="
             (el: any) => {
-              contentRef[1] = el;
+              contentRef[0] = el;
             }
           "
           v-model="formData"

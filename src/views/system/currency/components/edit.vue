@@ -1,6 +1,9 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="600px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
+      <el-form-item :label="'类型'" prop="show_name">
+        <el-input v-model="formData.chain" placeholder="" disabled />
+      </el-form-item>
       <el-form-item :label="$t('mingCheng')" prop="show_name">
         <el-input v-model="formData.show_name" placeholder="" />
       </el-form-item>
@@ -44,7 +47,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item :label="$t('tiKuanJinepeiZhi')" prop="withdraw_config" v-if="formData.withdraw_type == 2">
-        <el-input v-model="formData.withdraw_config" />
+        <el-input v-model="formData.withdraw_config" :placeholder="$t('duoGeJineyongYingWen')" />
       </el-form-item>
       <el-form-item :label="$t('huiShuai')" prop="exchange_rate">
         <el-input-number v-model="formData.exchange_rate" :precision="2" />

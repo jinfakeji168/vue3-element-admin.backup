@@ -5,7 +5,7 @@
         <el-input v-model="form.member_id" disabled />
       </el-form-item>
       <el-form-item :label="$t('zhangHuLeiXing_0')" prop="op_type" class="mb-6" v-loading="loading[0]">
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-3 gap-4">
           <div v-for="(type, index) in accountTypes" :key="index" class="account-card" :class="{ 'is-selected': form.op_type === type.value }" @click="form.op_type = type.value">
             <div class="card-header">
               <el-radio v-model="form.op_type" :value="type.value" :label="type.label" class="!m-0"></el-radio>
@@ -72,11 +72,11 @@ const rules = {
 
 const accountTypes = [
   { label: $t("chongZhiZongE"), value: 2, key: "recharge_account" },
-  { label: $t("liangHuaZhangHuYuE"), value: 1, key: "quant_account" },
-  { label: $t("yongJinZhangHuYuE"), value: 3, key: "brokerage_account" },
-  { label: $t("zhiNengZhangHuYuE"), value: 4, key: "smart_account" },
-  { label: $t("tiYanJinYuE"), value: 5, key: "experience_account" },
-  { label: $t("miaoHeYueYuE"), value: 6, key: "second_contract_account" },
+  { label: $t("liangHuaZhangHu"), value: 1, key: "quant_account" },
+  { label: $t("yongJinZhangHu"), value: 3, key: "brokerage_account" },
+  { label: $t("zhiNengZhangHu"), value: 4, key: "smart_account" },
+  { label: $t("miaoHeYueZhangHu"), value: 6, key: "second_contract_account" },
+  { label: $t("tiYanJinZhangHu"), value: 5, key: "experience_account" },
 ] as const;
 
 // 获取余额数据

@@ -2,22 +2,23 @@
   <el-form label-width="240px">
     <el-form-item :label="$t('yunXuChongZhiZhangH')">
       <el-checkbox-group v-model="getI('account_type_options').values" :min="1">
-        <el-checkbox :label="1">{{ $t("liangHuaZhangHu") }}</el-checkbox>
-        <el-checkbox :label="4">{{ $t("zhiNengZhangHu") }}</el-checkbox>
-        <el-checkbox :label="5">{{ $t("miaoHeYueZhangHu") }}</el-checkbox>
+        <el-checkbox v-for="item of store.accountTypeList.toSpliced(1, 1)" :label="item.value">{{ item.label }}</el-checkbox>
       </el-checkbox-group>
     </el-form-item>
-    <el-form-item :label="$t('chongZhiFanLiLeiXin')">
-      <el-radio-group v-model="getI('vip_rebate_type').values">
-        <el-radio :label="1">{{ $t("jinXianChongZhiZaiL") }}</el-radio>
-        <el-radio :label="2">{{ $t("chongZhiLiangHuaZhan") }}</el-radio>
-      </el-radio-group>
+    <el-form-item :label="'充值到账户触发返利'">
+      <el-tooltip content="多选，用户充值到什么类型的账户上才能触发各种返利" placement="right">
+        <el-checkbox-group v-model="getI('vip_rebate_type').values" :min="0">
+          <el-checkbox v-for="item of store.accountTypeList.toSpliced(1, 1)" :label="item.value">{{ item.label }}</el-checkbox>
+        </el-checkbox-group>
+      </el-tooltip>
     </el-form-item>
 
     <el-form-item :label="$t('chongZhiFanLiZhangH')">
-      <el-radio-group v-model="getI('recharge_rebate_account').values">
-        <el-radio v-for="item of store.accountTypeList" :label="item.value">{{ item.label }}</el-radio>
-      </el-radio-group>
+      <el-tooltip content="单选，用户复充返利到什么账户上去" placement="right">
+        <el-radio-group v-model="getI('recharge_rebate_account').values">
+          <el-radio v-for="item of store.accountTypeList" :label="item.value">{{ item.label }}</el-radio>
+        </el-radio-group>
+      </el-tooltip>
     </el-form-item>
 
     <!-- 首充送款相关配置 -->

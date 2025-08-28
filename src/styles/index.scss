@@ -50,3 +50,9 @@ hr {
   height: 1px;
   background: #ddd;
 }
+
+.cell {
+  .el-button {
+    margin: 0 !important;
+  }
+}

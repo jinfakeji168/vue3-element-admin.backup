@@ -19,7 +19,11 @@
         <el-table-column type="selection" width="55" />
         <el-table-column prop="id" label="ID" min-width="60" />
         <el-table-column prop="sort" :label="$t('paiXu')" width="100" />
-        <el-table-column prop="title_original" :label="$t('biaoTi')" min-width="220" />
+        <el-table-column prop="content_original" :label="$t('neiRong')" min-width="220">
+          <template #default="{ row }">
+            <div v-html="row.content_original"></div>
+          </template>
+        </el-table-column>
         <el-table-column prop="status" :label="$t('zhuangTai')">
           <template #default="{ row }">
             <el-tag v-if="row.status == StatusEnum.False" type="success">{{ $t("zhengChang") }}</el-tag>

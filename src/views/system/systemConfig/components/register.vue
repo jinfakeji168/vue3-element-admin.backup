@@ -14,6 +14,9 @@
         <el-form-item :label="$t('zhuCeFaSongZhanNei')">
           <el-switch v-model="getI('is_register_message').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
+        <el-form-item :label="'注册信格式'">
+          <el-button type="primary" @click="explainVisible = true">查看/编辑</el-button>
+        </el-form-item>
         <el-form-item :label="$t('zhuCeShiFouKaiQiYa')">
           <el-switch v-model="getI('register_is_captcha').values" :active-value="1" :inactive-value="2" />
         </el-form-item>
@@ -153,18 +156,20 @@
       </el-collapse-item>
     </el-collapse>
   </el-form>
+  <MessageTemplate v-model="explainVisible" :data="getI('register_message_setting')" />
 </template>
 
 <script setup lang="ts">
 import systemConfig, { type Form } from "@/api/system/systemConfig";
 import { useStore } from "@/store/modules/common";
+import MessageTemplate from "./parts/messageTemplate.vue";
 const activeNames = ["1", "2", "3", "4", "5"];
 const store = useStore();
 const props = defineProps<{ configData: Form[] }>();
 function getI(key: string): Form {
   return props.configData?.find((item) => item.name === key) || {};
 }
-const visible = ref([false, false]);
+const explainVisible = ref(false);
 
 const current_autoIncrementId = ref();
 const originId = ref();

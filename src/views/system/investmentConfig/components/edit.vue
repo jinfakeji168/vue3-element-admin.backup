@@ -2,17 +2,11 @@
   <el-dialog v-model="visible" :title="title" width="600px" @closed="closeHandler">
     <el-form ref="formRef" :model="formData" :rules="rules" label-width="200px">
       <el-form-item :label="$t('chanPinLeiXing_0')" prop="type">
-        <template #label>
-          <div class="flex-center">
-            <span>{{ $t("chanPinLeiXing_0") }}</span>
-            <el-tooltip :content="$t('puTongTouZiChanPin')" placement="top">
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
-        <el-radio-group v-model="formData.type" :disabled="Boolean(data)">
-          <el-radio v-for="item of productTypeOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
-        </el-radio-group>
+        <el-tooltip :content="$t('puTongTouZiChanPin')" placement="right">
+          <el-radio-group v-model="formData.type" :disabled="Boolean(data)">
+            <el-radio v-for="item of productTypeOptions" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
+          </el-radio-group>
+        </el-tooltip>
       </el-form-item>
 
       <el-form-item :label="$t('mingCheng')" prop="title">
@@ -36,27 +30,21 @@
         </el-select>
       </el-form-item>
       <el-form-item :label="$t('xianGouShuLiang')" prop="sales_quota">
-        <template #label>
-          <div class="flex-center">
-            <span>{{ $t("xianGouShuLiang") }}</span>
-            <el-tooltip :content="$t('0BiaoShiBuXianZhi')" placement="top">
-              <el-icon><QuestionFilled /></el-icon>
-            </el-tooltip>
-          </div>
-        </template>
-        <el-input-number v-model="formData.sales_quota" :min="0" />
+        <el-tooltip :content="$t('0BiaoShiBuXianZhi')" placement="right">
+          <el-input-number v-model="formData.sales_quota" :min="0" />
+        </el-tooltip>
       </el-form-item>
       <el-form-item :label="$t('shengYuShuLiang')" prop="residual_num">
         <el-input-number v-model="formData.residual_num" :min="0" />
       </el-form-item>
       <el-form-item :label="$t('shengYuShuLiangShiF')" prop="show_residual_num">
-        <el-switch v-model="formData.show_residual_num" :active-value="1" :inactive-value="2" :active-text="'开启'" :inactive-text="'关闭'" />
+        <el-switch v-model="formData.show_residual_num" :active-value="1" :inactive-value="2" :active-text="$t('kaiQi_0')" :inactive-text="'关闭'" />
       </el-form-item>
       <el-form-item :label="$t('xiaoShouZhuangTai_0')" prop="sales_status">
-        <el-switch v-model="formData.sales_status" :active-value="1" :inactive-value="2" :active-text="'开启'" :inactive-text="'关闭'" />
+        <el-switch v-model="formData.sales_status" :active-value="1" :inactive-value="2" :active-text="$t('kaiQi_1')" :inactive-text="'关闭'" />
       </el-form-item>
       <el-form-item :label="$t('zhuangTai')" prop="status">
-        <el-switch v-model="formData.status" :active-value="1" :inactive-value="2" :active-text="'开启'" :inactive-text="'关闭'" />
+        <el-switch v-model="formData.status" :active-value="1" :inactive-value="2" :active-text="$t('kaiQi_2')" :inactive-text="'关闭'" />
       </el-form-item>
       <el-form-item :label="$t('paiXu')" prop="sort">
         <el-input-number v-model="formData.sort" :min="0" />

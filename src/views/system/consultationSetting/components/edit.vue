@@ -84,6 +84,8 @@ const contentRef = ref<InstanceType<typeof Content>[]>([]);
 const emits = defineEmits(["finish"]);
 async function submitHandler() {
   const valid = await Promise.all([unref(formRef)?.validate(), ...unref(contentRef).map((el) => el.validate())]);
+  if (!(await unref(contentRef)[1].validate())) currentIndex.value = 1;
+  else if (!(await unref(contentRef)[0].validate())) currentIndex.value = 0;
   if (valid.some((v) => !v)) return;
   loading.value = true;
   try {
